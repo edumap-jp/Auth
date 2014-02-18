@@ -1,0 +1,31 @@
+{
+    "name":        "netcommons/auth",
+    "description": "Auth Plugin for CakePHP",
+    "type":        "cakephp-plugin",
+    "keywords":    ["cakephp", "auth"],
+    "homepage":    "http://www.netcommons.org/",
+    "license":     "NetCommons License",
+    "authors": [
+        {
+            "name":     "NetCommons Community",
+            "homepage": "https://github.com/NetCommons3/Auth/graphs/contributors"
+        }
+    ],
+    "require": {
+        "cakephp/cakephp":        "~2.4.0",
+        "cakephp/debug_kit":      "~2.2.0",
+        "cakedc/migrations":      "~2.2.0",
+        "twbs/bootstrap":         "~3.1.0",
+        "components/jquery":      "~2.1.0"
+    },
+    "require-dev": {
+        "netcommons/users":       "dev-master",
+        "satooshi/php-coveralls": "dev-master"
+    },
+    "bin": [
+        "lib/Cake/Console/cake"
+    ],
+    "config": {
+        "vendor-dir": "vendors"
+    }
+}
