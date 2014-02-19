@@ -12,19 +12,16 @@
         }
     ],
     "require": {
-        "cakephp/cakephp":        "~2.4.0",
-        "cakephp/debug_kit":      "~2.2.0",
-        "cakedc/migrations":      "~2.2.0",
-        "twbs/bootstrap":         "~3.1.0",
-        "components/jquery":      "~2.1.0"
+        "cakephp/cakephp":        "~2.4",
+        "cakephp/debug_kit":      "~2.2",
+        "cakedc/migrations":      "~2.2",
+        "twbs/bootstrap":         "~3.1",
+        "components/jquery":      "~2.1"
     },
     "require-dev": {
         "netcommons/users":       "dev-master",
         "satooshi/php-coveralls": "dev-master"
     },
-    "bin": [
-        "lib/Cake/Console/cake"
-    ],
     "config": {
         "vendor-dir": "vendors"
     }
