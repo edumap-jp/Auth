@@ -5,15 +5,17 @@ php:
   - 5.5
 
 env:
-  - DB=mysql
-  - DB=pgsql
+  - VERSION=master DB=mysql
+  - VERSION=master DB=pgsql
 
 before_script:
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE cakephp_test;' -U postgres; fi"
-  - chmod -R 777 ./app/tmp
+  - git clone git://github.com/NetCommons3/NetCommons3 ../NetCommons3 && cd ../NetCommons3 && git checkout $VERSION
+  - curl -s http://getcomposer.org/installer | php
+  - php composer.phar install
+  - cp -R ../Auth plugins/Auth
+  - chmod -R 777 app/tmp
   - mkdir -p build/logs
   - pear channel-discover pear.cakephp.org
   - pear install --alldeps cakephp/CakePHP_CodeSniffer
