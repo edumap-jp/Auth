@@ -18,6 +18,7 @@ before_script:
   - git checkout $NETCOMMONS_VERSION
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
+  - cp -r ../$PLUGIN_NAME plugins
   - cp -r ../$PLUGIN_NAME app/Plugin/
   - chmod -R 777 app/tmp
   - mkdir -p build/logs
@@ -33,7 +34,7 @@ before_script:
   - cp app/Config/database.php.test app/Config/database.php
 
 script:
-  - ./lib/Cake/Console/cake test app/Plugin/$PLUGIN_NAME All$PLUGIN_NAME --stderr
+  - ./lib/Cake/Console/cake test Auth All$PLUGIN_NAME --stderr
   - phpcs -p --extensions=php --standard=CakePHP --ignore=app/Config/Migration/,app/Config/database.php,app/Plugin/DebugKit,app/Plugin/Migrations,app/Plugin/MobileDetect app
   - phpmd app text ruleset/phpmd.xml --exclude $NETCOMMONS_BUILD_DIR/app/Config/Migration,$NETCOMMONS_BUILD_DIR/app/Plugin/DebugKit,$NETCOMMONS_BUILD_DIR/app/Plugin/Migrations,$NETCOMMONS_BUILD_DIR/app/Plugin/MobileDetect
   - phpcpd --exclude Test --exclude Config --exclude app/Config/database.php --exclude app/Plugin/DebugKit --exclude app/Plugin/Migrations --exclude app/Plugin/MobileDetect app
