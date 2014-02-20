@@ -37,9 +37,9 @@ script:
 after_script:
   - php vendors/bin/coveralls -vvv
 
-notifications:
-  email:
-    recipients:
-      - netcommons3@googlegroups.com
-    on_success: never  # default: change
-    on_failure: always # default: always
+# notifications:
+#   email:
+#     recipients:
+#       - netcommons3@googlegroups.com
+#     on_success: never  # default: change
+#     on_failure: always # default: always
