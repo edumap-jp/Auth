@@ -5,16 +5,19 @@ php:
   - 5.5
 
 env:
-  - VERSION=master DB=mysql
-  - VERSION=master DB=pgsql
+  - NETCOMMONS_VERSION=master DB=mysql
+  - NETCOMMONS_VERSION=master DB=pgsql
 
 before_script:
   - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'CREATE DATABASE cakephp_test;'; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'CREATE DATABASE cakephp_test;' -U postgres; fi"
-  - git clone git://github.com/NetCommons3/NetCommons3 ../NetCommons3 && cd ../NetCommons3 && git checkout $VERSION
+  - export NETCOMMONS_BUILD_DIR=`dirname $TRAVIS_BUILD_DIR`/NetCommons3
+  - git clone git://github.com/NetCommons3/NetCommons3 $NETCOMMONS_BUILD_DIR
+  - cd $NETCOMMONS_BUILD_DIR
+  - git checkout $NETCOMMONS_VERSION
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install
-  - cp -R ../Auth plugins/Auth
+  - cp -R ../Auth plugins/
   - chmod -R 777 app/tmp
   - mkdir -p build/logs
   - pear channel-discover pear.cakephp.org
@@ -30,7 +33,6 @@ before_script:
 
 script:
   - ./lib/Cake/Console/cake test Auth All --stderr
-  - export NETCOMMONS_BUILD_DIR=`dirname $TRAVIS_BUILD_DIR`/NetCommons3
   - phpcs -p --extensions=php --standard=CakePHP --ignore=app/Config/Migration/,app/Config/database.php,app/Plugin/DebugKit,app/Plugin/Migrations,app/Plugin/MobileDetect app
   - phpmd app text ruleset/phpmd.xml --exclude $NETCOMMONS_BUILD_DIR/app/Config/Migration,$NETCOMMONS_BUILD_DIR/app/Plugin/DebugKit,$NETCOMMONS_BUILD_DIR/app/Plugin/Migrations,$NETCOMMONS_BUILD_DIR/app/Plugin/MobileDetect
   - phpcpd --exclude Test --exclude Config --exclude app/Config/database.php --exclude app/Plugin/DebugKit --exclude app/Plugin/Migrations --exclude app/Plugin/MobileDetect app
