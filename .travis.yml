@@ -30,9 +30,7 @@ before_script:
 
 script:
   - ./lib/Cake/Console/cake test Auth All --stderr
-  - echo $TRAVIS_BUILD_DIR
   - export NETCOMMONS_BUILD_DIR=`dirname $TRAVIS_BUILD_DIR`/NetCommons3
-  - echo $NETCOMMONS_BUILD_DIR
   - phpcs -p --extensions=php --standard=CakePHP --ignore=app/Config/Migration/,app/Config/database.php,app/Plugin/DebugKit,app/Plugin/Migrations,app/Plugin/MobileDetect app
   - phpmd app text ruleset/phpmd.xml --exclude $NETCOMMONS_BUILD_DIR/app/Config/Migration,$NETCOMMONS_BUILD_DIR/app/Plugin/DebugKit,$NETCOMMONS_BUILD_DIR/app/Plugin/Migrations,$NETCOMMONS_BUILD_DIR/app/Plugin/MobileDetect
   - phpcpd --exclude Test --exclude Config --exclude app/Config/database.php --exclude app/Plugin/DebugKit --exclude app/Plugin/Migrations --exclude app/Plugin/MobileDetect app
@@ -40,9 +38,9 @@ script:
 after_script:
   - php vendors/bin/coveralls -vvv
 
-# notifications:
-#   email:
-#     recipients:
-#       - netcommons3@googlegroups.com
-#     on_success: never  # default: change
-#     on_failure: always # default: always
+notifications:
+  email:
+    recipients:
+      - netcommons3@googlegroups.com
+    on_success: never  # default: change
+    on_failure: always # default: always
