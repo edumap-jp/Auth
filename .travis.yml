@@ -32,12 +32,13 @@ before_script:
   - phpenv rehash
   - set +H
   - cp app/Config/database.php.test app/Config/database.php
+  - for p in `cat app/Config/vendors.txt`; do export IGNORE_PLUGINS=$IGNORE_PLUGINS,$TRAVIS_BUILD_DIR/app/Plugin/$p; export IGNORE_PLUGINS_OPTS="$IGNORE_PLUGINS_OPTS --exclude app/Plugin/$p"; done
 
 script:
-  - ./lib/Cake/Console/cake test Auth All$PLUGIN_NAME --stderr
-  - phpcs -p --extensions=php --standard=CakePHP --ignore=app/Config/Migration/,app/Config/database.php,app/Plugin/DebugKit,app/Plugin/Migrations,app/Plugin/MobileDetect app
-  - phpmd app text ruleset/phpmd.xml --exclude $NETCOMMONS_BUILD_DIR/app/Config/Migration,$NETCOMMONS_BUILD_DIR/app/Plugin/DebugKit,$NETCOMMONS_BUILD_DIR/app/Plugin/Migrations,$NETCOMMONS_BUILD_DIR/app/Plugin/MobileDetect
-  - phpcpd --exclude Test --exclude Config --exclude app/Config/database.php --exclude app/Plugin/DebugKit --exclude app/Plugin/Migrations --exclude app/Plugin/MobileDetect app
+  - ./lib/Cake/Console/cake test $PLUGIN_NAME All$PLUGIN_NAME --stderr
+  - phpcs -p --extensions=php --standard=CakePHP --ignore=app/Config/Migration/,app/Config/database.php,$IGNORE_PLUGINS app
+  - phpmd app text ruleset/phpmd.xml --exclude $NETCOMMONS_BUILD_DIR/app/Config/Migration,$IGNORE_PLUGINS
+  - phpcpd --exclude Test --exclude Config --exclude app/Config/database.php $IGNORE_PLUGINS_OPTS app
 
 after_script:
   - php vendors/bin/coveralls -vvv
