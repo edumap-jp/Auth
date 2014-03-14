@@ -19,13 +19,21 @@ foreach ($plugins as $plugin) {
 							'controller' => $plugin,
 							'action'     => 'login'))) ?>
 		<fieldset>
-				<legend>
-						<?php echo __('Please enter your username and password') ?>
-				</legend>
-				<?php echo $this->Form->input('username') ?>
-				<?php echo $this->Form->input('password') ?>
+			<h2 class="form-signin-heading"><?php echo __('Please enter your username and password') ?></h2>
+				<?php echo $this->Form->input('username',
+						array("class"=>"form-control",
+							"placeholder"=>_("Username"))) ?>
+				<?php echo $this->Form->input('password',
+							array(
+								"class"=>"form-control",
+								"placeholder"=>_("Password")
+							)
+				) ?>
 		</fieldset>
-<?php 	echo $this->Form->end(__('Login')) ?>
+	<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo __('Login')?></button>
 <?php endforeach ?>
 
 </div>
+
+
+
