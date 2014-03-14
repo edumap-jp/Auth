@@ -1,5 +1,5 @@
 <?php
 
-Router::connect('/auth/*', array(
+Router::connect('/auth/:action', array(
 	'plugin' => 'auth', 'controller' => 'auth'
 ));
