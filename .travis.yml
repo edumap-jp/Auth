@@ -17,7 +17,8 @@ before_script:
   - git clone git://github.com/NetCommons3/NetCommons3 $NETCOMMONS_BUILD_DIR
   - cd $NETCOMMONS_BUILD_DIR
   - git checkout $NETCOMMONS_VERSION
-  - if [ "$STABILITY" == "dev" ]; then composer require netcommons/auth:dev-master netcommons/auth-general:dev-master netcommons/users:dev-master --dev; else composer require netcommons/auth netcommons/auth-general netcommons/users; fi
+#  - if [ "$STABILITY" == "dev" ]; then composer require netcommons/auth:dev-master netcommons/auth-general:dev-master netcommons/users:dev-master --dev; else composer require netcommons/auth netcommons/auth-general netcommons/users; fi
+  - cp $TRAVIS_BUILD_DIR/composer.json $TRAVIS_BUILD_DIR/composer.lock .
   - composer install
   - chmod -R 777 app/tmp
   - mkdir -p build/logs

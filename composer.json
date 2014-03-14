@@ -11,18 +11,36 @@
             "homepage": "https://github.com/NetCommons3/Auth/graphs/contributors"
         }
     ],
+    "extra": {
+        "installer-paths": {
+            "app/Plugin/{$name}": [
+                "cakephp/debug_kit",
+                "cakedc/migrations",
+                "mustangostang/spyc",
+                "slywalker/boost_cake",
+                "chronon/mobile_detect"
+            ]
+        }
+    },
     "require": {
-        "cakephp/cakephp":        "~2.4",
-        "cakephp/debug_kit":      "~2.2",
-        "cakedc/migrations":      "~2.2",
-        "twbs/bootstrap":         "~3.1",
-        "components/jquery":      "~2.1"
+        "cakephp/cakephp":         "~2.4",
+        "cakephp/debug_kit":       "~2.2",
+        "cakedc/migrations":       "~2.2",
+        "chronon/mobile_detect":  "*",
+        "slywalker/boost_cake":   "*",
+        "twbs/bootstrap":          "~3.1",
+        "components/jquery":       "~2.1"
     },
     "require-dev": {
-        "netcommons/users":       "dev-master",
-        "satooshi/php-coveralls": "dev-master"
+        "netcommons/users":        "dev-master",
+        "netcommons/auth-general": "dev-master",
+        "satooshi/php-coveralls":  "dev-master"
     },
+    "bin": [
+        "lib/Cake/Console/cake"
+    ],
     "config": {
-        "vendor-dir": "vendors"
+        "vendor-dir": "vendors",
+        "process-timeout": 3000
     }
 }
