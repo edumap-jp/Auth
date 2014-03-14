@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "460631d8dc3a98aa62cfda70179d34fb",
+    "hash": "dcdf68342bb1d58c5465cfbf3c9ce52c",
     "packages": [
         {
             "name": "cakedc/migrations",
@@ -1212,7 +1212,6 @@
     ],
     "minimum-stability": "stable",
     "stability-flags": {
-        "netcommons/auth": 20,
         "netcommons/auth-general": 20,
         "netcommons/users": 20,
         "satooshi/php-coveralls": 20
