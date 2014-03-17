@@ -1,5 +1,5 @@
 <?php
-App::uses('AppController', 'Controller');
+App::uses('AuthAppController', 'Auth.Controller');
 /**
  * Auth Controller
  *
@@ -7,7 +7,7 @@ App::uses('AppController', 'Controller');
  * @link     http://www.netcommons.org NetCommons Project
  * @license  http://www.netcommons.org/license.txt NetCommons License
  */
-class AuthController extends AppController {
+class AuthController extends AuthAppController {
 
 /**
  * beforeFilter

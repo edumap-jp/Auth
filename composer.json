@@ -32,13 +32,9 @@
         "components/jquery":       "~2.1"
     },
     "require-dev": {
-        "netcommons/auth-general": "dev-master",
         "netcommons/users":        "dev-master",
         "satooshi/php-coveralls":  "dev-master"
     },
-    "bin": [
-        "lib/Cake/Console/cake"
-    ],
     "config": {
         "vendor-dir": "vendors",
         "process-timeout": 3000
