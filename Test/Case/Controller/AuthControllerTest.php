@@ -24,21 +24,60 @@ class AuthControllerTest extends ControllerTestCase {
 	);
 
 /**
+ * setUp
+ *
+ * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return   void
+ */
+	public function setUp() {
+		parent::setUp();
+		$this->AuthController = $this->generate('Auth.Auth', array(
+			'components' => array(
+				'Auth' => array('user'),
+				'Session',
+			),
+		));
+		$this->controller->plugin = 'Auth';
+		$this->controller->Auth
+			->staticExpects($this->any())
+			->method('user')
+			->will($this->returnCallback(array($this, 'authUserCallback')));
+	}
+
+/**
+ * authUserCallback
+ *
+ * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @param    type $key
+ * @return   mixed
+ */
+	public function authUserCallback($key) {
+		$auth = array(
+			'id' => 1,
+			'username' => 'admin',
+		);
+		if (empty($key) || !isset($auth[$key])) {
+			return $auth;
+		}
+		return $auth[$key];
+	}
+
+/**
  * testIndex method
  *
  * @return void
  */
 	public function testIndex() {
 		$this->testAction('/auth/index');
-		$this->assertTrue(true);
+		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
 	}
 
 /**
- * testLogin method
+ * testAvailableAuthenticator method
  *
  * @return void
  */
-	public function testLogin() {
+	public function testAvailableAuthenticator() {
 		$this->testAction('/auth_general/auth_general/login', array(
 			'data' => array(
 				'User' => array(
@@ -47,7 +86,7 @@ class AuthControllerTest extends ControllerTestCase {
 				),
 			),
 		));
-		$this->assertTrue(true);
+		$this->assertTrue($this->controller->Auth->loggedIn());
 	}
 
 /**
@@ -60,6 +99,6 @@ class AuthControllerTest extends ControllerTestCase {
 			'data' => array(
 			),
 		));
-		$this->assertTrue(true);
+		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
 	}
 }
