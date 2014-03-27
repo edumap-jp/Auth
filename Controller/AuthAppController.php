@@ -10,6 +10,16 @@ App::uses('AppController', 'Controller');
 class AuthAppController extends AppController {
 
 /**
+ * Return authentication adapter name
+ *
+ * @return string Authentication adapter name
+ * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ **/
+	protected static function _getAuthenticator() {
+		return 'Form';
+	}
+
+/**
  * Return available authenticators
  *
  * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>

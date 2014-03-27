@@ -16,10 +16,13 @@ class AuthController extends AuthAppController {
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  **/
 	public function beforeFilter() {
-		$this->__loadAuthenticators();
+		// Load available authenticators
+		$authenticators = $this->getAuthenticators();
+		$this->set('authenticators', $authenticators);
+
+		$this->__setDefaultAuthenticator();
 
 		parent::beforeFilter();
-
 		$this->Auth->allow('login', 'logout');
 	}
 
@@ -60,23 +63,20 @@ class AuthController extends AuthAppController {
 	}
 
 /**
- * Load available authenticators
+ * Set authenticator
  *
  * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  **/
-	private function __loadAuthenticators() {
-		$authenticators = $this->getAuthenticators();
-		$this->set('authenticators', $authenticators);
-
+	private function __setDefaultAuthenticator() {
 		$plugin = Inflector::camelize($this->request->offsetGet('plugin'));
 		$scheme = strtr(Inflector::camelize($this->request->offsetGet('plugin')), array('Auth' => ''));
-		$callee = array(sprintf('Auth%sAppController', $scheme), 'getAuthenticator');
+		$callee = array(sprintf('Auth%sAppController', $scheme), '_getAuthenticator');
 
 		if (is_callable($callee)) {
 			$authenticator = call_user_func($callee);
-			$this->Auth->authenticate = array(sprintf('%s.%s', $plugin, $scheme) => array());
-			CakeLog::info(sprintf('Will load %s.%s authenticator', $plugin, $scheme), true);
+			$this->Auth->authenticate = array($authenticator => array());
+			CakeLog::info(sprintf('Will load %s authenticator', $authenticator), true);
 		} else {
 			CakeLog::info(sprintf('Unknown authenticator %s.%s', $plugin, $scheme), true);
 		}
