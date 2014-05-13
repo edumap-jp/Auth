@@ -12,8 +12,8 @@ class AuthController extends AuthAppController {
 /**
  * beforeFilter
  *
- * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return void
  **/
 	public function beforeFilter() {
 		// Load available authenticators
@@ -29,8 +29,8 @@ class AuthController extends AuthAppController {
 /**
  * index
  *
- * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return void
  **/
 	public function index() {
 		$this->redirect($this->Auth->loginAction);
@@ -39,8 +39,8 @@ class AuthController extends AuthAppController {
 /**
  * login
  *
- * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return void
  **/
 	public function login() {
 		if ($this->request->is('post')) {
@@ -55,8 +55,8 @@ class AuthController extends AuthAppController {
 /**
  * logout
  *
- * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return void
  **/
 	public function logout() {
 		$this->redirect($this->Auth->logout());
@@ -65,8 +65,8 @@ class AuthController extends AuthAppController {
 /**
  * Set authenticator
  *
- * @return void
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @return void
  **/
 	private function __setDefaultAuthenticator() {
 		$plugin = Inflector::camelize($this->request->offsetGet('plugin'));
