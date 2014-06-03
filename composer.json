@@ -13,13 +13,7 @@
     ],
     "extra": {
         "installer-paths": {
-            "app/Plugin/{$name}": [
-                "cakephp/debug_kit",
-                "cakedc/migrations",
-                "mustangostang/spyc",
-                "slywalker/boost_cake",
-                "chronon/mobile_detect"
-            ]
+            "app/Plugin/{$name}": ["type:cakephp-plugin"]
         }
     },
     "require": {
@@ -33,6 +27,7 @@
     },
     "require-dev": {
         "netcommons/users":        "dev-master",
+        "mustangostang/spyc":      "dev-master",
         "satooshi/php-coveralls":  "dev-master"
     },
     "config": {
