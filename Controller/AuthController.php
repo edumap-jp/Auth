@@ -1,5 +1,10 @@
 <?php
+/**
+ * Auth Controller
+ */
+
 App::uses('AuthAppController', 'Auth.Controller');
+
 /**
  * Auth Controller
  *

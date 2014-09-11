@@ -1,16 +1,16 @@
 <?php
 /**
- * AuthController Test Case
- *
- * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @link     http://www.netcommons.org NetCommons Project
- * @license  http://www.netcommons.org/license.txt NetCommons License
+ * Summary for AuthController Test Case
  */
 
 App::uses('AuthController', 'Controller');
 
 /**
- * Summary for AuthController Test Case
+ * AuthController Test Case
+ *
+ * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @link     http://www.netcommons.org NetCommons Project
+ * @license  http://www.netcommons.org/license.txt NetCommons License
  */
 class AuthControllerTest extends ControllerTestCase {
 
@@ -48,7 +48,7 @@ class AuthControllerTest extends ControllerTestCase {
  * authUserCallback
  *
  * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @param    type $key
+ * @param    int $key
  * @return   mixed
  */
 	public function authUserCallback($key) {
