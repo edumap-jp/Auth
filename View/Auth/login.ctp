@@ -2,7 +2,7 @@
 <?php echo $this->Session->flash('auth') ?>
 	<h2 class="form-signin-heading"><?php echo __('Please enter your username and password') ?></h2>
 <?php foreach ($authenticators as $authenticator): ?>
-<?php 	$plugin = Inflector::underscore(sprintf('Auth%s', $authenticator)); ?>
+	<?php 	$plugin = Inflector::underscore(sprintf('Auth%s', $authenticator)); ?>
 	<h3 class="form-signin-heading"><?php echo Inflector::humanize($authenticator) ?></h3>
 	<?php echo $this->Form->create('User',
 					array(
