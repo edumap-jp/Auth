@@ -23,7 +23,7 @@
 							)
 				) ?>
 		</fieldset>
-		<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo __('Login')?></button>
+		<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo __d('net_commons', 'Login')?></button>
 	<?php echo $this->Form->end() ?>
 <?php endforeach ?>
 </div>
