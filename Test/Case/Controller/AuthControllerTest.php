@@ -4,6 +4,7 @@
  */
 
 App::uses('AuthController', 'Controller');
+App::uses('YAControllerTestCase', 'NetCommons.TestSuite');
 
 /**
  * AuthController Test Case
@@ -12,7 +13,7 @@ App::uses('AuthController', 'Controller');
  * @link     http://www.netcommons.org NetCommons Project
  * @license  http://www.netcommons.org/license.txt NetCommons License
  */
-class AuthControllerTest extends ControllerTestCase {
+class AuthControllerTest extends YAControllerTestCase {
 
 /**
  * Fixtures
@@ -20,8 +21,8 @@ class AuthControllerTest extends ControllerTestCase {
  * @var array
  */
 	public $fixtures = array(
-		'plugin.net_commons.site_setting',
-		'plugin.users.user',
+		//'plugin.net_commons.site_setting',
+		//'plugin.users.user',
 	);
 
 /**
@@ -100,6 +101,6 @@ class AuthControllerTest extends ControllerTestCase {
 			'data' => array(
 			),
 		));
-		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
+		$this->assertEqual($this->headers['Location'], Router::url('/', true));
 	}
 }
