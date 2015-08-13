@@ -94,10 +94,12 @@ class AuthControllerTest extends YAControllerTestCase {
  * @return void
  */
 	public function testLogout() {
+		$this->testAvailableAuthenticator();
+
 		$this->testAction('/auth_general/auth_general/logout', array(
 			'data' => array(
 			),
 		));
-		$this->assertEqual($this->headers['Location'], Router::url('/', true));
+		$this->assertEqual(null, CakeSession::read('Auth.User'));
 	}
 }
