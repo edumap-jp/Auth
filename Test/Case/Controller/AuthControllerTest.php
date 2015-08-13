@@ -20,10 +20,7 @@ class AuthControllerTest extends YAControllerTestCase {
  *
  * @var array
  */
-	public $fixtures = array(
-		//'plugin.net_commons.site_setting',
-		//'plugin.users.user',
-	);
+	public $fixtures = array();
 
 /**
  * setUp
