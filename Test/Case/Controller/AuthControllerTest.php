@@ -4,6 +4,7 @@
  */
 
 App::uses('AuthController', 'Controller');
+App::uses('YAControllerTestCase', 'NetCommons.TestSuite');
 
 /**
  * AuthController Test Case
@@ -12,17 +13,14 @@ App::uses('AuthController', 'Controller');
  * @link     http://www.netcommons.org NetCommons Project
  * @license  http://www.netcommons.org/license.txt NetCommons License
  */
-class AuthControllerTest extends ControllerTestCase {
+class AuthControllerTest extends YAControllerTestCase {
 
 /**
  * Fixtures
  *
  * @var array
  */
-	public $fixtures = array(
-		'plugin.net_commons.site_setting',
-		'plugin.users.user',
-	);
+	public $fixtures = array();
 
 /**
  * setUp
@@ -96,10 +94,12 @@ class AuthControllerTest extends ControllerTestCase {
  * @return void
  */
 	public function testLogout() {
+		$this->testAvailableAuthenticator();
+
 		$this->testAction('/auth_general/auth_general/logout', array(
 			'data' => array(
 			),
 		));
-		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
+		$this->assertEqual(null, CakeSession::read('Auth.User'));
 	}
 }
