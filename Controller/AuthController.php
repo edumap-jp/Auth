@@ -15,6 +15,15 @@ App::uses('AuthAppController', 'Auth.Controller');
 class AuthController extends AuthAppController {
 
 /**
+ * use model
+ *
+ * @var array
+ */
+	public $uses = array(
+		'Users.User',
+	);
+
+/**
  * beforeFilter
  *
  * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
@@ -50,6 +59,22 @@ class AuthController extends AuthAppController {
 	public function login() {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
+				//トランザクションBegin
+				$this->User->setDataSource('master');
+				$dataSource = $this->User->getDataSource();
+				$dataSource->begin();
+
+				try {
+					$update = array('last_login' => '\'' . date('Y-m-d H:i:s') . '\'');
+					$conditions = array('id' => (int)$this->Auth->user('id'));
+					$this->User->updateAll($update, $conditions);
+					$dataSource->commit();
+				} catch (Exception $ex) {
+					$dataSource->rollback();
+					CakeLog::error($ex);
+					throw $ex;
+				}
+
 				$this->redirect($this->Auth->redirect());
 			}
 			$this->Session->setFlash(__('Invalid username or password, try again'));
