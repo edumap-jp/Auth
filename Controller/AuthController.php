@@ -65,8 +65,8 @@ class AuthController extends AuthAppController {
 				$dataSource->begin();
 
 				try {
-					$update = array('last_login' => '\'' . date('Y-m-d H:i:s') . '\'');
-					$conditions = array('id' => (int)$this->Auth->user('id'));
+					$update = array('User.last_login' => '\'' . date('Y-m-d H:i:s') . '\'');
+					$conditions = array('User.id' => (int)$this->Auth->user('id'));
 					$this->User->updateAll($update, $conditions);
 					$dataSource->commit();
 				} catch (Exception $ex) {
