@@ -1,6 +1,11 @@
 <?php
 /**
  * Auth Controller
+ *
+ * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @link http://www.netcommons.org NetCommons Project
+ * @license http://www.netcommons.org/license.txt NetCommons License
+ * @copyright Copyright 2014, NetCommons Project
  */
 
 App::uses('AuthAppController', 'Auth.Controller');
@@ -8,9 +13,8 @@ App::uses('AuthAppController', 'Auth.Controller');
 /**
  * Auth Controller
  *
- * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @link     http://www.netcommons.org NetCommons Project
- * @license  http://www.netcommons.org/license.txt NetCommons License
+ * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @package NetCommons\Auth\Controller
  */
 class AuthController extends AuthAppController {
 
@@ -26,7 +30,6 @@ class AuthController extends AuthAppController {
 /**
  * beforeFilter
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @return void
  **/
 	public function beforeFilter() {
@@ -43,7 +46,6 @@ class AuthController extends AuthAppController {
 /**
  * index
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @return void
  **/
 	public function index() {
@@ -53,8 +55,8 @@ class AuthController extends AuthAppController {
 /**
  * login
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @return void
+ * @throws InternalErrorException
  **/
 	public function login() {
 		if ($this->request->is('post')) {
@@ -85,7 +87,6 @@ class AuthController extends AuthAppController {
 /**
  * logout
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @return void
  **/
 	public function logout() {
@@ -95,7 +96,6 @@ class AuthController extends AuthAppController {
 /**
  * Set authenticator
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @return void
  **/
 	private function __setDefaultAuthenticator() {
