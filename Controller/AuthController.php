@@ -79,7 +79,7 @@ class AuthController extends AuthAppController {
 
 				$this->redirect($this->Auth->redirect());
 			}
-			$this->Session->setFlash(__('Invalid username or password, try again'));
+			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));
 			$this->redirect($this->Auth->loginAction);
 		}
 	}
