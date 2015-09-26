@@ -16,6 +16,7 @@ App::uses('Role', 'Roles.Model');
 /**
  * AuthControllerのテスト
  *
+ * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case\Controller
  */
@@ -65,7 +66,7 @@ class AuthControllerTest extends NetCommonsControllerTestCase {
 	}
 
 /**
- * ログイン画面表示のテスト
+ * ログイン表示のテスト
  *
  * @return void
  */
