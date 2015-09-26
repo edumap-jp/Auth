@@ -1,19 +1,25 @@
 <?php
 /**
- * Summary for AuthController Test Case
+ * AuthControllerのテスト
+ *
+ * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @author Shohei Nakajima <nakajimashouhei@gmail.com>
+ * @link http://www.netcommons.org NetCommons Project
+ * @license http://www.netcommons.org/license.txt NetCommons License
+ * @copyright Copyright 2014, NetCommons Project
  */
 
 App::uses('AuthController', 'Controller');
-App::uses('YAControllerTestCase', 'NetCommons.TestSuite');
+App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
+App::uses('Role', 'Roles.Model');
 
 /**
- * AuthController Test Case
+ * AuthControllerのテスト
  *
- * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @link     http://www.netcommons.org NetCommons Project
- * @license  http://www.netcommons.org/license.txt NetCommons License
+ * @author Shohei Nakajima <nakajimashouhei@gmail.com>
+ * @package NetCommons\Auth\Test\Case\Controller
  */
-class AuthControllerTest extends YAControllerTestCase {
+class AuthControllerTest extends NetCommonsControllerTestCase {
 
 /**
  * Fixtures
@@ -23,46 +29,43 @@ class AuthControllerTest extends YAControllerTestCase {
 	public $fixtures = array();
 
 /**
+ * Plugin name
+ *
+ * @var array
+ */
+	protected $_plugin = 'auth';
+
+/**
+ * Controller name
+ *
+ * @var string
+ */
+	protected $_controller = 'auth';
+
+/**
  * setUp
  *
- * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @return   void
+ * @return void
  */
 	public function setUp() {
 		parent::setUp();
-		$this->AuthController = $this->generate('Auth.Auth', array(
-			'components' => array(
-				'Auth' => array('user'),
-				'Session',
-			),
-		));
+
 		$this->controller->plugin = 'Auth';
 		$this->controller->Auth
 			->staticExpects($this->any())
 			->method('user')
-			->will($this->returnCallback(array($this, 'authUserCallback')));
+			->will($this->returnCallback(function ($key = null) {
+				$role = Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR;
+				if (isset(AuthGeneralTestSuite::$roles[$role][$key])) {
+					return AuthGeneralTestSuite::$roles[$role][$key];
+				} else {
+					return AuthGeneralTestSuite::$roles[$role];
+				}
+			}));
 	}
 
 /**
- * authUserCallback
- *
- * @author   Jun Nishikawa <topaz2@m0n0m0n0.com>
- * @param    int $key
- * @return   mixed
- */
-	public function authUserCallback($key) {
-		$auth = array(
-			'id' => 1,
-			'username' => 'admin',
-		);
-		if (empty($key) || !isset($auth[$key])) {
-			return $auth;
-		}
-		return $auth[$key];
-	}
-
-/**
- * testIndex method
+ * ログイン画面表示のテスト
  *
  * @return void
  */
@@ -72,11 +75,11 @@ class AuthControllerTest extends YAControllerTestCase {
 	}
 
 /**
- * testAvailableAuthenticator method
+ * ログインのテスト
  *
  * @return void
  */
-	public function testAvailableAuthenticator() {
+	public function testLogin() {
 		$this->testAction('/auth_general/auth_general/login', array(
 			'data' => array(
 				'User' => array(
@@ -89,16 +92,37 @@ class AuthControllerTest extends YAControllerTestCase {
 	}
 
 /**
- * testLogout method
+ * ログインのテスト(Userのupdateエラー)
+ *
+ * @return void
+ */
+	public function testLoginOnUserUpdateError() {
+		$Mock = $this->getMockForModel('Users.User', ['updateAll']);
+		$Mock->expects($this->once())
+			->method('updateAll')
+			->will($this->returnValue(false));
+
+		$this->setExpectedException('InternalErrorException');
+		$this->testAction('/auth_general/auth_general/login', array(
+			'data' => array(
+				'User' => array(
+					'username' => 'admin',
+					'password' => 'admin',
+				),
+			),
+		));
+	}
+
+/**
+ * ログアウトのテスト
  *
  * @return void
  */
 	public function testLogout() {
-		$this->testAvailableAuthenticator();
+		$this->testLogin();
 
 		$this->testAction('/auth_general/auth_general/logout', array(
-			'data' => array(
-			),
+			'data' => array(),
 		));
 		$this->assertEqual(null, CakeSession::read('Auth.User'));
 	}
