@@ -57,10 +57,10 @@ class AuthControllerTest extends NetCommonsControllerTestCase {
 			->method('user')
 			->will($this->returnCallback(function ($key = null) {
 				$role = Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR;
-				if (isset(AuthGeneralTestSuite::$roles[$role][$key])) {
-					return AuthGeneralTestSuite::$roles[$role][$key];
+				if (isset(TestAuthGeneral::$roles[$role][$key])) {
+					return TestAuthGeneral::$roles[$role][$key];
 				} else {
-					return AuthGeneralTestSuite::$roles[$role];
+					return TestAuthGeneral::$roles[$role];
 				}
 			}));
 	}
