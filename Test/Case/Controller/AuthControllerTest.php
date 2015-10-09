@@ -50,6 +50,7 @@ class AuthControllerTest extends NetCommonsControllerTestCase {
  */
 	public function setUp() {
 		parent::setUp();
+		$this->generateNc('Auth.Auth');
 
 		$this->controller->plugin = 'Auth';
 		$this->controller->Auth
