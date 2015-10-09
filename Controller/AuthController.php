@@ -62,19 +62,17 @@ class AuthController extends AuthAppController {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				//トランザクションBegin
-				$this->User->setDataSource('master');
-				$dataSource = $this->User->getDataSource();
-				$dataSource->begin();
+				$this->User->begin();
 
 				try {
 					$update = array('User.last_login' => '\'' . date('Y-m-d H:i:s') . '\'');
 					$conditions = array('User.id' => (int)$this->Auth->user('id'));
-					$this->User->updateAll($update, $conditions);
-					$dataSource->commit();
+					if (! $this->User->updateAll($update, $conditions)) {
+						throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+					}
+					$this->User->commit();
 				} catch (Exception $ex) {
-					$dataSource->rollback();
-					CakeLog::error($ex);
-					throw $ex;
+					$this->User->rollback($ex);
 				}
 
 				$this->redirect($this->Auth->redirect());
