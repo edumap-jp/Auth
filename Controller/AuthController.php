@@ -61,20 +61,7 @@ class AuthController extends AuthAppController {
 	public function login() {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
-				//トランザクションBegin
-				$this->User->begin();
-
-				try {
-					$update = array('User.last_login' => '\'' . date('Y-m-d H:i:s') . '\'');
-					$conditions = array('User.id' => (int)$this->Auth->user('id'));
-					if (! $this->User->updateAll($update, $conditions)) {
-						throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-					}
-					$this->User->commit();
-				} catch (Exception $ex) {
-					$this->User->rollback($ex);
-				}
-
+				$this->User->updateLoginTime($this->Auth->user('id'));
 				$this->redirect($this->Auth->redirect());
 			}
 			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));

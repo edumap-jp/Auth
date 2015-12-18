@@ -34,7 +34,7 @@ class AuthAppController extends AppController {
 		$authenticators = array();
 		$plugins = App::objects('plugins');
 		foreach ($plugins as $plugin) {
-			if (preg_match('/^Auth([\w]+)/', $plugin, $matches)) {
+			if (preg_match('/^Auth([A-Z0-9_][\w]+)/', $plugin, $matches)) {
 				$authenticators[] = $matches[1];
 			}
 		}
