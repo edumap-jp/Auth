@@ -2,7 +2,8 @@
 /**
  * Auth Controller
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @author Noriko Arai <arai@nii.ac.jp>
+ * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @link http://www.netcommons.org NetCommons Project
  * @license http://www.netcommons.org/license.txt NetCommons License
  * @copyright Copyright 2014, NetCommons Project
@@ -13,7 +14,7 @@ App::uses('AuthAppController', 'Auth.Controller');
 /**
  * Auth Controller
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
  */
 class AuthController extends AuthAppController {
@@ -63,6 +64,7 @@ class AuthController extends AuthAppController {
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
 				$this->redirect($this->Auth->redirect());
+				return;
 			}
 			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));
 			$this->redirect($this->Auth->loginAction);
@@ -91,9 +93,9 @@ class AuthController extends AuthAppController {
 		if (is_callable($callee)) {
 			$authenticator = call_user_func($callee);
 			$this->Auth->authenticate = array($authenticator => array());
-			CakeLog::info(sprintf('Will load %s authenticator', $authenticator), true);
+			//CakeLog::info(sprintf('Will load %s authenticator', $authenticator), true);
 		} else {
-			CakeLog::info(sprintf('Unknown authenticator %s.%s', $plugin, $scheme), true);
+			//CakeLog::info(sprintf('Unknown authenticator %s.%s', $plugin, $scheme), true);
 		}
 	}
 }
