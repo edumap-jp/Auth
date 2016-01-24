@@ -86,7 +86,6 @@ class AuthController extends AuthAppController {
  * @return void
  **/
 	private function __setDefaultAuthenticator() {
-		$plugin = Inflector::camelize($this->request->offsetGet('plugin'));
 		$scheme = strtr(Inflector::camelize($this->request->offsetGet('plugin')), array('Auth' => ''));
 		$callee = array(sprintf('Auth%sAppController', $scheme), '_getAuthenticator');
 
