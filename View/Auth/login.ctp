@@ -1,6 +1,9 @@
 <?php
 /**
- * AccessCounters delete form template
+ * ログインテンプレート
+ *
+ * 独自ログインテンプレートを使いたい場合、
+ * AuthXxxx/View/Element/login.ctpファイル作成すれば、自動的に読み込む
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -33,19 +36,24 @@
 					)
 			); ?>
 
-			<div class="panel-body">
-				<?php echo $this->NetCommonsForm->input('username',
-								array('placeholder' => __d('auth', 'Please enter your username'))
-							); ?>
+			<?php if ($this->elementExists(Inflector::camelize($plugin) . '.login')) : ?>
+				<?php echo $this->element(Inflector::camelize($plugin) . '.login'); ?>
 
-				<?php echo $this->NetCommonsForm->input('password',
-								array('placeholder' => __d('auth', 'Please enter your password'))
-							); ?>
+			<?php else : ?>
+				<div class="panel-body">
+					<?php echo $this->NetCommonsForm->input('username',
+									array('placeholder' => __d('auth', 'Please enter your username'))
+								); ?>
 
-				<button class="btn btn-primary btn-block" type="submit">
-					<?php echo __d('auth', 'Login'); ?>
-				</button>
-			</div>
+					<?php echo $this->NetCommonsForm->input('password',
+									array('placeholder' => __d('auth', 'Please enter your password'))
+								); ?>
+
+					<button class="btn btn-primary btn-block" type="submit">
+						<?php echo __d('auth', 'Login'); ?>
+					</button>
+				</div>
+			<?php endif; ?>
 		<?php echo $this->NetCommonsForm->end(); ?>
 	</article>
 <?php endforeach;
