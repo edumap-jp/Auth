@@ -16,7 +16,7 @@ App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
- * @package NetCommons\Auth\Test\Case\Controller
+ * @package NetCommons\Auth\Test\Case\View\Auth
  */
 class AuthViewAuthLoginTest extends NetCommonsControllerTestCase {
 

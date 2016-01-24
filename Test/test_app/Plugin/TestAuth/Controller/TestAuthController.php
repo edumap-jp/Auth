@@ -15,7 +15,7 @@ App::uses('AuthAppController', 'Auth.Controller');
  * TestAuth Controller
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
- * @package NetCommons\Auth\Test\test_app\Plugin\TestAuth
+ * @package NetCommons\Auth\Test\test_app\Plugin\TestAuth\Controller
  */
 class TestAuthController extends AuthAppController {
 
