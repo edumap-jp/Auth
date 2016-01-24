@@ -2,7 +2,7 @@
 /**
  * Auth All Test Suite
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @link http://www.netcommons.org NetCommons Project
  * @license http://www.netcommons.org/license.txt NetCommons License
@@ -14,7 +14,7 @@ App::uses('NetCommonsTestSuite', 'NetCommons.TestSuite');
 /**
  * Auth All Test Suite
  *
- * @author Jun Nishikawa <topaz2@m0n0m0n0.com>
+ * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case
  * @codeCoverageIgnore
