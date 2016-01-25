@@ -14,7 +14,6 @@ App::uses('NetCommonsTestSuite', 'NetCommons.TestSuite');
 /**
  * Auth All Test Suite
  *
- * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case
  * @codeCoverageIgnore
@@ -24,7 +23,7 @@ class AllAuthTest extends NetCommonsTestSuite {
 /**
  * All test suite
  *
- * @return CakeTestSuite
+ * @return NetCommonsTestSuite
  */
 	public static function suite() {
 		$plugin = preg_replace('/^All([\w]+)Test$/', '$1', __CLASS__);
