@@ -25,7 +25,9 @@ class AuthController extends AuthAppController {
  * @var array
  */
 	public $uses = array(
+		'Rooms.Room',
 		'Users.User',
+		'UserRoles.UserRole',
 	);
 
 /**
@@ -63,8 +65,9 @@ class AuthController extends AuthAppController {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
-				$this->redirect($this->Auth->redirect());
-				return;
+				Current::write('User', $this->Auth->user());
+				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
+				return $this->redirect($this->Auth->redirect());
 			}
 			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));
 			$this->redirect($this->Auth->loginAction);
