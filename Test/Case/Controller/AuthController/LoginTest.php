@@ -162,7 +162,7 @@ class AuthControllerLoginTest extends NetCommonsControllerTestCase {
 		));
 
 		$this->assertFalse($this->controller->Auth->loggedIn());
-		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
+		$this->assertTextContains('/auth/login', $this->headers['Location']);
 	}
 
 /**
