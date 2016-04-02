@@ -49,6 +49,6 @@ class AuthControllerIndexTest extends NetCommonsControllerTestCase {
 		$this->_testNcAction('/auth/index', array(
 			'method' => 'get'
 		));
-		$this->assertEqual($this->headers['Location'], Router::url('/auth/login', true));
+		$this->assertTextContains('/auth/login', $this->headers['Location']);
 	}
 }
