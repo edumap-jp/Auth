@@ -10,6 +10,7 @@
  */
 
 App::uses('AuthAppController', 'Auth.Controller');
+App::uses('MailSend', 'Mails.Utility');
 
 /**
  * Auth Controller
@@ -20,6 +21,15 @@ App::uses('AuthAppController', 'Auth.Controller');
 class AuthController extends AuthAppController {
 
 /**
+ * use component
+ *
+ * @var array
+ */
+	public $components = array(
+		'Security',
+	);
+
+/**
  * use model
  *
  * @var array
@@ -28,6 +38,7 @@ class AuthController extends AuthAppController {
 		'Rooms.Room',
 		'Users.User',
 		'UserRoles.UserRole',
+		'Auth.ForgotPass',
 	);
 
 /**
@@ -43,7 +54,10 @@ class AuthController extends AuthAppController {
 		$this->__setDefaultAuthenticator();
 
 		parent::beforeFilter();
-		$this->Auth->allow('login', 'logout');
+		$this->Auth->allow('login', 'logout', 'forgot_password', 'request_password');
+
+		$siteSettions = $this->ForgotPass->getSiteSetting();
+		$this->set('siteSettions', $siteSettions);
 	}
 
 /**
@@ -56,21 +70,116 @@ class AuthController extends AuthAppController {
 	}
 
 /**
- * login
+ * ログイン処理
  *
  * @return void
  * @throws InternalErrorException
  **/
 	public function login() {
 		if ($this->request->is('post')) {
+			//ログイン
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
 				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
 			}
-			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));
+
+			//パスワード再発行でログイン
+			$user = $this->ForgotPass->loginRescuePassowrd($this->request->data);
+			if ($this->Auth->login($user)) {
+				$this->User->updateLoginTime($this->Auth->user('id'));
+				Current::write('User', $this->Auth->user());
+				$this->Auth->loginRedirect = '/auth/auth/update_password';
+				return $this->redirect($this->Auth->redirect());
+			}
+
+			$this->NetCommons->setFlashNotification(
+				__d('auth', 'Invalid username or password, try again'),
+				array(
+					'class' => 'danger',
+					'interval' => NetCommonsComponent::ALERT_VALIDATE_ERROR_INTERVAL,
+				),
+				400
+			);
 			$this->redirect($this->Auth->loginAction);
+		}
+	}
+
+/**
+ * パスワード再発行の受付
+ *
+ * @return void
+ **/
+	public function forgot_password() {
+		if (! Hash::get($$this->viewVars['siteSettions']['ForgotPass.use_password_reissue'], '0.value')) {
+			return $this->throwBadRequest();
+		}
+
+		if ($this->request->is('post')) {
+			$forgotPass = $this->ForgotPass->saveForgotPassowrd($this->request->data);
+			if ($forgotPass) {
+				// キューからメール送信
+				MailSend::send();
+
+				$this->NetCommons->setFlashNotification(
+					__d('auth',
+						'We have sent you the key to obtain a new password to your registered e-mail address.'),
+					array('class' => 'success')
+				);
+
+				$this->Session->write($forgotPass);
+				return $this->redirect('/auth/auth/request_password');
+			}
+			$this->NetCommons->handleValidationError($this->ForgotPass->validationErrors);
+		}
+	}
+
+/**
+ * パスワード再発行
+ *
+ * @return void
+ **/
+	public function request_password() {
+		if (! Hash::get($$this->viewVars['siteSettions']['ForgotPass.use_password_reissue'], '0.value')) {
+			return $this->throwBadRequest();
+		}
+
+		if ($this->request->is('post')) {
+			if ($this->ForgotPass->saveRequestPassowrd($this->request->data)) {
+				// キューからメール送信
+				MailSend::send();
+
+				$this->NetCommons->setFlashNotification(
+					__d('auth', 'We have sent your new password to your registered e-mail address.'),
+					array('class' => 'success')
+				);
+
+				$this->Session->delete('ForgotPass');
+				return $this->redirect('/auth/auth/login');
+			}
+			$this->NetCommons->handleValidationError($this->ForgotPass->validationErrors);
+		}
+	}
+
+/**
+ * パスワード再発行
+ *
+ * @return void
+ **/
+	public function update_password() {
+		if ($this->request->is('put')) {
+			if ($this->ForgotPass->savePassowrd($this->request->data)) {
+				$this->NetCommons->setFlashNotification(
+					__d('net_commons', 'Successfully saved.'), array('class' => 'success')
+				);
+				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
+				return $this->redirect($this->Auth->redirect());
+			}
+
+			$this->NetCommons->handleValidationError($this->ForgotPass->validationErrors);
+		} else {
+			$this->request->data['User']['id'] = Current::read('User.id');
 		}
 	}
 

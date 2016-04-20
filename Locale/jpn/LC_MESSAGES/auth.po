@@ -15,10 +15,14 @@ msgstr ""
 "Language: ja\n"
 "X-Generator: Poedit 1.8.1\n"
 
-msgid "Please enter your username"
+#
+# ログイン
+#
+
+msgid "Please enter your username."
 msgstr "ログインIDを入力してください。"
 
-msgid "Please enter your password"
+msgid "Please enter your password."
 msgstr "パスワードを入力してください。"
 
 msgid "Login"
@@ -26,3 +30,60 @@ msgstr "ログイン"
 
 msgid "Invalid username or password, try again"
 msgstr "ログイン情報が間違っています。再度、入力してください。"
+
+
+#
+# パスワード再発行
+#
+
+msgid "Forgot your Password? Please click here."
+msgstr "パスワードがわからない方はこちら"
+
+msgid "Forgot your Password?"
+msgstr "パスワード再発行"
+
+msgid "Please enter your registered e-mail address, and click on the [OK] button. <br>"
+"We will send the activation key to obtain a new password to your registered e-mail address."
+msgstr "登録に使用したメールアドレスを入力し、[決定]ボタンをクリックしてください。<br>"
+"パスワード取得用のリンクが記載されたメールが登録メールアドレス宛に送られます。"
+
+msgid "email"
+msgstr "Eメール"
+
+msgid "We have sent you the key to obtain a new password to your registered e-mail address."
+msgstr "入力されたメールアドレスに認証キーをメール送信しました。"
+
+
+#
+# 認証キー入力画面
+#
+
+msgid "Authorization key"
+msgstr "認証キー"
+
+msgid "Enter the authentication key that has been notified to the entered email address, please click on the [OK] button. <br>"
+"If the authentication key does not reach, please also check the junk mail. "
+"If you do not arrive in junk e-mail, click the [Cancel] button, please try again. "
+"If you do not reach even to try several times, please consult your system administrator."
+msgstr "入力したメールアドレスに通知された認証キーを入力し、[決定]ボタンをクリックしてください。<br>"
+"認証キーが届かない場合は、迷惑メールも確認してください。"
+"迷惑メールにも届いていない場合は、[キャンセル]ボタンをクリックし、再度やり直してください。"
+"何度か試しても届かない場合は、システム管理者に相談してください。"
+
+msgid "Failed on validation errors. Please check the authorization key."
+msgstr "認証キーが異なります。正しい認証キーを入力してください。"
+
+msgid "We have sent your new password to your registered e-mail address."
+msgstr "指定されたメールアドレスに新しいパスワードをメール送信しました。"
+
+
+
+#
+# 新しいパスワード入力画面
+#
+
+msgid "New password"
+msgstr "新しいパスワード"
+
+msgid "Enter the new password, please click the [OK] button."
+msgstr "新しいパスワードを入力して、[決定]ボタンをクリックして下さい。"
