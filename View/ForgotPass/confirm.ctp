@@ -13,11 +13,12 @@
 <h2>
 	<?php echo __d('auth', 'Forgot your Password?'); ?>
 </h2>
+<?php echo $this->Wizard->navibar(ForgotPassController::WIZARD_CONFIRM); ?>
 
 <?php echo $this->MessageFlash->description(
 		__d('auth', 'Enter the authentication key that has been notified to the entered email address, please click on the [OK] button. <br>' .
 					'If the authentication key does not reach, please also check the junk mail. ' .
-					'If you do not arrive in junk e-mail, click the [Cancel] button, please try again. ' .
+					'If you do not arrive in junk e-mail, please try again. ' .
 					'If you do not reach even to try several times, please consult your system administrator.')
 	); ?>
 
@@ -32,12 +33,7 @@
 		</div>
 
 		<div class="panel-footer text-center">
-			<?php echo $this->Button->cancelAndSave(
-						__d('net_commons', 'Cancel'),
-						__d('net_commons', 'OK'),
-						array('action' => 'login')
-					);
-				?>
+			<?php echo $this->Wizard->buttons(ForgotPassController::WIZARD_CONFIRM); ?>
 		</div>
 	<?php echo $this->NetCommonsForm->end(); ?>
 </article>

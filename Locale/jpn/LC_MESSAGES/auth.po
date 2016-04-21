@@ -63,16 +63,19 @@ msgstr "入力されたメールアドレスに認証キーをメール送信し
 # 認証キー入力画面
 #
 
+msgid "Authorization key confirm?"
+msgstr "認証キー確認"
+
 msgid "Authorization key"
 msgstr "認証キー"
 
 msgid "Enter the authentication key that has been notified to the entered email address, please click on the [OK] button. <br>"
 "If the authentication key does not reach, please also check the junk mail. "
-"If you do not arrive in junk e-mail, click the [Cancel] button, please try again. "
+"If you do not arrive in junk e-mail, please try again. "
 "If you do not reach even to try several times, please consult your system administrator."
 msgstr "入力したメールアドレスに通知された認証キーを入力し、[決定]ボタンをクリックしてください。<br>"
 "認証キーが届かない場合は、迷惑メールも確認してください。"
-"迷惑メールにも届いていない場合は、[キャンセル]ボタンをクリックし、再度やり直してください。"
+"迷惑メールにも届いていない場合は、再度やり直してください。"
 "何度か試しても届かない場合は、システム管理者に相談してください。"
 
 msgid "Failed on validation errors. Please check the authorization key."
@@ -85,6 +88,9 @@ msgstr "指定されたメールアドレスに新しいパスワードをメー
 #
 # 新しいパスワード入力画面
 #
+
+msgid "Entry new password"
+msgstr "新しいパスワードの登録"
 
 msgid "Failed on validation errors. Please check the login id."
 msgstr "ログインIDが異なります。正しいログインIDを入力してください。"

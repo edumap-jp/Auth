@@ -22,6 +22,27 @@ App::uses('MailSend', 'Mails.Utility');
 class ForgotPassController extends AuthAppController {
 
 /**
+ * ウィザード定数(再発行の受付)
+ *
+ * @var string
+ */
+	const WIZARD_REQUEST = 'request';
+
+/**
+ * ウィザード定数(再発行受付確認画面)
+ *
+ * @var string
+ */
+	const WIZARD_CONFIRM = 'confirm';
+
+/**
+ * ウィザード定数(新しいパスワード登録)
+ *
+ * @var string
+ */
+	const WIZARD_UPDATE = 'update';
+
+/**
  * use component
  *
  * @var array
@@ -39,6 +60,31 @@ class ForgotPassController extends AuthAppController {
 		'Auth.ForgotPass',
 		'Users.User',
 	);
+	public $helpers = array(
+		'NetCommons.Wizard' => array(
+			'navibar' => array(
+				self::WIZARD_REQUEST => array(
+					'url' => array(
+						'controller' => 'forgot_pass', 'action' => 'request',
+					),
+					'label' => array('auth', 'Forgot your Password?'),
+				),
+				self::WIZARD_CONFIRM => array(
+					'url' => array(
+						'controller' => 'forgot_pass', 'action' => 'confirm',
+					),
+					'label' => array('auth', 'Authorization key confirm?'),
+				),
+				self::WIZARD_UPDATE => array(
+					'url' => array(
+						'controller' => 'forgot_pass', 'action' => 'update',
+					),
+					'label' => array('auth', 'Entry new password'),
+				),
+			),
+			'cancelUrl' => array('controller' => 'auth', 'action' => 'login')
+		),
+	);
 
 /**
  * beforeFilter
@@ -47,7 +93,7 @@ class ForgotPassController extends AuthAppController {
  **/
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('request', 'reissue', 'update');
+		$this->Auth->allow('request', 'confirm', 'update');
 
 		$siteSettions = $this->ForgotPass->getSiteSetting();
 		$this->set('siteSettions', $siteSettions);
@@ -105,7 +151,7 @@ class ForgotPassController extends AuthAppController {
 					array('class' => 'success')
 				);
 
-				return $this->redirect('/auth/forgot_pass/reissue');
+				return $this->redirect('/auth/forgot_pass/confirm');
 			}
 			$this->NetCommons->handleValidationError($this->ForgotPass->validationErrors);
 		}
@@ -116,7 +162,7 @@ class ForgotPassController extends AuthAppController {
  *
  * @return void
  **/
-	public function reissue() {
+	public function confirm() {
 		if ($this->request->is('post')) {
 			if ($this->ForgotPass->validateAuthorizationKey($this->request->data)) {
 				$forgotPass = $this->Session->read('ForgotPass');

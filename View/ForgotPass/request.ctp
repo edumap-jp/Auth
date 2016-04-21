@@ -13,6 +13,7 @@
 <h2>
 	<?php echo __d('auth', 'Forgot your Password?'); ?>
 </h2>
+<?php echo $this->Wizard->navibar(ForgotPassController::WIZARD_REQUEST); ?>
 
 <?php echo $this->MessageFlash->description(
 		__d('auth', 'Please enter your registered e-mail address, and click on the [OK] button. <br>' .
@@ -30,12 +31,7 @@
 		</div>
 
 		<div class="panel-footer text-center">
-			<?php echo $this->Button->cancelAndSave(
-						__d('net_commons', 'Cancel'),
-						__d('net_commons', 'OK'),
-						array('action' => 'login')
-					);
-				?>
+			<?php echo $this->Wizard->buttons(ForgotPassController::WIZARD_REQUEST); ?>
 		</div>
 	<?php echo $this->NetCommonsForm->end(); ?>
 </article>

@@ -11,8 +11,9 @@
 ?>
 
 <h2>
-	<?php echo __d('auth', 'Login'); ?>
+	<?php echo __d('auth', 'Forgot your Password?'); ?>
 </h2>
+<?php echo $this->Wizard->navibar(ForgotPassController::WIZARD_UPDATE); ?>
 
 <?php echo $this->MessageFlash->description(
 		__d('auth', 'Enter the new password, please click the [OK] button.')
@@ -39,7 +40,7 @@
 		</div>
 
 		<div class="panel-footer text-center">
-			<?php echo $this->Button->save(__d('net_commons', 'OK'));?>
+			<?php echo $this->Wizard->buttons(ForgotPassController::WIZARD_UPDATE); ?>
 		</div>
 
 	<?php echo $this->NetCommonsForm->end(); ?>
