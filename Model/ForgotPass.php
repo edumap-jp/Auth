@@ -24,7 +24,7 @@ class ForgotPass extends AppModel {
  *
  * @var const
  */
-	const RANDAMSTR = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%&=-~+*?@_';
+	const RANDAMSTR = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%=-~+*?@_';
 
 /**
  * テーブル名
@@ -114,21 +114,15 @@ class ForgotPass extends AppModel {
 	}
 
 /**
- * パスワード再発行通知処理
+ * パスワード再発行通知のチェック
  *
  * @param array $data リクエストデータ
  * @return mixed ForgotPassデータ配列
- * @throws InternalErrorException
  */
-	public function saveForgotPassowrd($data) {
+	public function validateRequest($data) {
 		$this->loadModels([
 			'User' => 'Users.User',
 		]);
-
-		//トランザクションBegin
-		$this->begin();
-
-		//$data['ForgotPass']['key'] = ''; //←無駄だが、セットしないと動かないため。
 
 		//バリデーション
 		$this->set($data);
@@ -136,35 +130,21 @@ class ForgotPass extends AppModel {
 			return false;
 		}
 
-		try {
-			$email = trim($data['ForgotPass']['email']);
-			//if (! $this->saveQueuePostMail(Current::read('Language.id'), null, null, $email)) {
-			//	throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			//}
+		$email = trim($data['ForgotPass']['email']);
 
-			$user = $this->User->find('first', array(
-				'recursive' => -1,
-				'conditions' => array(
-					'email' => $email,
-				),
-			));
-			$forgotPass = $this->create(array(
-				'user_id' => Hash::get($user, 'User.id', '0'),
-				'username' => Hash::get($user, 'User.username'),
-				'handlename' => Hash::get($user, 'User.handlename'),
-				'authorization_key' => substr(str_shuffle(self::RANDAMSTR), 0, 10),
-				'email' => $email
-			));
-
-			CakeLog::debug(var_export($forgotPass, true)); //TODO: とりあえず
-
-			//トランザクションCommit
-			$this->commit();
-
-		} catch (Exception $ex) {
-			//トランザクションRollback
-			$this->rollback($ex);
-		}
+		$user = $this->User->find('first', array(
+			'recursive' => -1,
+			'conditions' => array(
+				'email' => $email,
+			),
+		));
+		$forgotPass = $this->create(array(
+			'user_id' => Hash::get($user, 'User.id', '0'),
+			'username' => Hash::get($user, 'User.username'),
+			'handlename' => Hash::get($user, 'User.handlename'),
+			'authorization_key' => substr(str_shuffle(self::RANDAMSTR), 0, 10),
+			'email' => $email
+		));
 
 		return $forgotPass;
 	}
@@ -176,16 +156,7 @@ class ForgotPass extends AppModel {
  * @return bool
  * @throws InternalErrorException
  */
-	public function saveRequestPassowrd($data) {
-		$this->loadModels([
-			'User' => 'Users.User',
-		]);
-
-		//トランザクションBegin
-		$this->begin();
-
-		//$data['ForgotPass']['key'] = ''; //←無駄だが、セットしないと動かないため。
-
+	public function validateAuthorizationKey($data) {
 		$forgotPass = CakeSession::read('ForgotPass');
 
 		//バリデーション
@@ -204,32 +175,6 @@ class ForgotPass extends AppModel {
 			return false;
 		}
 
-		try {
-			App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
-			$passwordHasher = new SimplePasswordHasher();
-			$rescuePassowrd = substr(str_shuffle(self::RANDAMSTR), 0, 10);
-
-			CakeLog::debug($rescuePassowrd); //TODO: とりあえず
-			$hashRescuePassowrd = $passwordHasher->hash($rescuePassowrd);
-
-			//$email = Hash::get($forgotPass, 'email');
-			//if (! $this->saveQueuePostMail(Current::read('Language.id'), null, null, $email)) {
-			//	throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			//}
-
-			$this->User->id = Hash::get($forgotPass, 'user_id');
-			if (! $this->User->saveField('rescue_password', $hashRescuePassowrd, ['callbacks' => false])) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
-
-			//トランザクションCommit
-			$this->commit();
-
-		} catch (Exception $ex) {
-			//トランザクションRollback
-			$this->rollback($ex);
-		}
-
 		return true;
 	}
 
@@ -240,24 +185,24 @@ class ForgotPass extends AppModel {
  * @return mixed Userデータ配列
  * @throws InternalErrorException
  */
-	public function loginRescuePassowrd($data) {
-		$this->loadModels([
-			'User' => 'Users.User',
-		]);
-
-		App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
-		$passwordHasher = new SimplePasswordHasher();
-
-		$user = $this->User->find('first', array(
-			'recursive' => 0,
-			'conditions' => array(
-				'User.username' => $data['User']['username'],
-				'User.rescue_password' => $passwordHasher->hash($data['User']['password']),
-			),
-		));
-
-		return Hash::get($user, 'User');
-	}
+//	public function loginRescuePassowrd($data) {
+//		$this->loadModels([
+//			'User' => 'Users.User',
+//		]);
+//
+//		App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
+//		$passwordHasher = new SimplePasswordHasher();
+//
+//		$user = $this->User->find('first', array(
+//			'recursive' => 0,
+//			'conditions' => array(
+//				'User.username' => $data['User']['username'],
+//				'User.rescue_password' => $passwordHasher->hash($data['User']['password']),
+//			),
+//		));
+//
+//		return Hash::get($user, 'User');
+//	}
 
 /**
  * パスワード再登録処理
@@ -271,36 +216,25 @@ class ForgotPass extends AppModel {
 			'User' => 'Users.User',
 		]);
 
+		$forgotPass = CakeSession::read('ForgotPass');
+
 		//トランザクションBegin
 		$this->begin();
 
 		//バリデーション
-		$this->User->Behaviors->unload('Users.SaveUser');
-		$this->User->Behaviors->unload('Files.Attachment');
-		$this->User->Behaviors->unload('Users.Avatar');
-		$this->User->Behaviors->unload('NetCommons.OriginalKey');
+		CakeLog::debug(var_export(Hash::get($forgotPass, 'user_id'), true));
+		CakeLog::debug(var_export($data['User']['username'], true));
 
-		$this->User->validate = Hash::merge($this->User->validate, array(
-			'password' => array(
-				'notBlank' => array(
-					'rule' => array('notBlank'),
-					'message' => sprintf(
-						__d('net_commons', 'Please input %s.'), __d('users', 'password')
-					),
-					'allowEmpty' => false,
-					'required' => true,
-				),
-			),
-			'password_again' => array(
-				'notBlank' => array(
-					'rule' => array('notBlank'),
-					'allowEmpty' => false,
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('net_commons', 'Re-enter')),
-					'required' => true,
-				),
-			),
-		));
+		if ($data['User']['username'] !== Hash::get($forgotPass, 'username')) {
+			$this->User->invalidate(
+				'username',
+				__d('auth', 'Failed on validation errors. Please check the login id.')
+			);
+			return false;
+		}
 
+		$data['User']['id'] = Hash::get($forgotPass, 'user_id');
+		unset($data['User']['username']);
 		$this->User->set($data);
 		if (! $this->User->validates()) {
 			$this->validationErrors = Hash::merge(
@@ -310,10 +244,20 @@ class ForgotPass extends AppModel {
 		}
 
 		try {
+			//不要なビヘイビアを一時的にアンロードする
+			$this->User->Behaviors->unload('Users.SaveUser');
+			$this->User->Behaviors->unload('Files.Attachment');
+			$this->User->Behaviors->unload('Users.Avatar');
+
 			//Userデータの登録
 			if (! $this->User->save(null, false)) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
 			}
+
+			//不要なビヘイビアをロードし直す
+			$this->User->Behaviors->load('Users.SaveUser');
+			$this->User->Behaviors->load('Files.Attachment');
+			$this->User->Behaviors->load('Users.Avatar');
 
 			//トランザクションCommit
 			$this->commit();

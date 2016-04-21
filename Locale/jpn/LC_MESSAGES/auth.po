@@ -31,6 +31,11 @@ msgstr "ログイン"
 msgid "Invalid username or password, try again"
 msgstr "ログイン情報が間違っています。再度、入力してください。"
 
+msgid "Username"
+msgstr "ログインID"
+
+msgid "Password"
+msgstr "パスワード"
 
 #
 # パスワード再発行
@@ -73,14 +78,16 @@ msgstr "入力したメールアドレスに通知された認証キーを入力
 msgid "Failed on validation errors. Please check the authorization key."
 msgstr "認証キーが異なります。正しい認証キーを入力してください。"
 
-msgid "We have sent your new password to your registered e-mail address."
+msgid "We have sent your login id to your registered e-mail address."
 msgstr "指定されたメールアドレスに新しいパスワードをメール送信しました。"
-
 
 
 #
 # 新しいパスワード入力画面
 #
+
+msgid "Failed on validation errors. Please check the login id."
+msgstr "ログインIDが異なります。正しいログインIDを入力してください。"
 
 msgid "New password"
 msgstr "新しいパスワード"

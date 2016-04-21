@@ -21,6 +21,12 @@
 <article class="panel panel-default">
 	<?php echo $this->NetCommonsForm->create('User'); ?>
 		<div class="panel-body">
+			<?php echo $this->NetCommonsForm->input('User.username', array(
+				'label' => __d('auth', 'Username'),
+				'placeholder' => __d('auth', 'Please enter your username.'),
+				'required' => true
+			)); ?>
+
 			<?php echo $this->NetCommonsForm->input('User.password', array(
 				'type' => 'password',
 				'label' => __d('auth', 'New password'),
@@ -35,6 +41,6 @@
 		<div class="panel-footer text-center">
 			<?php echo $this->Button->save(__d('net_commons', 'OK'));?>
 		</div>
-	
+
 	<?php echo $this->NetCommonsForm->end(); ?>
 </article>
