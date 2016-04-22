@@ -179,32 +179,6 @@ class ForgotPass extends AppModel {
 	}
 
 /**
- * パスワードチェック
- *
- * @param array $data リクエストデータ
- * @return mixed Userデータ配列
- * @throws InternalErrorException
- */
-//	public function loginRescuePassowrd($data) {
-//		$this->loadModels([
-//			'User' => 'Users.User',
-//		]);
-//
-//		App::uses('SimplePasswordHasher', 'Controller/Component/Auth');
-//		$passwordHasher = new SimplePasswordHasher();
-//
-//		$user = $this->User->find('first', array(
-//			'recursive' => 0,
-//			'conditions' => array(
-//				'User.username' => $data['User']['username'],
-//				'User.rescue_password' => $passwordHasher->hash($data['User']['password']),
-//			),
-//		));
-//
-//		return Hash::get($user, 'User');
-//	}
-
-/**
  * パスワード再登録処理
  *
  * @param array $data リクエストデータ

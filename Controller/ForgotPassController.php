@@ -60,6 +60,12 @@ class ForgotPassController extends AuthAppController {
 		'Auth.ForgotPass',
 		'Users.User',
 	);
+
+/**
+ * use helper
+ *
+ * @var array
+ */
 	public $helpers = array(
 		'NetCommons.Wizard' => array(
 			'navibar' => array(
