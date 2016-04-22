@@ -41,17 +41,32 @@
 
 			<?php else : ?>
 				<div class="panel-body">
-					<?php echo $this->NetCommonsForm->input('username',
-									array('placeholder' => __d('auth', 'Please enter your username'))
-								); ?>
+					<?php echo $this->NetCommonsForm->input('username', array(
+						'label' => __d('auth', 'Username'),
+						'placeholder' => __d('auth', 'Please enter your username.'),
+						'required' => true
+					)); ?>
 
-					<?php echo $this->NetCommonsForm->input('password',
-									array('placeholder' => __d('auth', 'Please enter your password'))
-								); ?>
+					<?php echo $this->NetCommonsForm->input('password', array(
+						'label' => __d('auth', 'Password'),
+						'placeholder' => __d('auth', 'Please enter your password.'),
+						'required' => true
+					)); ?>
 
 					<button class="btn btn-primary btn-block" type="submit">
 						<?php echo __d('auth', 'Login'); ?>
 					</button>
+
+					<hr>
+
+					<?php if (Hash::get($siteSettions['ForgotPass.use_password_reissue'], '0.value')) : ?>
+					<div>
+						<?php echo $this->NetCommonsHtml->link(
+								__d('auth', 'Forgot your Password? Please click here.'),
+								array('controller' => 'forgot_pass', 'action' => 'request')
+							); ?>
+					</div>
+					<?php endif; ?>
 				</div>
 			<?php endif; ?>
 		<?php echo $this->NetCommonsForm->end(); ?>

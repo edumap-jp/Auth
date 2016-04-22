@@ -25,6 +25,7 @@ class AuthController extends AuthAppController {
  * @var array
  */
 	public $uses = array(
+		'Auth.ForgotPass',
 		'Rooms.Room',
 		'Users.User',
 		'UserRoles.UserRole',
@@ -56,12 +57,15 @@ class AuthController extends AuthAppController {
 	}
 
 /**
- * login
+ * ログイン処理
  *
  * @return void
  * @throws InternalErrorException
  **/
 	public function login() {
+		$siteSettions = $this->ForgotPass->getSiteSetting();
+		$this->set('siteSettions', $siteSettions);
+
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
@@ -69,7 +73,15 @@ class AuthController extends AuthAppController {
 				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
 			}
-			$this->Flash->set(__d('auth', 'Invalid username or password, try again'));
+
+			$this->NetCommons->setFlashNotification(
+				__d('auth', 'Invalid username or password, try again'),
+				array(
+					'class' => 'danger',
+					'interval' => NetCommonsComponent::ALERT_VALIDATE_ERROR_INTERVAL,
+				),
+				400
+			);
 			$this->redirect($this->Auth->loginAction);
 		}
 	}
