@@ -1,6 +1,6 @@
 <?php
 /**
- * Auth Controller
+ * パスワード再発行Controller
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -11,10 +11,9 @@
 
 App::uses('AuthAppController', 'Auth.Controller');
 App::uses('NetCommonsMail', 'Mails.Utility');
-App::uses('MailSend', 'Mails.Utility');
 
 /**
- * Auth Controller
+ * パスワード再発行Controller
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
