@@ -100,3 +100,81 @@ msgstr "新しいパスワード"
 
 msgid "Enter the new password, please click the [OK] button."
 msgstr "新しいパスワードを入力して、[決定]ボタンをクリックして下さい。"
+
+
+#
+# 新規登録キーの入力画面
+#
+
+msgid "Entry secret key?"
+msgstr "キーの入力"
+
+msgid "Secret key"
+msgstr "キー"
+
+msgid "Entry secret key, and press [NEXT] button."
+msgstr "新規登録を受け付けるためのキーを入力して、[次へ]ボタンを押してください。"
+
+msgid "Failed on validation errors. Please check the secret key."
+msgstr "キーが異なります。正しいキーを入力してください。"
+
+
+#
+# 新規登録の受付画面
+#
+
+msgid "Sign up"
+msgstr "新規登録"
+
+msgid "Registration?"
+msgstr "新規登録の受付"
+
+msgid "Fill out the following items, and press [NEXT] button."
+msgstr "下記項目を入力して、[次へ]ボタンを押してください。"
+
+msgid "Terms of use"
+msgstr "利用規約"
+
+msgid "I agree to the above."
+msgstr "私は上記事項に同意します。"
+
+msgid "You have not agreed to the terms of use."
+msgstr "利用許諾に同意してください。"
+
+
+#
+# 新規登録の入力確認画面
+#
+
+msgid "Entry confirm."
+msgstr "入力内容の確認"
+
+msgid "Check the input contents. "
+"If there is no content is a problem, please click on the [NEXT] button. "
+"If you re-fix, please click on the [BACK] button."
+msgstr "入力した内容を確認して下さい。"
+"内容に問題なければ、[次へ]ボタンをクリックしてください。"
+"修正しなおす場合は、[前へ]ボタンをクリックしてください。"
+
+
+#
+# 新規登録の登録画面
+#
+
+msgid "Complete registration."
+msgstr "登録の完了"
+
+msgid "Complete request registration."
+msgstr "新規登録の受付完了"
+
+msgid "Thank you for your registration. Click on the link, please login."
+msgstr "登録が完了しました。ログインボックスよりログインしてください。"
+
+msgid "Confirmation e-mail will be sent to the registered address, after the system administrator approve your registration."
+msgstr "登録メールアドレス宛に承認キーを送信しました。メールの指示に従い、承認を完了してください。"
+
+msgid "Your registration will be confirmed by the system administrator. <br>When confirmed, it will be notified by e-mail."
+msgstr "サイト管理者がアカウントを承認するまでしばらくお待ちください。<br>承認完了時にはメールにてお知らせします。"
+
+msgid "Registered info"
+msgstr "登録された内容"

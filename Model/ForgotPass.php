@@ -1,6 +1,6 @@
 <?php
 /**
- * パスワード再発行用Model
+ * パスワード再発行Model
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -12,7 +12,7 @@
 App::uses('AppModel', 'Model');
 
 /**
- * パスワード再発行用Model
+ * パスワード再発行Model
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Model
@@ -20,7 +20,7 @@ App::uses('AppModel', 'Model');
 class ForgotPass extends AppModel {
 
 /**
- * エクスポート用のランダム文字列
+ * 認証キー用のランダム文字列
  *
  * @var const
  */
@@ -29,12 +29,14 @@ class ForgotPass extends AppModel {
 /**
  * テーブル名
  *
- * @var mixed
+ * @var bool
  */
 	public $useTable = false;
 
 /**
- * 使用ビヘイビア
+ * 使用するBehaviors
+ *
+ * - [Mails.MailQueueBehavior](../../Mails/classes/MailQueueBehavior.html)
  *
  * @var array
  */
@@ -53,6 +55,11 @@ class ForgotPass extends AppModel {
  * @see Model::save()
  */
 	public function beforeValidate($options = array()) {
+		$forgotPass = CakeSession::read('ForgotPass');
+		if (! $forgotPass) {
+			$forgotPass = array();
+		}
+
 		$this->validate = Hash::merge($this->validate, array(
 			'email' => array(
 				'notBlank' => array(
@@ -72,7 +79,14 @@ class ForgotPass extends AppModel {
 			'authorization_key' => array(
 				'notBlank' => array(
 					'rule' => array('notBlank'),
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('auth', 'Authorization key')),
+					'message' => sprintf(
+						__d('net_commons', 'Please input %s.'), __d('auth', 'Authorization key')
+					),
+					'required' => false
+				),
+				'equalTo' => array(
+					'rule' => array('equalTo', Hash::get($forgotPass, 'authorization_key')),
+					'message' => __d('auth', 'Failed on validation errors. Please check the authorization key.'),
 					'required' => false
 				),
 			),
@@ -165,9 +179,7 @@ class ForgotPass extends AppModel {
 			return false;
 		}
 		$data['ForgotPass']['authorization_key'] = trim($data['ForgotPass']['authorization_key']);
-		if (! $forgotPass || ! Hash::get($forgotPass, 'user_id') ||
-				$data['ForgotPass']['authorization_key'] !== Hash::get($forgotPass, 'authorization_key')) {
-
+		if (! $forgotPass || ! Hash::get($forgotPass, 'user_id')) {
 			$this->invalidate(
 				'authorization_key',
 				__d('auth', 'Failed on validation errors. Please check the authorization key.')

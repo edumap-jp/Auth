@@ -1,6 +1,6 @@
 <?php
 /**
- * Auth Controller
+ * 認証Controller
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -12,7 +12,7 @@
 App::uses('AuthAppController', 'Auth.Controller');
 
 /**
- * Auth Controller
+ * 認証Controller
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
@@ -20,15 +20,20 @@ App::uses('AuthAppController', 'Auth.Controller');
 class AuthController extends AuthAppController {
 
 /**
- * use model
+ * 使用するModels
+ *
+ * - [Auth.ForgotPass](../../Auth/classes/ForgotPass.html)
+ * - [Rooms.Rooms](../../Rooms/classes/Room.html)
+ * - [UserRoles.UserRole](../../UserRoles/classes/UserRole.html)
+ * - [Users.User](../../Users/classes/User.html)
  *
  * @var array
  */
 	public $uses = array(
 		'Auth.ForgotPass',
 		'Rooms.Room',
-		'Users.User',
 		'UserRoles.UserRole',
+		'Users.User',
 	);
 
 /**

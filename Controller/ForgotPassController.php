@@ -42,7 +42,9 @@ class ForgotPassController extends AuthAppController {
 	const WIZARD_UPDATE = 'update';
 
 /**
- * use component
+ * 使用するComponents
+ *
+ * - [SecurityComponent](http://book.cakephp.org/2.0/ja/core-libraries/components/security-component.html)
  *
  * @var array
  */
@@ -51,7 +53,10 @@ class ForgotPassController extends AuthAppController {
 	);
 
 /**
- * use model
+ * 使用するModels
+ *
+ * - [Auth.ForgotPass](../../Auth/classes/ForgotPass.html)
+ * - [Users.User](../../Users/classes/User.html)
  *
  * @var array
  */
@@ -61,7 +66,9 @@ class ForgotPassController extends AuthAppController {
 	);
 
 /**
- * use helper
+ * 使用するHelpers
+ *
+ * - [NetCommons.Wizard](../../NetCommons/classes/WizardHelper.html)
  *
  * @var array
  */
