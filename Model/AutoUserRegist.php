@@ -152,10 +152,6 @@ class AutoUserRegist extends AppModel {
 				'AutoRegist.acceptance_mail_subject',
 				// ** 会員登録受付メールの本文
 				'AutoRegist.acceptance_mail_body',
-				// ** 会員登録メールの件名
-				'AutoRegist.mail_subject',
-				// ** 会員登録メールの本文
-				'AutoRegist.mail_body',
 			))
 		);
 

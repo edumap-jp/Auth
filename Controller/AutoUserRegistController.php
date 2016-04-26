@@ -213,9 +213,9 @@ class AutoUserRegistController extends AuthAppController {
 
 		if ($this->request->is('post')) {
 			$user = $this->AutoUserRegist->saveAutoUserRegist($this->request->data);
-CakeLog::debug(var_export($this->request->data, true));
-CakeLog::debug(var_export($user, true));
 			if ($user) {
+				$user = Hash::merge($this->request->data, Hash::remove($user, 'User.password'));
+				$this->Session->write('AutoUserRegist', $user);
 				return $this->redirect('/auth/auto_user_regist/completion');
 			} else {
 				$this->view = 'request';
@@ -253,8 +253,6 @@ CakeLog::debug(var_export($user, true));
 
 			$data['subject'] = Hash::get($siteSettings['AutoRegist.acceptance_mail_subject'], '0.value');
 			$data['body'] = Hash::get($siteSettings['AutoRegist.acceptance_mail_body'], '0.value');
-
-
 		}
 		$this->set('message', $message);
 		$this->set('url', $url);
