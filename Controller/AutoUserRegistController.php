@@ -300,8 +300,11 @@ CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 			$this->view = 'acceptance';
 			$message = __d('auth', 'Your registration was not approved.<br>' .
 									'Please consult with the system administrator.');
+			$options = array('class' => 'alert alert-danger');
+
 			$this->set('message', $message);
 			$this->set('redirectUrl', '/');
+			$this->set('options', $options);
 		}
 	}
 
@@ -323,8 +326,22 @@ CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 			array('auth', 'Complete request registration.')
 		);
 
-CakeLog::debug(var_export($this->params['pass'], true));
+		if ($this->AutoUserRegist->saveUserStatus($this->request->query, AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL)) {
+			$message = __d('auth', 'Your registration will be confirmed by the system administrator. <br>' .
+									'When confirmed, it will be notified by e-mail.');
+			$options = array();
+		} else {
+CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 
+			$this->view = 'acceptance';
+			$message = __d('auth', 'Your registration was not approved.<br>' .
+									'Please consult with the system administrator.');
+			$options = array('class' => 'alert alert-danger');
+		}
+
+		$this->set('message', $message);
+		$this->set('redirectUrl', '/');
+		$this->set('options', $options);
 	}
 
 /**
@@ -343,7 +360,7 @@ CakeLog::debug(var_export($this->params['pass'], true));
 			$data['body'] = Hash::get(
 				$siteSettings['AutoRegist.approval_mail_body'], Current::read('Language.id') . '.value'
 			);
-			$data['email'] = $user['User']['email'];
+			$data['email'] = array($user['User']['email']);
 			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/approval' .
 						$user['User']['activate_parameter'];
 
@@ -363,16 +380,18 @@ CakeLog::debug(var_export($this->params['pass'], true));
 
 		$mail = new NetCommonsMail();
 
-		$mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
-		$mail->mailAssignTag->setFixedPhraseBody($data['body']);
-		$mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
-		$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
-		$mail->initPlugin(Current::read('Language.id'));
-		$mail->to($data['email']);
-		$mail->setFrom(Current::read('Language.id'));
+		foreach ($data['email'] as $email) {
+			$mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
+			$mail->mailAssignTag->setFixedPhraseBody($data['body']);
+			$mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
+			$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
+			$mail->initPlugin(Current::read('Language.id'));
+			$mail->to($email);
+			$mail->setFrom(Current::read('Language.id'));
 
-		if (! $mail->sendMailDirect()) {
-			//throw new InternalErrorException(__d('net_commons', 'SendMail Error'));
+			if (! $mail->sendMailDirect()) {
+				//throw new InternalErrorException(__d('net_commons', 'SendMail Error'));
+			}
 		}
 
 		return true;

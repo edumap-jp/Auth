@@ -18,7 +18,7 @@
 <?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
 	<article class="panel panel-default">
 		<div class="panel-body">
-			<?php echo $this->MessageFlash->description($message); ?>
+			<?php echo $this->MessageFlash->description($message, $options); ?>
 		</div>
 
 		<div class="panel-footer text-center">
