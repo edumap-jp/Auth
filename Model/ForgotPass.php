@@ -208,9 +208,6 @@ class ForgotPass extends AppModel {
 		$this->begin();
 
 		//バリデーション
-		CakeLog::debug(var_export(Hash::get($forgotPass, 'user_id'), true));
-		CakeLog::debug(var_export($data['User']['username'], true));
-
 		if ($data['User']['username'] !== Hash::get($forgotPass, 'username')) {
 			$this->User->invalidate(
 				'username',
