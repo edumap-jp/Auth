@@ -220,7 +220,7 @@ class ForgotPass extends AppModel {
 		$data['User']['id'] = Hash::get($forgotPass, 'user_id');
 		unset($data['User']['username']);
 		$this->User->set($data);
-		if (! $this->User->validates()) {
+		if (! $this->User->validates(array('validatePassword' => true))) {
 			$this->validationErrors = Hash::merge(
 				$this->validationErrors, $this->User->validationErrors
 			);
