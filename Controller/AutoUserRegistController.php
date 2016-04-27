@@ -10,6 +10,7 @@
  */
 
 App::uses('AuthAppController', 'Auth.Controller');
+App::uses('NetCommonsMail', 'Mails.Utility');
 
 /**
  * 新規登録Controller
@@ -68,6 +69,7 @@ class AutoUserRegistController extends AuthAppController {
  */
 	public $uses = array(
 		'Auth.AutoUserRegist',
+		'PluginManager.PluginsRole',
 		'Users.User',
 	);
 
@@ -119,7 +121,7 @@ class AutoUserRegistController extends AuthAppController {
  **/
 	public function beforeFilter() {
 		parent::beforeFilter();
-		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion');
+		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion', 'approval', 'acceptance');
 
 		$siteSettions = $this->AutoUserRegist->getSiteSetting();
 		$this->set('siteSettions', $siteSettions);
@@ -128,28 +130,33 @@ class AutoUserRegistController extends AuthAppController {
 			return $this->setAction('throwBadRequest');
 		}
 
-		//管理者の承認が必要の場合、ウィザードの文言変更
-		$value = Hash::get($siteSettions['AutoRegist.confirmation'], '0.value');
-		if ($value === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
-			$keyPath = self::WIZARD_COMPLETION . '.label';
-			$this->helpers['NetCommons.Wizard']['navibar'] = Hash::insert(
-				$this->helpers['NetCommons.Wizard']['navibar'],
-				$keyPath,
-				array('auth', 'Complete request registration.')
-			);
-		}
-
-		//入力キーのチェック
-		$value = Hash::get($siteSettions['AutoRegist.use_secret_key'], '0.value');
-		if ($value) {
-			if (! $this->Session->read('AutoUserRegistKey')) {
-				$this->Session->write('AutoUserRegistRedirect', $this->params['action']);
-				$this->setAction('entry_key');
-			}
-		} else {
+		if (Hash::get($this->params['pass'], 'activate_key')) {
 			$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
 				$this->helpers['NetCommons.Wizard']['navibar'], self::WIZARD_ENTRY_KEY
 			);
+		} else {
+			//管理者の承認が必要の場合、ウィザードの文言変更
+			$value = Hash::get($siteSettions['AutoRegist.confirmation'], '0.value');
+			if ($value === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
+				$this->helpers['NetCommons.Wizard']['navibar'] = Hash::insert(
+					$this->helpers['NetCommons.Wizard']['navibar'],
+					self::WIZARD_COMPLETION . '.label',
+					array('auth', 'Complete request registration.')
+				);
+			}
+
+			//入力キーのチェック
+			$value = Hash::get($siteSettions['AutoRegist.use_secret_key'], '0.value');
+			if ($value) {
+				if (! $this->Session->read('AutoUserRegistKey')) {
+					$this->Session->write('AutoUserRegistRedirect', $this->params['action']);
+					$this->setAction('entry_key');
+				}
+			} else {
+				$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
+					$this->helpers['NetCommons.Wizard']['navibar'], self::WIZARD_ENTRY_KEY
+				);
+			}
 		}
 	}
 
@@ -160,7 +167,8 @@ class AutoUserRegistController extends AuthAppController {
  **/
 	public function entry_key() {
 		if ($this->request->is('post')) {
-			if ($this->AutoUserRegist->validateSecretKey($this->request->data)) {
+			$this->AutoUserRegist->set($this->request->data);
+			if (! $this->AutoUserRegist->validates()) {
 				$this->Session->write('AutoUserRegistKey', true);
 				return $this->redirect(
 					'/auth/auto_user_regist/' . $this->Session->read('AutoUserRegistRedirect')
@@ -216,6 +224,11 @@ class AutoUserRegistController extends AuthAppController {
 			if ($user) {
 				$user = Hash::merge($this->request->data, Hash::remove($user, 'User.password'));
 				$this->Session->write('AutoUserRegist', $user);
+
+				$siteSettings = $this->viewVars['siteSettions'];
+				$value = Hash::get($siteSettings['AutoRegist.confirmation'], '0.value');
+				$this->__sendMail($value, $user);
+
 				return $this->redirect('/auth/auto_user_regist/completion');
 			} else {
 				$this->view = 'request';
@@ -233,29 +246,30 @@ class AutoUserRegistController extends AuthAppController {
  * @return void
  **/
 	public function completion() {
+		//ウィザードのリンク削除
+		$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
+			$this->helpers['NetCommons.Wizard']['navibar'],
+			'{s}.url'
+		);
+
 		$siteSettings = $this->viewVars['siteSettions'];
+		$this->request->data = $this->Session->read('AutoUserRegist');
 
 		$value = Hash::get($siteSettings['AutoRegist.confirmation'], '0.value');
 		if ($value === AutoUserRegist::CONFIRMATION_USER_OWN) {
-			$message = __d('auth', 'Thank you for your registration. Click on the link, please login.');
-			$url = '/auth/auth/login';
-		} elseif ($value === AutoUserRegist::CONFIRMATION_AUTO_REGIST) {
 			$message = __d('auth', 'Confirmation e-mail will be sent to the registered address, ' .
 								'after the system administrator approve your registration.');
-			$url = '/';
-
-			$data['subject'] = Hash::get($siteSettings['AutoRegist.approval_mail_subject'], '0.value');
-			$data['body'] = Hash::get($siteSettings['AutoRegist.approval_mail_body'], '0.value');
+			$redirectUrl = '/';
+		} elseif ($value === AutoUserRegist::CONFIRMATION_AUTO_REGIST) {
+			$message = __d('auth', 'Thank you for your registration. Click on the link, please login.');
+			$redirectUrl = '/auth/auth/login';
 		} else {
 			$message = __d('auth', 'Your registration will be confirmed by the system administrator. <br>' .
 								'When confirmed, it will be notified by e-mail.');
-			$url = '/';
-
-			$data['subject'] = Hash::get($siteSettings['AutoRegist.acceptance_mail_subject'], '0.value');
-			$data['body'] = Hash::get($siteSettings['AutoRegist.acceptance_mail_body'], '0.value');
+			$redirectUrl = '/';
 		}
 		$this->set('message', $message);
-		$this->set('url', $url);
+		$this->set('redirectUrl', $redirectUrl);
 
 		$userAttributes = $this->AutoUserRegist->getUserAttribures();
 		$this->set('userAttributes', $userAttributes);
@@ -263,4 +277,137 @@ class AutoUserRegistController extends AuthAppController {
 		$this->request->data = $this->Session->read('AutoUserRegist');
 		$this->Session->delete('AutoUserRegist');
 	}
+
+/**
+ * 本人の登録確認
+ *
+ * @return void
+ **/
+	public function approval() {
+		//ウィザードのリンク削除
+		$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
+			$this->helpers['NetCommons.Wizard']['navibar'],
+			'{s}.url'
+		);
+
+		if ($this->AutoUserRegist->saveUserStatus($this->request->query, AutoUserRegist::CONFIRMATION_USER_OWN)) {
+			$message = __d('auth', 'Thank you for your registration. Click on the link, please login.');
+			$this->NetCommons->setFlashNotification($message, array('class' => 'success'));
+			return $this->redirect('/auth/auth/login');
+		} else {
+CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
+
+			$this->view = 'acceptance';
+			$message = __d('auth', 'Your registration was not approved.<br>' .
+									'Please consult with the system administrator.');
+			$this->set('message', $message);
+			$this->set('redirectUrl', '/');
+		}
+	}
+
+/**
+ * 管理者の承認確認
+ *
+ * @return void
+ **/
+	public function acceptance() {
+		//ウィザードのリンク削除
+		$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
+			$this->helpers['NetCommons.Wizard']['navibar'],
+			'{s}.url'
+		);
+
+		$this->helpers['NetCommons.Wizard']['navibar'] = Hash::insert(
+			$this->helpers['NetCommons.Wizard']['navibar'],
+			self::WIZARD_COMPLETION . '.label',
+			array('auth', 'Complete request registration.')
+		);
+
+CakeLog::debug(var_export($this->params['pass'], true));
+
+	}
+
+/**
+ * 新規登録のメール処理
+ *
+ * @param int $confirmation 完了確認ステータス
+ * @param array $user ユーザ情報
+ * @return bool
+ */
+	private function __sendMail($confirmation, $user) {
+		$siteSettings = $this->viewVars['siteSettions'];
+		if ($confirmation === AutoUserRegist::CONFIRMATION_USER_OWN) {
+			$data['subject'] = Hash::get(
+				$siteSettings['AutoRegist.approval_mail_subject'], Current::read('Language.id') . '.value'
+			);
+			$data['body'] = Hash::get(
+				$siteSettings['AutoRegist.approval_mail_body'], Current::read('Language.id') . '.value'
+			);
+			$data['email'] = $user['User']['email'];
+			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/approval' .
+						$user['User']['activate_parameter'];
+
+		} elseif ($confirmation === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
+			$data['subject'] = Hash::get(
+				$siteSettings['AutoRegist.acceptance_mail_subject'], Current::read('Language.id') . '.value'
+			);
+			$data['body'] = Hash::get(
+				$siteSettings['AutoRegist.acceptance_mail_body'], Current::read('Language.id') . '.value'
+			);
+			$data['email'] = $this->__getMailAddressForAdmin();
+			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/acceptance' .
+						$user['User']['activate_parameter'];
+		} else {
+			return true;
+		}
+
+		$mail = new NetCommonsMail();
+
+		$mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
+		$mail->mailAssignTag->setFixedPhraseBody($data['body']);
+		$mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
+		$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
+		$mail->initPlugin(Current::read('Language.id'));
+		$mail->to($data['email']);
+		$mail->setFrom(Current::read('Language.id'));
+
+		if (! $mail->sendMailDirect()) {
+			//throw new InternalErrorException(__d('net_commons', 'SendMail Error'));
+		}
+
+		return true;
+	}
+
+/**
+ * 管理者ユーザのメールアドレス取得
+ * ここでいう管理者権限とは、会員管理が使える権限のこと。
+ *
+ * @return array
+ */
+	private function __getMailAddressForAdmin() {
+		$roleKeys = $this->PluginsRole->find('list', array(
+			'recursive' => -1,
+			'fields' => array('id', 'role_key'),
+			'conditions' => array(
+				'plugin_key' => 'user_manager',
+			),
+		));
+
+		//その他のメールアドレスも含める必要あり
+		$mails = $this->User->find('all', array(
+			'recursive' => -1,
+			'fields' => array('email'),
+			'conditions' => array(
+				'role_key' => $roleKeys,
+			),
+		));
+
+		$result = array();
+		foreach ($mails as $mail) {
+			$result = array_merge($result, Hash::extract($mail, '{s}.{s}'));
+		}
+
+		return $result;
+	}
+
 }

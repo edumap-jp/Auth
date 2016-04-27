@@ -19,8 +19,8 @@
 		__d('auth', 'Fill out the following items, and press [NEXT] button.')
 	); ?>
 
-<article class="panel panel-default">
-	<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+	<article class="panel panel-default">
 		<div class="panel-body">
 			<?php echo $this->NetCommonsForm->hidden('User.id'); ?>
 			<?php echo $this->NetCommonsForm->hidden('UsersLanguage.' . Current::read('Language.id') . '.id'); ?>
@@ -51,5 +51,5 @@
 		<div class="panel-footer text-center">
 			<?php echo $this->Wizard->buttons(AutoUserRegistController::WIZARD_REQUEST); ?>
 		</div>
-	<?php echo $this->NetCommonsForm->end(); ?>
-</article>
+	</article>
+<?php echo $this->NetCommonsForm->end();

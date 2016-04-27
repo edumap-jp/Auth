@@ -146,6 +146,7 @@ class ForgotPass extends AppModel {
 
 		$email = trim($data['ForgotPass']['email']);
 
+		//その他のメールアドレスも含める必要あり
 		$user = $this->User->find('first', array(
 			'recursive' => -1,
 			'conditions' => array(

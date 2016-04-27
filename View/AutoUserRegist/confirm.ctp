@@ -21,8 +21,8 @@
 					'If you re-fix, please click on the [BACK] button.')
 	); ?>
 
-<article class="panel panel-default">
-	<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+	<article class="panel panel-default">
 		<div class="panel-body">
 			<?php foreach ($userAttributes as $id => $userAttribute) : ?>
 				<?php echo $this->AutoUserRegistForm->input($userAttribute, true); ?>
@@ -32,5 +32,6 @@
 		<div class="panel-footer text-center">
 			<?php echo $this->Wizard->buttons(AutoUserRegistController::WIZARD_CONFIRM); ?>
 		</div>
-	<?php echo $this->NetCommonsForm->end(); ?>
-</article>
+	</article>
+<?php echo $this->NetCommonsForm->end();
+

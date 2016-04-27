@@ -15,18 +15,10 @@
 </h2>
 <?php echo $this->Wizard->navibar(AutoUserRegistController::WIZARD_COMPLETION); ?>
 
-<?php echo $this->MessageFlash->description($message); ?>
-
 <?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
 	<article class="panel panel-default">
-		<div class="panel-heading">
-			<?php echo __d('auth', 'Registered info'); ?>
-		</div>
-
 		<div class="panel-body">
-			<?php foreach ($userAttributes as $id => $userAttribute) : ?>
-				<?php echo $this->AutoUserRegistForm->input($userAttribute, true); ?>
-			<?php endforeach; ?>
+			<?php echo $this->MessageFlash->description($message); ?>
 		</div>
 
 		<div class="panel-footer text-center">

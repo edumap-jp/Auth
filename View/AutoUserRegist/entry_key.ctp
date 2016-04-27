@@ -19,8 +19,8 @@
 		__d('auth', 'Entry secret key, and press [NEXT] button.')
 	); ?>
 
-<article class="panel panel-default">
-	<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+<?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
+	<article class="panel panel-default">
 		<div class="panel-body">
 			<?php echo $this->NetCommonsForm->input('AutoUserRegist.secret_key', array(
 				'type' => 'password',
@@ -32,5 +32,5 @@
 		<div class="panel-footer text-center">
 			<?php echo $this->Wizard->buttons(AutoUserRegistController::WIZARD_ENTRY_KEY); ?>
 		</div>
-	<?php echo $this->NetCommonsForm->end(); ?>
-</article>
+	</article>
+<?php echo $this->NetCommonsForm->end();

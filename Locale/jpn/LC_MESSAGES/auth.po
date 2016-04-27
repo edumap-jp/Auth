@@ -158,7 +158,7 @@ msgstr "入力した内容を確認して下さい。"
 
 
 #
-# 新規登録の登録画面
+# 新規登録の完了画面
 #
 
 msgid "Complete registration."
@@ -166,6 +166,9 @@ msgstr "登録の完了"
 
 msgid "Complete request registration."
 msgstr "新規登録の受付完了"
+
+msgid "Approval completion."
+msgstr "承認の完了"
 
 msgid "Thank you for your registration. Click on the link, please login."
 msgstr "登録が完了しました。ログインボックスよりログインしてください。"
@@ -178,3 +181,12 @@ msgstr "サイト管理者がアカウントを承認するまでしばらくお
 
 msgid "Registered info"
 msgstr "登録された内容"
+
+msgid "Your registration was not approved.<br>Please consult with the system administrator."
+msgstr "アカウントを承認できませんでした。<br>システム管理者にお問い合わせください。"
+
+msgid "Selected account is already activated!"
+msgstr "既に承認された会員です。"
+
+msgid "The member was cancelled out."
+msgstr "指定会員はすでに削除されています。承認できませんでした。"

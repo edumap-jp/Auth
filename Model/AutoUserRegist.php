@@ -10,7 +10,6 @@
  */
 
 App::uses('AppModel', 'Model');
-App::uses('NetCommonsMail', 'Mails.Utility');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
 
 /**
@@ -20,6 +19,13 @@ App::uses('NetCommonsTime', 'NetCommons.Utility');
  * @package NetCommons\Auth\Model
  */
 class AutoUserRegist extends AppModel {
+
+/**
+ * 認証キー用のランダム文字列
+ *
+ * @var const
+ */
+	const RANDAMSTR = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 /**
  * アカウント登録の最終決定(ユーザ自身による確認)
@@ -41,6 +47,34 @@ class AutoUserRegist extends AppModel {
  * @var string
  */
 	const CONFIRMATION_ADMIN_APPROVAL = '2';
+
+/**
+ * ユーザステータス(利用不可)
+ *
+ * @var string
+ */
+	const STATUS_KEY_NOT_AVAILABLE = 'status_0';
+
+/**
+ * ユーザステータス(公開)
+ *
+ * @var string
+ */
+	const STATUS_KEY_AVAILABLE = 'status_1';
+
+/**
+ * ユーザステータス(管理者の承認待ち)
+ *
+ * @var string
+ */
+	const STATUS_KEY_WAIT_ACCEPTANCE = 'status_2';
+
+/**
+ * ユーザステータス(本人の確認待ち)
+ *
+ * @var string
+ */
+	const STATUS_KEY_WAIT_APPROVAL = 'status_3';
 
 /**
  * 自動登録の有無
@@ -171,23 +205,38 @@ class AutoUserRegist extends AppModel {
  *
  * @return array
  */
+	private function __getUserStatusCode($statusKey) {
+		$siteSettions = $this->getSiteSetting();
+		$userAttributes = $this->getUserAttribures();
+
+		$attrId = Hash::extract($userAttributes, '{n}.UserAttribute[key=status]')[0]['id'];
+		$pathKey = $attrId . '.UserAttributeChoice.{n}[key=' . $statusKey . ']';
+		$status = Hash::extract($userAttributes, $pathKey)[0]['code'];
+
+		return $status;
+	}
+
+/**
+ * 初期値データの取得
+ *
+ * @return array
+ */
 	private function __getDefaultData() {
 		$siteSettions = $this->getSiteSetting();
 		$userAttributes = $this->getUserAttribures();
 
 		$confirmation = Hash::get($siteSettions['AutoRegist.confirmation'], '0.value');
-		$attrId = Hash::extract($userAttributes, '{n}.UserAttribute[key=status]')[0]['id'];
 		if ($confirmation === self::CONFIRMATION_USER_OWN) {
 			//自分自身による確認
-			$pathKey = $attrId . '.UserAttributeChoice.{n}[key=status_3]';
+			$statusKey = self::STATUS_KEY_WAIT_APPROVAL;
 		} elseif ($confirmation === self::CONFIRMATION_AUTO_REGIST) {
 			//自動的に承認
-			$pathKey = $attrId . '.UserAttributeChoice.{n}[key=status_1]';
+			$statusKey = self::STATUS_KEY_AVAILABLE;
 		} else {
 			//管理者による承認
-			$pathKey = $attrId . '.UserAttributeChoice.{n}[key=status_2]';
+			$statusKey = self::STATUS_KEY_WAIT_ACCEPTANCE;
 		}
-		$status = Hash::extract($userAttributes, $pathKey)[0]['code'];
+		$status = $this->__getUserStatusCode($statusKey);
 
 		$default = array(
 			'User' => array(
@@ -305,20 +354,6 @@ class AutoUserRegist extends AppModel {
 	}
 
 /**
- * キーの入力チェック
- *
- * @param array $data リクエストデータ
- * @return bool
- */
-	public function validateSecretKey($data) {
-		$this->set($data);
-		if (! $this->validates()) {
-			return false;
-		}
-		return true;
-	}
-
-/**
  * 新規登録の入力チェック
  *
  * @param array $data リクエストデータ
@@ -432,39 +467,216 @@ class AutoUserRegist extends AppModel {
 		//トランザクションBegin
 		$this->begin();
 
-		$this->__setValidateRequest();
+		try {
+			$this->__setValidateRequest();
 
-		//Userデータの登録
-		$user = $this->User->saveUser($data);
-		if (! $user) {
-			return false;
+			//Userデータの登録
+			$user = $this->User->saveUser($data);
+			if (! $user) {
+				return false;
+			}
+
+			//アクティベートキーの登録
+			$result = $this->saveActivateKey($user['User']['id']);
+			$user['User']['activate_key'] = $result['activate_key'];
+			$user['User']['activated'] = $result['activated'];
+			$user['User']['activate_parameter'] = $result['activate_parameter'];
+
+			//トランザクションCommit
+			$this->commit();
+
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$this->rollback($ex);
 		}
 
 		return $user;
 	}
 
 /**
- * 新規登録のメール処理
+ * アクティベートキーを登録する
  *
- * @param array $data リクエストデータ
- * @return bool
+ * @param int $userId ユーザID
+ * @return array アクティベートキーとアクティベート日時
  */
-	public function sendAutoUserRegist($data) {
-		$mail = new NetCommonsMail();
+	public function saveActivateKey($userId) {
+		$this->loadModels([
+			'User' => 'Users.User',
+		]);
 
-		$mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
-		$mail->mailAssignTag->setFixedPhraseBody($data['body']);
-		$mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
-		$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
-		$mail->initPlugin(Current::read('Language.id'));
-		$mail->to($data['email']);
-		$mail->setFrom(Current::read('Language.id'));
+		//トランザクションBegin
+		$this->begin();
 
-		if (! $mail->sendMailDirect()) {
-			throw new InternalErrorException(__d('net_commons', 'SendMail Error'));
+		try {
+			//登録処理
+			$this->User->id = $userId;
+
+			$activateKey = substr(str_shuffle(self::RANDAMSTR), 0, 10);
+			if (! $this->User->saveField('activate_key', $activateKey, ['callbacks' => false])) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+
+			$activated = date('Y-m-d H:i:s');
+			if (! $this->User->saveField('activated', $activated, ['callbacks' => false])) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+
+			//トランザクションCommit
+			$this->commit();
+
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$this->rollback($ex);
 		}
 
-		return true;
+		$parameter = '?id=' . $userId .
+						'&activate_key=' . $activateKey .
+						'&timestamp=' . strtotime($activated) .
+						'&' . Security::hash($userId . $activateKey, 'md5', true);
+		return array(
+			'activate_key' => $activateKey,
+			'activated' => $activated,
+			'activate_parameter' => $parameter
+		);
+	}
+
+/**
+ * ステータスを更新する
+ *
+ * @param array $data リクエストデータ
+ * @param int $status ステータス
+ * @return bool|array バリデーションエラーの場合、falseを返す。<br>
+ * 正常の場合で、管理者の承認有無は、本人の登録確認のためのユーザ情報を返す。<br>
+ * また、本人の登録確認の場合、trueを返す。
+ */
+	public function saveUserStatus($data, $status) {
+		$this->loadModels([
+			'User' => 'Users.User',
+		]);
+
+		//トランザクションBegin
+		$this->begin();
+
+		$userId = Hash::get($data, 'id');
+		$data = Hash::remove($data, 'id');
+
+		$activateKey = Hash::get($data, 'activate_key');
+		$data = Hash::remove($data, 'activate_key');
+
+		$activateTime = date('Y-m-d H:i:s', Hash::get($data, 'timestamp'));
+		$data = Hash::remove($data, 'timestamp');
+
+		$hash = array_keys($data)[0];
+
+		$user = $this->__validateUserStatus($userId, $status, $activateKey, $activateTime, $hash);
+		if (! $user) {
+			return false;
+		}
+
+		//ステータスチェック
+		if ($status === self::CONFIRMATION_USER_OWN) {
+			//自分自身による確認
+			$updateStatus = $this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE);
+		} elseif ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
+			//管理者による承認
+			$updateStatus = $this->__getUserStatusCode(self::STATUS_KEY_WAIT_APPROVAL);
+		}
+
+		try {
+			//登録処理
+			$this->User->id = $userId;
+
+			$result = $this->User->saveField('status', $updateStatus, ['callbacks' => false]);
+			if (! $result) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+			$result = $this->User->saveField('activate_key', '', ['callbacks' => false]);
+			if (! $result) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+			$result = $this->User->saveField('activated', null, ['callbacks' => false]);
+			if (! $result) {
+				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+			}
+
+			if ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
+				$result = $this->saveActivateKey($userId);
+			}
+
+			//トランザクションCommit
+			$this->commit();
+
+		} catch (Exception $ex) {
+			//トランザクションRollback
+			$this->rollback($ex);
+		}
+
+		return $result;
+	}
+
+/**
+ * メールでの承認バリデーション
+ *
+ * @return bool|array ユーザ情報 or エラー
+ */
+	private function __validateUserStatus($userId, $status, $activateKey, $activateTime, $hash) {
+		//改竄チェック
+		if (Security::hash($userId . $activateKey, 'md5', true) !== $hash) {
+			//不正アクセスエラー
+			$this->invalidate('bad_request1', __d('net_commons', 'Bad Request'));
+			return false;
+		}
+
+		//ユーザデータ取得
+		$user = $this->User->find('first', array(
+			'recursive' => -1,
+			'conditions' => array('id' => $userId),
+		));
+
+		if (! $user) {
+			//既に削除されたエラー
+			$this->invalidate('deletedError',
+				__d('auth', 'The member was cancelled out.')
+			);
+			return false;
+		}
+
+		//ステータスチェック
+		if ($status === self::CONFIRMATION_USER_OWN) {
+			//自分自身による確認
+			$statusKey = self::STATUS_KEY_WAIT_APPROVAL;
+			$approvedError = array(
+				$this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE)
+			);
+		} elseif ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
+			//管理者による承認
+			$statusKey = self::STATUS_KEY_WAIT_ACCEPTANCE;
+			$approvedError = array(
+				$this->__getUserStatusCode(self::STATUS_KEY_WAIT_APPROVAL),
+				$this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE)
+			);
+		} else {
+			//不正アクセスエラー
+			$this->invalidate('bad_request2', __d('net_commons', 'Bad Request'));
+			return false;
+		}
+
+		if ($user['User']['status'] === $this->__getUserStatusCode($statusKey) &&
+				$user['User']['activated'] === $activateTime) {
+			//OK
+		} elseif (in_array($user['User']['status'], $approvedError, true)) {
+			//既に承認済みエラー
+			$this->invalidate('approvedError',
+				__d('auth', 'Selected account is already activated!')
+			);
+			return false;
+		} else {
+			//不正アクセスエラー
+			$this->invalidate('bad_request3', __d('net_commons', 'Bad Request'));
+			return false;
+		}
+
+		return $user;
 	}
 
 }
