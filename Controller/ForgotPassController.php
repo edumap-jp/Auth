@@ -227,8 +227,11 @@ class ForgotPassController extends AuthAppController {
 				$this->NetCommons->setFlashNotification(
 					__d('net_commons', 'Successfully saved.'), array('class' => 'success')
 				);
-
 				$this->Session->delete('ForgotPass');
+
+				$this->Auth->authenticate['all']['scope'] = array(
+					'User.status' => '1'
+				);
 				if ($this->Auth->login()) {
 					$this->User->updateLoginTime($this->Auth->user('id'));
 					Current::write('User', $this->Auth->user());

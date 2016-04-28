@@ -77,6 +77,27 @@ class AutoUserRegist extends AppModel {
 	const STATUS_KEY_WAIT_APPROVAL = 'status_3';
 
 /**
+ * バリデーションエラーのキー(不正リクエスト)
+ *
+ * @var string
+ */
+	const INVALIDATE_BAD_REQUEST = 'bad_request';
+
+/**
+ * バリデーションエラーのキー(既に承認済み)
+ *
+ * @var string
+ */
+	const INVALIDATE_ALREADY_ACTIVATED = 'already_activated';
+
+/**
+ * バリデーションエラーのキー(既に削除された)
+ *
+ * @var string
+ */
+	const INVALIDATE_CANCELLED_OUT = 'cancelled_out';
+
+/**
  * 自動登録の有無
  *
  * @var bool
@@ -203,10 +224,10 @@ class AutoUserRegist extends AppModel {
 /**
  * 初期値データの取得
  *
- * @return array
+ * @param string $statusKey ステータスのキー
+ * @return string ステータス値
  */
 	private function __getUserStatusCode($statusKey) {
-		$siteSettions = $this->getSiteSetting();
 		$userAttributes = $this->getUserAttribures();
 
 		$attrId = Hash::extract($userAttributes, '{n}.UserAttribute[key=status]')[0]['id'];
@@ -374,11 +395,7 @@ class AutoUserRegist extends AppModel {
 		$this->__setValidateRequest();
 
 		$this->User->set($data);
-		if (! $this->User->validates()) {
-			return false;
-		}
-
-		return true;
+		return $this->User->validates();
 	}
 
 /**
@@ -478,9 +495,7 @@ class AutoUserRegist extends AppModel {
 
 			//アクティベートキーの登録
 			$result = $this->saveActivateKey($user['User']['id']);
-			$user['User']['activate_key'] = $result['activate_key'];
-			$user['User']['activated'] = $result['activated'];
-			$user['User']['activate_parameter'] = $result['activate_parameter'];
+			$user = Hash::merge($user, $result);
 
 			//トランザクションCommit
 			$this->commit();
@@ -498,6 +513,7 @@ class AutoUserRegist extends AppModel {
  *
  * @param int $userId ユーザID
  * @return array アクティベートキーとアクティベート日時
+ * @throws InternalErrorException
  */
 	public function saveActivateKey($userId) {
 		$this->loadModels([
@@ -509,17 +525,26 @@ class AutoUserRegist extends AppModel {
 
 		try {
 			//登録処理
-			$this->User->id = $userId;
-
 			$activateKey = substr(str_shuffle(self::RANDAMSTR), 0, 10);
-			if (! $this->User->saveField('activate_key', $activateKey, ['callbacks' => false])) {
+			$activated = date('Y-m-d H:i:s');
+			$update = array(
+				'id' => $userId,
+				'activate_key' => $activateKey,
+				'activated' => $activated,
+			);
+
+			//不要なビヘイビアを一時的にアンロードする
+			$this->User->Behaviors->unload('Files.Attachment');
+			$this->User->Behaviors->unload('Users.Avatar');
+
+			$result = $this->User->save($update, false, array_keys($update));
+			if (! $result) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
 			}
 
-			$activated = date('Y-m-d H:i:s');
-			if (! $this->User->saveField('activated', $activated, ['callbacks' => false])) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
+			//一時的にアンロードしたビヘイビアをロードする
+			$this->User->Behaviors->load('Files.Attachment');
+			$this->User->Behaviors->load('Users.Avatar');
 
 			//トランザクションCommit
 			$this->commit();
@@ -533,11 +558,11 @@ class AutoUserRegist extends AppModel {
 						'&activate_key=' . $activateKey .
 						'&timestamp=' . strtotime($activated) .
 						'&' . Security::hash($userId . $activateKey, 'md5', true);
-		return array(
+		return array('User' => array(
 			'activate_key' => $activateKey,
 			'activated' => $activated,
 			'activate_parameter' => $parameter
-		);
+		));
 	}
 
 /**
@@ -548,6 +573,7 @@ class AutoUserRegist extends AppModel {
  * @return bool|array バリデーションエラーの場合、falseを返す。<br>
  * 正常の場合で、管理者の承認有無は、本人の登録確認のためのユーザ情報を返す。<br>
  * また、本人の登録確認の場合、trueを返す。
+ * @throws InternalErrorException
  */
 	public function saveUserStatus($data, $status) {
 		$this->loadModels([
@@ -577,27 +603,31 @@ class AutoUserRegist extends AppModel {
 		if ($status === self::CONFIRMATION_USER_OWN) {
 			//自分自身による確認
 			$updateStatus = $this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE);
-		} elseif ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
+		} else {
 			//管理者による承認
 			$updateStatus = $this->__getUserStatusCode(self::STATUS_KEY_WAIT_APPROVAL);
 		}
 
 		try {
-			//登録処理
-			$this->User->id = $userId;
+			//不要なビヘイビアを一時的にアンロードする
+			$this->User->Behaviors->unload('Files.Attachment');
+			$this->User->Behaviors->unload('Users.Avatar');
 
-			$result = $this->User->saveField('status', $updateStatus, ['callbacks' => false]);
+			//登録処理
+			$update = array(
+				'id' => $userId,
+				'status' => $updateStatus,
+				'activate_key' => '',
+				'activated' => null
+			);
+			$result = $this->User->save($update, false, array_keys($update));
 			if (! $result) {
 				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
 			}
-			$result = $this->User->saveField('activate_key', '', ['callbacks' => false]);
-			if (! $result) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
-			$result = $this->User->saveField('activated', null, ['callbacks' => false]);
-			if (! $result) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
+
+			//一時的にアンロードしたビヘイビアをロードする
+			$this->User->Behaviors->load('Files.Attachment');
+			$this->User->Behaviors->load('Users.Avatar');
 
 			if ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
 				$result = $this->saveActivateKey($userId);
@@ -617,25 +647,30 @@ class AutoUserRegist extends AppModel {
 /**
  * メールでの承認バリデーション
  *
+ * @param int $userId ユーザID
+ * @param int $status ステータス値
+ * @param string $activateKey アクティベートキー
+ * @param int $activateTime アクティベート日時(int)
+ * @param string $hash ユーザIDとアクティベートキーのハッシュ値(改竄チェック用)
  * @return bool|array ユーザ情報 or エラー
  */
 	private function __validateUserStatus($userId, $status, $activateKey, $activateTime, $hash) {
 		//改竄チェック
 		if (Security::hash($userId . $activateKey, 'md5', true) !== $hash) {
 			//不正アクセスエラー
-			$this->invalidate('bad_request1', __d('net_commons', 'Bad Request'));
+			$this->invalidate(self::INVALIDATE_BAD_REQUEST, __d('net_commons', 'Bad Request'));
 			return false;
 		}
 
 		//ユーザデータ取得
 		$user = $this->User->find('first', array(
 			'recursive' => -1,
-			'conditions' => array('id' => $userId),
+			'conditions' => array('id' => $userId, 'is_deleted' => '0'),
 		));
 
 		if (! $user) {
 			//既に削除されたエラー
-			$this->invalidate('deletedError',
+			$this->invalidate(self::INVALIDATE_CANCELLED_OUT,
 				__d('auth', 'The member was cancelled out.')
 			);
 			return false;
@@ -648,17 +683,13 @@ class AutoUserRegist extends AppModel {
 			$approvedError = array(
 				$this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE)
 			);
-		} elseif ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
+		} else {
 			//管理者による承認
 			$statusKey = self::STATUS_KEY_WAIT_ACCEPTANCE;
 			$approvedError = array(
 				$this->__getUserStatusCode(self::STATUS_KEY_WAIT_APPROVAL),
 				$this->__getUserStatusCode(self::STATUS_KEY_AVAILABLE)
 			);
-		} else {
-			//不正アクセスエラー
-			$this->invalidate('bad_request2', __d('net_commons', 'Bad Request'));
-			return false;
 		}
 
 		if ($user['User']['status'] === $this->__getUserStatusCode($statusKey) &&
@@ -666,13 +697,13 @@ class AutoUserRegist extends AppModel {
 			//OK
 		} elseif (in_array($user['User']['status'], $approvedError, true)) {
 			//既に承認済みエラー
-			$this->invalidate('approvedError',
+			$this->invalidate(self::INVALIDATE_ALREADY_ACTIVATED,
 				__d('auth', 'Selected account is already activated!')
 			);
 			return false;
 		} else {
 			//不正アクセスエラー
-			$this->invalidate('bad_request3', __d('net_commons', 'Bad Request'));
+			$this->invalidate(self::INVALIDATE_BAD_REQUEST, __d('net_commons', 'Bad Request'));
 			return false;
 		}
 

@@ -162,13 +162,13 @@ msgstr "入力した内容を確認して下さい。"
 #
 
 msgid "Complete registration."
-msgstr "登録の完了"
+msgstr "登録完了"
 
 msgid "Complete request registration."
-msgstr "新規登録の受付完了"
+msgstr "受付完了"
 
 msgid "Approval completion."
-msgstr "承認の完了"
+msgstr "承認完了"
 
 msgid "Thank you for your registration. Click on the link, please login."
 msgstr "登録が完了しました。ログインボックスよりログインしてください。"
@@ -190,3 +190,6 @@ msgstr "既に承認された会員です。"
 
 msgid "The member was cancelled out."
 msgstr "指定会員はすでに削除されています。承認できませんでした。"
+
+msgid "hank you for your registration.<br>We have sent you the registration key to your registered e-mail address."
+msgstr "アカウントを承認しました。<br>承認キーが記載されたメールを承認した会員に送信しました。"

@@ -225,6 +225,7 @@ class AutoUserRegistController extends AuthAppController {
 				$user = Hash::merge($this->request->data, Hash::remove($user, 'User.password'));
 				$this->Session->write('AutoUserRegist', $user);
 
+				//メール送信
 				$siteSettings = $this->viewVars['siteSettions'];
 				$value = Hash::get($siteSettings['AutoRegist.confirmation'], '0.value');
 				$this->__sendMail($value, $user);
@@ -290,21 +291,17 @@ class AutoUserRegistController extends AuthAppController {
 			'{s}.url'
 		);
 
-		if ($this->AutoUserRegist->saveUserStatus($this->request->query, AutoUserRegist::CONFIRMATION_USER_OWN)) {
+		$result = $this->AutoUserRegist->saveUserStatus(
+			$this->request->query,
+			AutoUserRegist::CONFIRMATION_USER_OWN
+		);
+		if ($result) {
 			$message = __d('auth', 'Thank you for your registration. Click on the link, please login.');
 			$this->NetCommons->setFlashNotification($message, array('class' => 'success'));
 			return $this->redirect('/auth/auth/login');
 		} else {
-CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
-
 			$this->view = 'acceptance';
-			$message = __d('auth', 'Your registration was not approved.<br>' .
-									'Please consult with the system administrator.');
-			$options = array('class' => 'alert alert-danger');
-
-			$this->set('message', $message);
-			$this->set('redirectUrl', '/');
-			$this->set('options', $options);
+			return $this->__setValidationError();
 		}
 	}
 
@@ -323,25 +320,31 @@ CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 		$this->helpers['NetCommons.Wizard']['navibar'] = Hash::insert(
 			$this->helpers['NetCommons.Wizard']['navibar'],
 			self::WIZARD_COMPLETION . '.label',
-			array('auth', 'Complete request registration.')
+			array('auth', 'Approval completion.')
 		);
 
-		if ($this->AutoUserRegist->saveUserStatus($this->request->query, AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL)) {
-			$message = __d('auth', 'Your registration will be confirmed by the system administrator. <br>' .
-									'When confirmed, it will be notified by e-mail.');
-			$options = array();
+		$result = $this->AutoUserRegist->saveUserStatus(
+			$this->request->query,
+			AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL
+		);
+		if ($result) {
+			$message = __d('auth', 'hank you for your registration.<br>' .
+							'We have sent you the registration key to your registered e-mail address.');
+			$this->set('message', $message);
+			$this->set('options', array());
+			$this->set('redirectUrl', '/');
+
+			$user = $this->User->find('first', array(
+				'recursive' => -1,
+				'conditions' => array('id' => $this->request->query['id'])
+			));
+			$user = Hash::merge($user, $result);
+			$this->__sendMail(AutoUserRegist::CONFIRMATION_USER_OWN, $user);
+
 		} else {
-CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
-
 			$this->view = 'acceptance';
-			$message = __d('auth', 'Your registration was not approved.<br>' .
-									'Please consult with the system administrator.');
-			$options = array('class' => 'alert alert-danger');
+			return $this->__setValidationError();
 		}
-
-		$this->set('message', $message);
-		$this->set('redirectUrl', '/');
-		$this->set('options', $options);
 	}
 
 /**
@@ -427,6 +430,34 @@ CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 		}
 
 		return $result;
+	}
+
+/**
+ * バリデーションエラーメッセージのセット
+ *
+ * @return void
+ */
+	private function __setValidationError() {
+		$errorKey = array_keys($this->AutoUserRegist->validationErrors)[0];
+		if ($errorKey === AutoUserRegist::INVALIDATE_BAD_REQUEST) {
+			//不正リクエスト
+			return $this->throwBadRequest();
+		} elseif ($errorKey === AutoUserRegist::INVALIDATE_CANCELLED_OUT ||
+					$errorKey === AutoUserRegist::INVALIDATE_ALREADY_ACTIVATED) {
+			//既に削除された or 既に承認済み
+			$message = array_shift($this->AutoUserRegist->validationErrors[$errorKey]);
+			$options = array('class' => 'alert alert-warning');
+		} else {
+			//それ以外
+			$message = __d('auth', 'Your registration was not approved.<br>' .
+									'Please consult with the system administrator.');
+			$options = array('class' => 'alert alert-danger');
+		}
+
+		CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
+		$this->set('redirectUrl', '/');
+		$this->set('message', $message);
+		$this->set('options', $options);
 	}
 
 }

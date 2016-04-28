@@ -72,6 +72,9 @@ class AuthController extends AuthAppController {
 		$this->set('siteSettions', $siteSettions);
 
 		if ($this->request->is('post')) {
+			$this->Auth->authenticate['all']['scope'] = array(
+				'User.status' => '1'
+			);
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
