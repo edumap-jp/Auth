@@ -68,9 +68,6 @@ class AuthController extends AuthAppController {
  * @throws InternalErrorException
  **/
 	public function login() {
-		$siteSettions = $this->ForgotPass->getSiteSetting();
-		$this->set('siteSettions', $siteSettions);
-
 		if ($this->request->is('post')) {
 			$this->Auth->authenticate['all']['scope'] = array(
 				'User.status' => '1'

@@ -11,6 +11,7 @@
 
 App::uses('AuthAppController', 'Auth.Controller');
 App::uses('NetCommonsMail', 'Mails.Utility');
+App::uses('SiteSettingUtil', 'SiteManager.Utility');
 
 /**
  * パスワード再発行Controller
@@ -107,10 +108,20 @@ class ForgotPassController extends AuthAppController {
 		parent::beforeFilter();
 		$this->Auth->allow('request', 'confirm', 'update');
 
-		$siteSettions = $this->ForgotPass->getSiteSetting();
-		$this->set('siteSettions', $siteSettions);
+		SiteSettingUtil::setup(array(
+			// ** パスワード再発行を使う
+			'ForgotPass.use_password_reissue',
+			// ** 新規パスワード通知の件名
+			'ForgotPass.issue_mail_subject',
+			// ** パスワード通知メールの本文
+			'ForgotPass.issue_mail_body',
+			// ** 新規パスワード発行の件名
+			'ForgotPass.request_mail_subject',
+			// ** パスワード発行メールの本文
+			'ForgotPass.request_mail_body',
+		));
 
-		if (! Hash::get($this->viewVars['siteSettions']['ForgotPass.use_password_reissue'], '0.value')) {
+		if (! SiteSettingUtil::read('ForgotPass.use_password_reissue', '0')) {
 			return $this->setAction('throwBadRequest');
 		}
 	}
@@ -133,16 +144,10 @@ class ForgotPassController extends AuthAppController {
 					$mail = new NetCommonsMail();
 
 					$mail->mailAssignTag->setFixedPhraseSubject(
-						Hash::get(
-							$this->viewVars['siteSettions']['ForgotPass.issue_mail_subject'],
-							Current::read('Language.id') . '.value'
-						)
+						SiteSettingUtil::read('ForgotPass.issue_mail_subject')
 					);
 					$mail->mailAssignTag->setFixedPhraseBody(
-						Hash::get(
-							$this->viewVars['siteSettions']['ForgotPass.issue_mail_body'],
-							Current::read('Language.id') . '.value'
-						)
+						SiteSettingUtil::read('ForgotPass.issue_mail_body')
 					);
 					$mail->mailAssignTag->assignTags(array(
 						'X-AUTHORIZATION_KEY' => Hash::get($forgotPass, 'authorization_key'),
@@ -182,16 +187,10 @@ class ForgotPassController extends AuthAppController {
 				$mail = new NetCommonsMail();
 
 				$mail->mailAssignTag->setFixedPhraseSubject(
-					Hash::get(
-						$this->viewVars['siteSettions']['ForgotPass.request_mail_subject'],
-						Current::read('Language.id') . '.value'
-					)
+					SiteSettingUtil::read('ForgotPass.request_mail_subject')
 				);
 				$mail->mailAssignTag->setFixedPhraseBody(
-					Hash::get(
-						$this->viewVars['siteSettions']['ForgotPass.request_mail_body'],
-						Current::read('Language.id') . '.value'
-					)
+					SiteSettingUtil::read('ForgotPass.request_mail_body')
 				);
 				$mail->mailAssignTag->assignTags(array(
 					'X-HANDLENAME' => $forgotPass['handlename'],

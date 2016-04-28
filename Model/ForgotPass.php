@@ -96,38 +96,6 @@ class ForgotPass extends AppModel {
 	}
 
 /**
- * SiteSettingデータ取得
- *
- * @return array
- */
-	public function getSiteSetting() {
-		$this->loadModels([
-			'SiteSetting' => 'SiteManager.SiteSetting',
-		]);
-
-		$siteSettions = $this->SiteSetting->getSiteSettingForEdit(
-			array('SiteSetting.key' => array(
-				// ** パスワード再発行を使う
-				'ForgotPass.use_password_reissue',
-				// ** 新規パスワード通知の件名
-				'ForgotPass.issue_mail_subject',
-				// ** パスワード通知メールの本文
-				'ForgotPass.issue_mail_body',
-				// ** 新規パスワード発行の件名
-				'ForgotPass.request_mail_subject',
-				// ** パスワード発行メールの本文
-				'ForgotPass.request_mail_body',
-			))
-		);
-
-		if (! $siteSettions) {
-			$siteSettions['ForgotPass.use_password_reissue'] = array(['value' => '0']);
-		}
-
-		return $siteSettions;
-	}
-
-/**
  * パスワード再発行通知のチェック
  *
  * @param array $data リクエストデータ
