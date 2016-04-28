@@ -1,6 +1,6 @@
 <?php
 /**
- * Auth Controller
+ * パスワード再発行Controller
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -11,10 +11,9 @@
 
 App::uses('AuthAppController', 'Auth.Controller');
 App::uses('NetCommonsMail', 'Mails.Utility');
-App::uses('MailSend', 'Mails.Utility');
 
 /**
- * Auth Controller
+ * パスワード再発行Controller
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
@@ -43,7 +42,9 @@ class ForgotPassController extends AuthAppController {
 	const WIZARD_UPDATE = 'update';
 
 /**
- * use component
+ * 使用するComponents
+ *
+ * - [SecurityComponent](http://book.cakephp.org/2.0/ja/core-libraries/components/security-component.html)
  *
  * @var array
  */
@@ -52,7 +53,10 @@ class ForgotPassController extends AuthAppController {
 	);
 
 /**
- * use model
+ * 使用するModels
+ *
+ * - [Auth.ForgotPass](../../Auth/classes/ForgotPass.html)
+ * - [Users.User](../../Users/classes/User.html)
  *
  * @var array
  */
@@ -62,7 +66,9 @@ class ForgotPassController extends AuthAppController {
 	);
 
 /**
- * use helper
+ * 使用するHelpers
+ *
+ * - [NetCommons.Wizard](../../NetCommons/classes/WizardHelper.html)
  *
  * @var array
  */
@@ -221,8 +227,11 @@ class ForgotPassController extends AuthAppController {
 				$this->NetCommons->setFlashNotification(
 					__d('net_commons', 'Successfully saved.'), array('class' => 'success')
 				);
-
 				$this->Session->delete('ForgotPass');
+
+				$this->Auth->authenticate['all']['scope'] = array(
+					'User.status' => '1'
+				);
 				if ($this->Auth->login()) {
 					$this->User->updateLoginTime($this->Auth->user('id'));
 					Current::write('User', $this->Auth->user());

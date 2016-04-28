@@ -1,6 +1,6 @@
 <?php
 /**
- * パスワード再発行用Model
+ * パスワード再発行Model
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -12,7 +12,7 @@
 App::uses('AppModel', 'Model');
 
 /**
- * パスワード再発行用Model
+ * パスワード再発行Model
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Model
@@ -20,7 +20,7 @@ App::uses('AppModel', 'Model');
 class ForgotPass extends AppModel {
 
 /**
- * エクスポート用のランダム文字列
+ * 認証キー用のランダム文字列
  *
  * @var const
  */
@@ -29,12 +29,14 @@ class ForgotPass extends AppModel {
 /**
  * テーブル名
  *
- * @var mixed
+ * @var bool
  */
 	public $useTable = false;
 
 /**
- * 使用ビヘイビア
+ * 使用するBehaviors
+ *
+ * - [Mails.MailQueueBehavior](../../Mails/classes/MailQueueBehavior.html)
  *
  * @var array
  */
@@ -53,6 +55,11 @@ class ForgotPass extends AppModel {
  * @see Model::save()
  */
 	public function beforeValidate($options = array()) {
+		$forgotPass = CakeSession::read('ForgotPass');
+		if (! $forgotPass) {
+			$forgotPass = array();
+		}
+
 		$this->validate = Hash::merge($this->validate, array(
 			'email' => array(
 				'notBlank' => array(
@@ -72,7 +79,14 @@ class ForgotPass extends AppModel {
 			'authorization_key' => array(
 				'notBlank' => array(
 					'rule' => array('notBlank'),
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('auth', 'Authorization key')),
+					'message' => sprintf(
+						__d('net_commons', 'Please input %s.'), __d('auth', 'Authorization key')
+					),
+					'required' => false
+				),
+				'equalTo' => array(
+					'rule' => array('equalTo', Hash::get($forgotPass, 'authorization_key')),
+					'message' => __d('auth', 'Failed on validation errors. Please check the authorization key.'),
 					'required' => false
 				),
 			),
@@ -132,6 +146,7 @@ class ForgotPass extends AppModel {
 
 		$email = trim($data['ForgotPass']['email']);
 
+		//その他のメールアドレスも含める必要あり
 		$user = $this->User->find('first', array(
 			'recursive' => -1,
 			'conditions' => array(
@@ -165,9 +180,7 @@ class ForgotPass extends AppModel {
 			return false;
 		}
 		$data['ForgotPass']['authorization_key'] = trim($data['ForgotPass']['authorization_key']);
-		if (! $forgotPass || ! Hash::get($forgotPass, 'user_id') ||
-				$data['ForgotPass']['authorization_key'] !== Hash::get($forgotPass, 'authorization_key')) {
-
+		if (! $forgotPass || ! Hash::get($forgotPass, 'user_id')) {
 			$this->invalidate(
 				'authorization_key',
 				__d('auth', 'Failed on validation errors. Please check the authorization key.')
@@ -196,9 +209,6 @@ class ForgotPass extends AppModel {
 		$this->begin();
 
 		//バリデーション
-		CakeLog::debug(var_export(Hash::get($forgotPass, 'user_id'), true));
-		CakeLog::debug(var_export($data['User']['username'], true));
-
 		if ($data['User']['username'] !== Hash::get($forgotPass, 'username')) {
 			$this->User->invalidate(
 				'username',
@@ -210,7 +220,7 @@ class ForgotPass extends AppModel {
 		$data['User']['id'] = Hash::get($forgotPass, 'user_id');
 		unset($data['User']['username']);
 		$this->User->set($data);
-		if (! $this->User->validates()) {
+		if (! $this->User->validates(array('validatePassword' => true))) {
 			$this->validationErrors = Hash::merge(
 				$this->validationErrors, $this->User->validationErrors
 			);

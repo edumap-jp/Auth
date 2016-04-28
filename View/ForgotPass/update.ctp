@@ -1,6 +1,6 @@
 <?php
 /**
- * パスワード再発行受付画面のテンプレート
+ * パスワード再発行画面のテンプレート
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>

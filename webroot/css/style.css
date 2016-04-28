@@ -1,0 +1,22 @@
+/**
+ * auth/css/style.css
+ *
+ * @author Shohei Nakajima <nakajimashouhei@gmail.com>
+ * @link http://www.netcommons.org NetCommons Project
+ * @license http://www.netcommons.org/license.txt NetCommons License
+ */
+
+.auto-user-regist-key-handlename,
+.auto-user-regist-key-name {
+	width: 50%;
+}
+
+.auto-user-regist-key-username,
+.auto-user-regist-key-password {
+	width: 30%;
+}
+
+.auto-user-regist-disclaimer {
+	overflow: auto;
+	height: 250px;
+}
