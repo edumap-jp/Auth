@@ -123,10 +123,34 @@ class AutoUserRegistController extends AuthAppController {
 		parent::beforeFilter();
 		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion', 'approval', 'acceptance');
 
-		$siteSettions = $this->AutoUserRegist->getSiteSetting();
-		$this->set('siteSettions', $siteSettions);
+		SiteSettingUtil::setup(array(
+			// * 入会設定
+			// ** 自動会員登録を許可する
+			'AutoRegist.use_automatic_register',
+			// ** アカウント登録の最終決定
+			'AutoRegist.confirmation',
+			// ** 入力キーの使用
+			'AutoRegist.use_secret_key',
+			// ** 入力キー
+			'AutoRegist.secret_key',
+			// ** 自動登録時の権限
+			'AutoRegist.role_key',
+			// ** 自動登録時にデフォルトルームに参加する
+			'AutoRegist.prarticipate_default_room',
 
-		if (! $this->AutoUserRegist->hasAutoUserRegist()) {
+			// ** 利用許諾文
+			'AutoRegist.disclaimer',
+			// ** 会員登録承認メールの件名
+			'AutoRegist.approval_mail_subject',
+			// ** 会員登録承認メールの本文
+			'AutoRegist.approval_mail_body',
+			// ** 会員登録受付メールの件名
+			'AutoRegist.acceptance_mail_subject',
+			// ** 会員登録受付メールの本文
+			'AutoRegist.acceptance_mail_body',
+		));
+
+		if (! SiteSettingUtil::read('AutoRegist.use_automatic_register', false)) {
 			return $this->setAction('throwBadRequest');
 		}
 
@@ -136,7 +160,7 @@ class AutoUserRegistController extends AuthAppController {
 			);
 		} else {
 			//管理者の承認が必要の場合、ウィザードの文言変更
-			$value = Hash::get($siteSettions['AutoRegist.confirmation'], '0.value');
+			$value = SiteSettingUtil::read('AutoRegist.confirmation');
 			if ($value === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
 				$this->helpers['NetCommons.Wizard']['navibar'] = Hash::insert(
 					$this->helpers['NetCommons.Wizard']['navibar'],
@@ -146,7 +170,7 @@ class AutoUserRegistController extends AuthAppController {
 			}
 
 			//入力キーのチェック
-			$value = Hash::get($siteSettions['AutoRegist.use_secret_key'], '0.value');
+			$value = SiteSettingUtil::read('AutoRegist.use_secret_key');
 			if ($value) {
 				if (! $this->Session->read('AutoUserRegistKey')) {
 					$this->Session->write('AutoUserRegistRedirect', $this->params['action']);
@@ -177,8 +201,7 @@ class AutoUserRegistController extends AuthAppController {
 				$this->NetCommons->handleValidationError($this->AutoUserRegist->validationErrors);
 			}
 		} else {
-			$value = Hash::get($this->viewVars['siteSettions']['AutoRegist.use_secret_key'], '0.value');
-			if (! $value) {
+			if (! SiteSettingUtil::read('ForgotPass.use_secret_key')) {
 				return $this->redirect(
 					'/auth/auto_user_regist/' . $this->Session->read('AutoUserRegistRedirect')
 				);
@@ -226,9 +249,7 @@ class AutoUserRegistController extends AuthAppController {
 				$this->Session->write('AutoUserRegist', $user);
 
 				//メール送信
-				$siteSettings = $this->viewVars['siteSettions'];
-				$value = Hash::get($siteSettings['AutoRegist.confirmation'], '0.value');
-				$this->__sendMail($value, $user);
+				$this->__sendMail(SiteSettingUtil::read('AutoRegist.confirmation'), $user);
 
 				return $this->redirect('/auth/auto_user_regist/completion');
 			} else {
@@ -253,10 +274,9 @@ class AutoUserRegistController extends AuthAppController {
 			'{s}.url'
 		);
 
-		$siteSettings = $this->viewVars['siteSettions'];
 		$this->request->data = $this->Session->read('AutoUserRegist');
 
-		$value = Hash::get($siteSettings['AutoRegist.confirmation'], '0.value');
+		$value = SiteSettingUtil::read('AutoRegist.confirmation');
 		if ($value === AutoUserRegist::CONFIRMATION_USER_OWN) {
 			$message = __d('auth', 'Confirmation e-mail will be sent to the registered address, ' .
 								'after the system administrator approve your registration.');
@@ -355,25 +375,16 @@ class AutoUserRegistController extends AuthAppController {
  * @return bool
  */
 	private function __sendMail($confirmation, $user) {
-		$siteSettings = $this->viewVars['siteSettions'];
 		if ($confirmation === AutoUserRegist::CONFIRMATION_USER_OWN) {
-			$data['subject'] = Hash::get(
-				$siteSettings['AutoRegist.approval_mail_subject'], Current::read('Language.id') . '.value'
-			);
-			$data['body'] = Hash::get(
-				$siteSettings['AutoRegist.approval_mail_body'], Current::read('Language.id') . '.value'
-			);
+			$data['subject'] = SiteSettingUtil::read('AutoRegist.approval_mail_subject');
+			$data['body'] = SiteSettingUtil::read('AutoRegist.approval_mail_body');
 			$data['email'] = array($user['User']['email']);
 			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/approval' .
 						$user['User']['activate_parameter'];
 
 		} elseif ($confirmation === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
-			$data['subject'] = Hash::get(
-				$siteSettings['AutoRegist.acceptance_mail_subject'], Current::read('Language.id') . '.value'
-			);
-			$data['body'] = Hash::get(
-				$siteSettings['AutoRegist.acceptance_mail_body'], Current::read('Language.id') . '.value'
-			);
+			$data['subject'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_subject');
+			$data['body'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_body');
 			$data['email'] = $this->__getMailAddressForAdmin();
 			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/acceptance' .
 						$user['User']['activate_parameter'];

@@ -27,9 +27,6 @@ class TestAuthController extends AuthAppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('index_only_auth_general', 'index_no_auth_general');
-
-		$siteSettions['ForgotPass.use_password_reissue'] = array(['value' => '0']);
-		$this->set('siteSettions', $siteSettions);
 	}
 
 /**

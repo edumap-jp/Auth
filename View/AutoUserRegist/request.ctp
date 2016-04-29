@@ -35,7 +35,7 @@
 					__d('auth', 'Terms of use')
 				); ?>
 				<div class="auto-user-regist-disclaimer form-control">
-					<?php echo Hash::get($siteSettions['AutoRegist.disclaimer'], Current::read('Language.id') . '.value'); ?>
+					<?php echo SiteSettingUtil::read('AutoRegist.disclaimer'); ?>
 				</div>
 			</div>
 

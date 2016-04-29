@@ -98,20 +98,6 @@ class AutoUserRegist extends AppModel {
 	const INVALIDATE_CANCELLED_OUT = 'cancelled_out';
 
 /**
- * 自動登録の有無
- *
- * @var bool
- */
-	private $__hasAutoUserRegist = null;
-
-/**
- * SiteSettionデータ
- *
- * @var array
- */
-	private $__siteSettions = null;
-
-/**
  * テーブル名
  *
  * @var bool
@@ -140,10 +126,8 @@ class AutoUserRegist extends AppModel {
  * @see Model::save()
  */
 	public function beforeValidate($options = array()) {
-		$siteSettions = $this->getSiteSetting();
-
 		//入力キーのチェック
-		if (Hash::get($siteSettions['AutoRegist.use_secret_key'], '0.value')) {
+		if (SiteSettingUtil::read('AutoRegist.use_secret_key')) {
 			$this->validate = Hash::merge($this->validate, array(
 				'secret_key' => array(
 					'notBlank' => array(
@@ -154,7 +138,7 @@ class AutoUserRegist extends AppModel {
 						'required' => true
 					),
 					'equalTo' => array(
-						'rule' => array('equalTo', Hash::get($siteSettions['AutoRegist.secret_key'], '0.value')),
+						'rule' => array('equalTo', SiteSettingUtil::read('AutoRegist.secret_key')),
 						'message' => __d('auth', 'Failed on validation errors. Please check the secret key.'),
 						'required' => false
 					),
@@ -163,62 +147,6 @@ class AutoUserRegist extends AppModel {
 		}
 
 		return parent::beforeValidate($options);
-	}
-
-/**
- * SiteSettingデータ取得
- *
- * @return array
- */
-	public function getSiteSetting() {
-		if ($this->__siteSettions) {
-			return $this->__siteSettions;
-		}
-
-		$this->loadModels([
-			'SiteSetting' => 'SiteManager.SiteSetting',
-		]);
-
-		$siteSettions = $this->SiteSetting->getSiteSettingForEdit(
-			array('SiteSetting.key' => array(
-				// * 入会設定
-				// ** 自動会員登録を許可する
-				'AutoRegist.use_automatic_register',
-				// ** アカウント登録の最終決定
-				'AutoRegist.confirmation',
-				// ** 入力キーの使用
-				'AutoRegist.use_secret_key',
-				// ** 入力キー
-				'AutoRegist.secret_key',
-				// ** 自動登録時の権限
-				'AutoRegist.role_key',
-				// ** 自動登録時にデフォルトルームに参加する
-				'AutoRegist.prarticipate_default_room',
-
-				// ** 自動登録時の入力項目(後で、、、会員項目設定で行う？)
-
-				// ** 利用許諾文
-				'AutoRegist.disclaimer',
-				// ** 会員登録承認メールの件名
-				'AutoRegist.approval_mail_subject',
-				// ** 会員登録承認メールの本文
-				'AutoRegist.approval_mail_body',
-				// ** 会員登録受付メールの件名
-				'AutoRegist.acceptance_mail_subject',
-				// ** 会員登録受付メールの本文
-				'AutoRegist.acceptance_mail_body',
-			))
-		);
-
-		if (! $siteSettions) {
-			$siteSettions['AutoRegist.use_automatic_register'] = array(['value' => '0']);
-		}
-
-		$value = Hash::get($siteSettions['AutoRegist.use_automatic_register'], '0.value', false);
-		$this->__hasAutoUserRegist = (bool)$value;
-		$this->__siteSettions = $siteSettions;
-
-		return $siteSettions;
 	}
 
 /**
@@ -243,10 +171,9 @@ class AutoUserRegist extends AppModel {
  * @return array
  */
 	private function __getDefaultData() {
-		$siteSettions = $this->getSiteSetting();
 		$userAttributes = $this->getUserAttribures();
 
-		$confirmation = Hash::get($siteSettions['AutoRegist.confirmation'], '0.value');
+		$confirmation = SiteSettingUtil::read('AutoRegist.confirmation');
 		if ($confirmation === self::CONFIRMATION_USER_OWN) {
 			//自分自身による確認
 			$statusKey = self::STATUS_KEY_WAIT_APPROVAL;
@@ -312,8 +239,7 @@ class AutoUserRegist extends AppModel {
 		]);
 
 		//SiteSettingデータ取得
-		$siteSettions = $this->getSiteSetting();
-		Current::write('User.role_key', Hash::get($siteSettions['AutoRegist.role_key'], '0.value'));
+		Current::write('User.role_key', SiteSettingUtil::read('AutoRegist.role_key'));
 
 		//UserAttributeデータ取得
 		$this->__userAttributes = $this->UserAttribute->getUserAttriburesForAutoUserRegist();
@@ -342,36 +268,6 @@ class AutoUserRegist extends AppModel {
 				$this->UsersLanguage->create($default['UsersLanguage'])['UsersLanguage'];
 
 		return $results;
-	}
-
-/**
- * 新規登録機能の利用有無
- *
- * @return bool
- */
-	public function hasAutoUserRegist() {
-		if (! isset($this->__hasAutoUserRegist)) {
-			$this->loadModels([
-				'SiteSetting' => 'SiteManager.SiteSetting',
-			]);
-
-			$siteSettions = $this->SiteSetting->getSiteSettingForEdit(
-				array('SiteSetting.key' => array(
-					// * 入会設定
-					// ** 自動会員登録を許可する
-					'AutoRegist.use_automatic_register',
-				))
-			);
-
-			if (! $siteSettions) {
-				$siteSettions['AutoRegist.use_automatic_register'] = array(['value' => '0']);
-			}
-
-			$value = Hash::get($siteSettions['AutoRegist.use_automatic_register'], '0.value', false);
-			$this->__hasAutoUserRegist = (bool)$value;
-		}
-
-		return $this->__hasAutoUserRegist;
 	}
 
 /**

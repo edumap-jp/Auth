@@ -59,7 +59,7 @@
 
 					<hr>
 
-					<?php if (Hash::get($siteSettions['ForgotPass.use_password_reissue'], '0.value')) : ?>
+					<?php if (SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
 					<div>
 						<?php echo $this->NetCommonsHtml->link(
 								__d('auth', 'Forgot your Password? Please click here.'),
