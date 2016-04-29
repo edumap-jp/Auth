@@ -24,6 +24,7 @@ class AuthController extends AuthAppController {
  *
  * - [Auth.ForgotPass](../../Auth/classes/ForgotPass.html)
  * - [Rooms.Rooms](../../Rooms/classes/Room.html)
+ * - [SiteManager.SiteSetting](../../SiteManager/classes/SiteSetting.html)
  * - [UserRoles.UserRole](../../UserRoles/classes/UserRole.html)
  * - [Users.User](../../Users/classes/User.html)
  *
@@ -32,6 +33,7 @@ class AuthController extends AuthAppController {
 	public $uses = array(
 		'Auth.ForgotPass',
 		'Rooms.Room',
+		'SiteManager.SiteSetting',
 		'UserRoles.UserRole',
 		'Users.User',
 	);
