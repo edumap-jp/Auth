@@ -59,7 +59,7 @@
 
 					<hr>
 
-					<?php if (SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
+					<?php if (! SiteSettingUtil::read('App.close_site') && SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
 					<div>
 						<?php echo $this->NetCommonsHtml->link(
 								__d('auth', 'Forgot your Password? Please click here.'),
