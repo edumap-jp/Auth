@@ -24,7 +24,6 @@
         "netcommons/users":             "dev-master"
     },
     "config": {
-        "vendor-dir": "vendors",
-        "process-timeout": 3000
+        "vendor-dir": "vendors"
     }
 }
