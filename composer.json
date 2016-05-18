@@ -22,9 +22,5 @@
         "netcommons/site-manager":      "dev-master",
         "netcommons/user-attributes":   "dev-master",
         "netcommons/users":             "dev-master"
-    },
-    "config": {
-        "vendor-dir": "vendors",
-        "process-timeout": 3000
     }
 }
