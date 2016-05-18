@@ -22,8 +22,8 @@
         "netcommons/site-manager":      "dev-master",
         "netcommons/user-attributes":   "dev-master",
         "netcommons/users":             "dev-master"
-    },		
-    "config": {		
-        "vendor-dir": "vendors"	
+    },
+    "config": {
+        "vendor-dir": "vendors"
     }
 }
