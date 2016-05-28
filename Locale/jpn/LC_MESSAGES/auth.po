@@ -99,7 +99,7 @@ msgid "New password"
 msgstr "新しいパスワード"
 
 msgid "Enter the new password, please click the [OK] button."
-msgstr "新しいパスワードを入力して、[決定]ボタンをクリックして下さい。"
+msgstr "新しいパスワードを入力して、[決定]ボタンをクリックしてください。"
 
 
 #
@@ -152,7 +152,7 @@ msgstr "入力内容の確認"
 msgid "Check the input contents. "
 "If there is no content is a problem, please click on the [NEXT] button. "
 "If you re-fix, please click on the [BACK] button."
-msgstr "入力した内容を確認して下さい。"
+msgstr "入力した内容を確認してください。"
 "内容に問題なければ、[次へ]ボタンをクリックしてください。"
 "修正しなおす場合は、[前へ]ボタンをクリックしてください。"
 
