@@ -51,9 +51,10 @@ class AutoUserRegistFormHelper extends AppHelper {
  *
  * @param array $userAttribute 会員項目データ配列
  * @param bool $disabled Disabledの有無
+ * @param string $colClass colのclass属性
  * @return string HTML
  */
-	public function input($userAttribute, $disabled) {
+	public function input($userAttribute, $disabled, $colClass) {
 		$output = '';
 
 		$key = $userAttribute['UserAttribute']['key'];
@@ -83,10 +84,7 @@ class AutoUserRegistFormHelper extends AppHelper {
 			$options['help'] = $userAttribute['UserAttribute']['description'];
 		}
 
-		$options['div'] = array('class' => 'form-group');
-		$options['div']['class'] .= ' auto-user-regist-key-' . $key;
-		$options['div']['class'] .= ' auto-user-regist-type-' . $dataTypeKey;
-
+		$options['div'] = array('class' => 'form-group' . $colClass);
 		if (in_array($dataTypeKey, ['radio', 'checkbox', 'select'], true)) {
 			$options['options'] = Hash::combine(
 				$userAttribute['UserAttributeChoice'], '{n}.key', '{n}.name'

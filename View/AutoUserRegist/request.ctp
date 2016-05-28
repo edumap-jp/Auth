@@ -26,9 +26,28 @@
 			<?php echo $this->NetCommonsForm->hidden('UsersLanguage.' . Current::read('Language.id') . '.id'); ?>
 			<?php echo $this->NetCommonsForm->hidden('UsersLanguage.' . Current::read('Language.id') . '.language_id'); ?>
 
-			<?php foreach ($userAttributes as $id => $userAttribute) : ?>
-				<?php echo $this->AutoUserRegistForm->input($userAttribute, false); ?>
-			<?php endforeach; ?>
+			<?php
+				foreach ($userAttributes as $id => $userAttribute) {
+					$attributeKey = $userAttribute['UserAttribute']['key'];
+					if (in_array($attributeKey, ['username', 'password'], true)) {
+						$startTag = '<div class="row">';
+						$colClass = ' col-xs-12 col-sm-4';
+						$endTag = '</div>';
+					} elseif (in_array($attributeKey, ['handlename', 'name'], true)) {
+						$startTag = '<div class="row">';
+						$colClass = ' col-xs-12 col-sm-6';
+						$endTag = '</div>';
+					} else {
+						$startTag = '';
+						$colClass = '';
+						$endTag = '';
+					}
+
+					echo $startTag;
+					echo $this->AutoUserRegistForm->input($userAttribute, false, $colClass);
+					echo $endTag;
+				}
+			?>
 
 			<div class="form-group">
 				<?php echo $this->NetCommonsForm->label(
