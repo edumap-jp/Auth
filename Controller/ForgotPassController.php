@@ -171,6 +171,8 @@ class ForgotPassController extends AuthAppController {
 				return $this->redirect('/auth/forgot_pass/confirm');
 			}
 			$this->NetCommons->handleValidationError($this->ForgotPass->validationErrors);
+		} else {
+			$this->request->data['ForgotPass']['email'] = Hash::get($this->request->query, 'email');
 		}
 	}
 
