@@ -140,7 +140,7 @@ class AutoUserRegist extends AppModel {
 					'equalTo' => array(
 						'rule' => array('equalTo', SiteSettingUtil::read('AutoRegist.secret_key')),
 						'message' => __d('auth', 'Failed on validation errors. Please check the secret key.'),
-						'required' => false
+						'required' => true
 					),
 				),
 			));
