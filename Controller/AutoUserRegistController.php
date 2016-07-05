@@ -173,7 +173,12 @@ class AutoUserRegistController extends AuthAppController {
 			$value = SiteSettingUtil::read('AutoRegist.use_secret_key');
 			if ($value) {
 				if (! $this->Session->read('AutoUserRegistKey')) {
-					$this->Session->write('AutoUserRegistRedirect', $this->params['action']);
+					if ($this->params['action'] === 'entry_key') {
+						$this->Session->delete('AutoUserRegistKey');
+						$this->Session->write('AutoUserRegistRedirect', 'request');
+					} else {
+						$this->Session->write('AutoUserRegistRedirect', $this->params['action']);
+					}
 					$this->setAction('entry_key');
 				}
 			} else {
@@ -192,7 +197,7 @@ class AutoUserRegistController extends AuthAppController {
 	public function entry_key() {
 		if ($this->request->is('post')) {
 			$this->AutoUserRegist->set($this->request->data);
-			if (! $this->AutoUserRegist->validates()) {
+			if ($this->AutoUserRegist->validates()) {
 				$this->Session->write('AutoUserRegistKey', true);
 				return $this->redirect(
 					'/auth/auto_user_regist/' . $this->Session->read('AutoUserRegistRedirect')
@@ -201,7 +206,7 @@ class AutoUserRegistController extends AuthAppController {
 				$this->NetCommons->handleValidationError($this->AutoUserRegist->validationErrors);
 			}
 		} else {
-			if (! SiteSettingUtil::read('ForgotPass.use_secret_key')) {
+			if (! SiteSettingUtil::read('AutoRegist.use_secret_key')) {
 				return $this->redirect(
 					'/auth/auto_user_regist/' . $this->Session->read('AutoUserRegistRedirect')
 				);
