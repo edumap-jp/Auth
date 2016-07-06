@@ -44,13 +44,15 @@
 					<?php echo $this->NetCommonsForm->input('username', array(
 						'label' => __d('auth', 'Username'),
 						'placeholder' => __d('auth', 'Please enter your username.'),
-						'required' => true
+						'required' => true,
+						'class' => 'form-control allow-submit',
 					)); ?>
 
 					<?php echo $this->NetCommonsForm->input('password', array(
 						'label' => __d('auth', 'Password'),
 						'placeholder' => __d('auth', 'Please enter your password.'),
-						'required' => true
+						'required' => true,
+						'class' => 'form-control allow-submit',
 					)); ?>
 
 					<button class="btn btn-primary btn-block" type="submit">
