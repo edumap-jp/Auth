@@ -108,6 +108,9 @@ class ForgotPassController extends AuthAppController {
 		parent::beforeFilter();
 		$this->Auth->allow('request', 'confirm', 'update');
 
+		//ページタイトル
+		$this->set('pageTitle', __d('auth', 'Forgot your Password?'));
+
 		SiteSettingUtil::setup(array(
 			// ** パスワード再発行を使う
 			'ForgotPass.use_password_reissue',

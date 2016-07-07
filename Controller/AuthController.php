@@ -64,6 +64,9 @@ class AuthController extends AuthAppController {
  * @throws InternalErrorException
  **/
 	public function login() {
+		//ページタイトル
+		$this->set('pageTitle', __d('auth', 'Login'));
+
 		if ($this->request->is('post')) {
 			$this->Auth->authenticate['all']['scope'] = array(
 				'User.status' => '1'
