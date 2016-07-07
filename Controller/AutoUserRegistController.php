@@ -123,6 +123,9 @@ class AutoUserRegistController extends AuthAppController {
 		parent::beforeFilter();
 		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion', 'approval', 'acceptance');
 
+		//ページタイトル
+		$this->set('pageTitle', __d('auth', 'Sign up'));
+
 		SiteSettingUtil::setup(array(
 			// * 入会設定
 			// ** 自動会員登録を許可する
