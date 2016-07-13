@@ -24,9 +24,11 @@
 <?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
 	<article class="panel panel-default">
 		<div class="panel-body">
-			<?php foreach ($userAttributes as $id => $userAttribute) : ?>
-				<?php echo $this->AutoUserRegistForm->input($userAttribute, true); ?>
-			<?php endforeach; ?>
+			<?php
+				foreach ($userAttributes as $userAttribute) {
+					echo $this->AutoUserRegistForm->input($userAttribute, true);
+				}
+			?>
 		</div>
 
 		<div class="panel-footer text-center">

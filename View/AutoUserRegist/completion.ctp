@@ -15,7 +15,7 @@
 </h2>
 <?php echo $this->Wizard->navibar(AutoUserRegistController::WIZARD_COMPLETION); ?>
 
-<?php echo $this->MessageFlash->description($message); ?>
+<?php echo $this->MessageFlash->description($message, array('class' => 'alert alert-success')); ?>
 
 <?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
 	<article class="panel panel-default">
@@ -24,13 +24,15 @@
 		</div>
 
 		<div class="panel-body">
-			<?php foreach ($userAttributes as $id => $userAttribute) : ?>
-				<?php echo $this->AutoUserRegistForm->input($userAttribute, true); ?>
-			<?php endforeach; ?>
+			<?php
+				foreach ($userAttributes as $userAttribute) {
+					echo $this->AutoUserRegistForm->inputByCompletion($userAttribute);
+				}
+			?>
 		</div>
 
 		<div class="panel-footer text-center">
-			<?php echo $this->Button->save(__d('net_commons', 'OK'), array('url' => $redirectUrl)); ?>
+			<?php echo $this->Button->cancel(__d('net_commons', 'Close'), $redirectUrl); ?>
 		</div>
 	</article>
 <?php echo $this->NetCommonsForm->end();

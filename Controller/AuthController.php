@@ -46,6 +46,9 @@ class AuthController extends AuthAppController {
 
 		parent::beforeFilter();
 		$this->Auth->allow('login', 'logout');
+
+		$this->Session->delete('AutoUserRegist');
+		$this->Session->delete('ForgotPass');
 	}
 
 /**
