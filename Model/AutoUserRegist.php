@@ -112,8 +112,7 @@ class AutoUserRegist extends AppModel {
  * @var array
  */
 	public $actsAs = array(
-		'Mails.MailQueue' => array(
-		),
+		'Mails.MailQueue' => array(),
 	);
 
 /**
@@ -147,6 +146,22 @@ class AutoUserRegist extends AppModel {
 		}
 
 		return parent::beforeValidate($options);
+	}
+
+/**
+ * model名(UserもしくはUsersLanguage)の取得
+ *
+ * @param array $userAttribute 会員項目データ
+ * @return string model名(UserもしくはUsersLanguage)
+ */
+	private function __getModel($userAttribute) {
+		if (Hash::get($userAttribute, 'UserAttribute.is_multilingualization')) {
+			$model = 'UsersLanguage';
+		} else {
+			$model = 'User';
+		}
+
+		return $model;
 	}
 
 /**
@@ -210,11 +225,7 @@ class AutoUserRegist extends AppModel {
 				continue;
 			}
 
-			if (Hash::get($userAttribute, 'UserAttribute.is_multilingualization')) {
-				$model = 'UsersLanguage';
-			} else {
-				$model = 'User';
-			}
+			$model = $this->__getModel($userAttribute);
 
 			$tmp = array_shift($userAttribute['UserAttributeChoice']);
 			$default = Hash::insert($default, $model . '.' . $key, $tmp['code']);
@@ -316,11 +327,7 @@ class AutoUserRegist extends AppModel {
 				continue;
 			}
 
-			if (Hash::get($userAttribute, 'UserAttribute.is_multilingualization')) {
-				$model = 'UsersLanguage';
-			} else {
-				$model = 'User';
-			}
+			$model = $this->__getModel($userAttribute);
 
 			//eメールは、確認を含める
 			if ($dataTypeKey === DataType::DATA_TYPE_EMAIL) {
@@ -409,7 +416,6 @@ class AutoUserRegist extends AppModel {
  *
  * @param int $userId ユーザID
  * @return array アクティベートキーとアクティベート日時
- * @throws InternalErrorException
  */
 	public function saveActivateKey($userId) {
 		$this->loadModels([
@@ -429,18 +435,8 @@ class AutoUserRegist extends AppModel {
 				'activated' => $activated,
 			);
 
-			//不要なビヘイビアを一時的にアンロードする
-			$this->User->Behaviors->unload('Files.Attachment');
-			$this->User->Behaviors->unload('Users.Avatar');
-
-			$result = $this->User->save($update, false, array_keys($update));
-			if (! $result) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
-
-			//一時的にアンロードしたビヘイビアをロードする
-			$this->User->Behaviors->load('Files.Attachment');
-			$this->User->Behaviors->load('Users.Avatar');
+			//登録処理
+			$this->__saveUser($update);
 
 			//トランザクションCommit
 			$this->commit();
@@ -462,16 +458,41 @@ class AutoUserRegist extends AppModel {
 	}
 
 /**
+ * 登録処理
+ *
+ * @param array $update 更新データ
+ * @return bool
+ * @throws InternalErrorException
+ */
+	private function __saveUser($update) {
+		//不要なビヘイビアを一時的にアンロードする
+		$this->User->Behaviors->unload('Files.Attachment');
+		$this->User->Behaviors->unload('Users.Avatar');
+
+		$result = $this->User->save($update, false, array_keys($update));
+		if (! $result) {
+			throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
+		}
+
+		//一時的にアンロードしたビヘイビアをロードする
+		$this->User->Behaviors->load('Files.Attachment');
+		$this->User->Behaviors->load('Users.Avatar');
+
+		return true;
+	}
+
+/**
  * ステータスを更新する
  *
  * @param array $data リクエストデータ
  * @param int $status ステータス
+ * @param bool $validate バリデーションの有無
  * @return bool|array バリデーションエラーの場合、falseを返す。<br>
  * 正常の場合で、管理者の承認有無は、本人の登録確認のためのユーザ情報を返す。<br>
  * また、本人の登録確認の場合、trueを返す。
- * @throws InternalErrorException
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
  */
-	public function saveUserStatus($data, $status) {
+	public function saveUserStatus($data, $status, $validate = true) {
 		$this->loadModels([
 			'User' => 'Users.User',
 		]);
@@ -482,17 +503,19 @@ class AutoUserRegist extends AppModel {
 		$userId = Hash::get($data, 'id');
 		$data = Hash::remove($data, 'id');
 
-		$activateKey = Hash::get($data, 'activate_key');
-		$data = Hash::remove($data, 'activate_key');
+		if ($validate) {
+			$activateKey = Hash::get($data, 'activate_key');
+			$data = Hash::remove($data, 'activate_key');
 
-		$activateTime = date('Y-m-d H:i:s', Hash::get($data, 'timestamp'));
-		$data = Hash::remove($data, 'timestamp');
+			$activateTime = date('Y-m-d H:i:s', Hash::get($data, 'timestamp'));
+			$data = Hash::remove($data, 'timestamp');
 
-		$hash = array_keys($data)[0];
+			$hash = array_keys($data)[0];
 
-		$user = $this->__validateUserStatus($userId, $status, $activateKey, $activateTime, $hash);
-		if (! $user) {
-			return false;
+			$user = $this->__validateUserStatus($userId, $status, $activateKey, $activateTime, $hash);
+			if (! $user) {
+				return false;
+			}
 		}
 
 		//ステータスチェック
@@ -505,25 +528,15 @@ class AutoUserRegist extends AppModel {
 		}
 
 		try {
-			//不要なビヘイビアを一時的にアンロードする
-			$this->User->Behaviors->unload('Files.Attachment');
-			$this->User->Behaviors->unload('Users.Avatar');
-
-			//登録処理
 			$update = array(
 				'id' => $userId,
 				'status' => $updateStatus,
 				'activate_key' => '',
 				'activated' => null
 			);
-			$result = $this->User->save($update, false, array_keys($update));
-			if (! $result) {
-				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-			}
 
-			//一時的にアンロードしたビヘイビアをロードする
-			$this->User->Behaviors->load('Files.Attachment');
-			$this->User->Behaviors->load('Users.Avatar');
+			//登録処理
+			$this->__saveUser($update);
 
 			if ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
 				$result = $this->saveActivateKey($userId);

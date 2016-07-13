@@ -10,7 +10,6 @@
  */
 
 App::uses('AuthAppController', 'Auth.Controller');
-App::uses('NetCommonsMail', 'Mails.Utility');
 
 /**
  * 新規登録Controller
@@ -69,6 +68,7 @@ class AutoUserRegistController extends AuthAppController {
  */
 	public $uses = array(
 		'Auth.AutoUserRegist',
+		'Auth.AutoUserRegistMail',
 		'PluginManager.PluginsRole',
 		'Users.User',
 	);
@@ -254,10 +254,10 @@ class AutoUserRegistController extends AuthAppController {
 			$user = $this->AutoUserRegist->saveAutoUserRegist($this->request->data);
 			if ($user) {
 				$user = Hash::merge($this->request->data, Hash::remove($user, 'User.password'));
-				$this->Session->write('AutoUserRegist', $user);
+				$this->Session->write('AutoUserRegist', Hash::remove($this->request->data, 'User.password'));
 
 				//メール送信
-				$this->__sendMail(SiteSettingUtil::read('AutoRegist.confirmation'), $user);
+				$this->AutoUserRegistMail->sendMail(SiteSettingUtil::read('AutoRegist.confirmation'), $user);
 
 				return $this->redirect('/auth/auto_user_regist/completion');
 			} else {
@@ -282,8 +282,6 @@ class AutoUserRegistController extends AuthAppController {
 			'{s}.url'
 		);
 
-		$this->request->data = $this->Session->read('AutoUserRegist');
-
 		$value = SiteSettingUtil::read('AutoRegist.confirmation');
 		if ($value === AutoUserRegist::CONFIRMATION_USER_OWN) {
 			$message = __d('auth', 'Confirmation e-mail will be sent to the registered address, ' .
@@ -303,8 +301,12 @@ class AutoUserRegistController extends AuthAppController {
 		$userAttributes = $this->AutoUserRegist->getUserAttribures();
 		$this->set('userAttributes', $userAttributes);
 
-		$this->request->data = $this->Session->read('AutoUserRegist');
-		$this->Session->delete('AutoUserRegist');
+		if ($this->Session->read('AutoUserRegist')) {
+			$this->request->data = $this->Session->read('AutoUserRegist');
+			$this->Session->delete('AutoUserRegist');
+		} else {
+			$this->request->data = array();
+		}
 	}
 
 /**
@@ -367,88 +369,12 @@ class AutoUserRegistController extends AuthAppController {
 				'conditions' => array('id' => $this->request->query['id'])
 			));
 			$user = Hash::merge($user, $result);
-			$this->__sendMail(AutoUserRegist::CONFIRMATION_USER_OWN, $user);
+			$this->AutoUserRegistMail->sendMail(AutoUserRegist::CONFIRMATION_USER_OWN, $user);
 
 		} else {
 			$this->view = 'acceptance';
 			return $this->__setValidationError();
 		}
-	}
-
-/**
- * 新規登録のメール処理
- *
- * @param int $confirmation 完了確認ステータス
- * @param array $user ユーザ情報
- * @return bool
- */
-	private function __sendMail($confirmation, $user) {
-		if ($confirmation === AutoUserRegist::CONFIRMATION_USER_OWN) {
-			$data['subject'] = SiteSettingUtil::read('AutoRegist.approval_mail_subject');
-			$data['body'] = SiteSettingUtil::read('AutoRegist.approval_mail_body');
-			$data['email'] = array($user['User']['email']);
-			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/approval' .
-						$user['User']['activate_parameter'];
-
-		} elseif ($confirmation === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
-			$data['subject'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_subject');
-			$data['body'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_body');
-			$data['email'] = $this->__getMailAddressForAdmin();
-			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/acceptance' .
-						$user['User']['activate_parameter'];
-		} else {
-			return true;
-		}
-
-		$mail = new NetCommonsMail();
-
-		foreach ($data['email'] as $email) {
-			$mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
-			$mail->mailAssignTag->setFixedPhraseBody($data['body']);
-			$mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
-			$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
-			$mail->initPlugin(Current::read('Language.id'));
-			$mail->to($email);
-			$mail->setFrom(Current::read('Language.id'));
-
-			if (! $mail->sendMailDirect()) {
-				//throw new InternalErrorException(__d('net_commons', 'SendMail Error'));
-			}
-		}
-
-		return true;
-	}
-
-/**
- * 管理者ユーザのメールアドレス取得
- * ここでいう管理者権限とは、会員管理が使える権限のこと。
- *
- * @return array
- */
-	private function __getMailAddressForAdmin() {
-		$roleKeys = $this->PluginsRole->find('list', array(
-			'recursive' => -1,
-			'fields' => array('id', 'role_key'),
-			'conditions' => array(
-				'plugin_key' => 'user_manager',
-			),
-		));
-
-		//その他のメールアドレスも含める必要あり
-		$mails = $this->User->find('all', array(
-			'recursive' => -1,
-			'fields' => array('email'),
-			'conditions' => array(
-				'role_key' => $roleKeys,
-			),
-		));
-
-		$result = array();
-		foreach ($mails as $mail) {
-			$result = array_merge($result, Hash::extract($mail, '{s}.{s}'));
-		}
-
-		return $result;
 	}
 
 /**

@@ -49,13 +49,48 @@ class AutoUserRegistFormHelper extends AppHelper {
 /**
  * データタイプに対するinputタグのHTML出力
  *
- * @param array $userAttribute 会員項目データ配列
+ * @param array $userAttributes 会員項目データ配列
  * @param bool $disabled Disabledの有無
- * @param string $colClass colのclass属性
  * @return string HTML
  */
-	public function input($userAttribute, $disabled, $colClass) {
+	public function inputs($userAttributes, $disabled) {
 		$output = '';
+
+		foreach ($userAttributes as $userAttribute) {
+			if ($this->_View->params['action'] === 'completion') {
+				$output .= $this->__inputByCompletion($userAttribute);
+			} else {
+				$output .= $this->__input($userAttribute, $disabled);
+			}
+		}
+
+		return $output;
+	}
+
+/**
+ * データタイプに対するinputタグのHTML出力
+ *
+ * @param array $userAttribute 会員項目データ配列
+ * @param bool $disabled Disabledの有無
+ * @return string HTML
+ */
+	public function input($userAttribute, $disabled) {
+		$output = '';
+
+		$attributeKey = $userAttribute['UserAttribute']['key'];
+		if (in_array($attributeKey, ['username', 'password'], true)) {
+			$startTag = '<div class="row">';
+			$colClass = ' col-xs-12 col-sm-4';
+			$endTag = '</div>';
+		} elseif (in_array($attributeKey, ['handlename', 'name'], true)) {
+			$startTag = '<div class="row">';
+			$colClass = ' col-xs-12 col-sm-6';
+			$endTag = '</div>';
+		} else {
+			$startTag = '';
+			$colClass = '';
+			$endTag = '';
+		}
 
 		$key = $userAttribute['UserAttribute']['key'];
 		$editable = $userAttribute['UserAttributesRole']['self_editable'];
@@ -68,7 +103,9 @@ class AutoUserRegistFormHelper extends AppHelper {
 
 		if (! $editable && ! in_array($key, ['username', 'password'], true)) {
 			if (! $disabled) {
+				$output .= $startTag;
 				$output .= $this->NetCommonsForm->hidden($field);
+				$output .= $endTag;
 			}
 			return $output;
 		}
@@ -78,23 +115,68 @@ class AutoUserRegistFormHelper extends AppHelper {
 			'label' => $userAttribute['UserAttribute']['name'],
 			'required' => $userAttribute['UserAttributeSetting']['required'],
 		);
-		if ($disabled) {
-			$options['disabled'] = true;
-		} else {
-			$options['help'] = $userAttribute['UserAttribute']['description'];
-		}
+		$options['disabled'] = $disabled;
+		$options['help'] = $userAttribute['UserAttribute']['description'];
 
 		$options['div'] = array('class' => 'form-group' . $colClass);
 		if (in_array($dataTypeKey, ['radio', 'checkbox', 'select'], true)) {
 			$options['options'] = Hash::combine(
-				$userAttribute['UserAttributeChoice'], '{n}.key', '{n}.name'
+				$userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'
 			);
 		}
 		if (in_array($dataTypeKey, ['password', 'email'], true)) {
 			$options['again'] = ! $disabled;
 		}
 
+		$output .= $startTag;
 		$output .= $this->NetCommonsForm->input($field, $options);
+		$output .= $endTag;
+
+		return $output;
+	}
+
+/**
+ * データタイプに対するinputタグのHTML出力（受付完了）
+ *
+ * @param array $userAttribute 会員項目データ配列
+ * @return string HTML
+ */
+	public function inputByCompletion($userAttribute) {
+		$output = '';
+
+		$attributeKey = $userAttribute['UserAttribute']['key'];
+		$editable = $userAttribute['UserAttributesRole']['self_editable'];
+
+		if ($attributeKey === 'password') {
+			return $output;
+		}
+
+		if (! $editable && $attributeKey !== 'username') {
+			return $output;
+		}
+
+		$dataTypeKey = $userAttribute['UserAttributeSetting']['data_type_key'];
+		if (Hash::get($userAttribute, 'UserAttributeSetting.is_multilingualization')) {
+			$field = 'UsersLanguage.' . Current::read('Language.id') . '.' . $attributeKey;
+		} else {
+			$field = 'User' . '.' . $attributeKey;
+		}
+
+		$output .= '<div class="row form-group">';
+		$output .= '<div class="col-xs-12 col-sm-2">';
+		$output .= '<strong>' . $userAttribute['UserAttribute']['name'] . '</strong>';
+		$output .= '</div>';
+		$output .= '<div class="col-xs-12 col-sm-10">';
+		if (in_array($dataTypeKey, ['radio', 'checkbox', 'select'], true)) {
+			$options = Hash::combine(
+				$userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'
+			);
+			$output .= Hash::get($options, Hash::get($this->_View->request->data, $field, ''));
+		} else {
+			$output .= Hash::get($this->_View->request->data, $field);
+		}
+		$output .= '</div>';
+		$output .= '</div>';
 
 		return $output;
 	}
