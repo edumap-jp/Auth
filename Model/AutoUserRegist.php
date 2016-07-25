@@ -253,7 +253,14 @@ class AutoUserRegist extends AppModel {
 		Current::write('User.role_key', SiteSettingUtil::read('AutoRegist.role_key'));
 
 		//UserAttributeデータ取得
-		$this->__userAttributes = $this->UserAttribute->getUserAttriburesForAutoUserRegist();
+		$this->__userAttributes = $this->UserAttribute->getUserAttriburesForAutoUserRegist(
+			array(
+				'OR' => array(
+					'UserAttributeSetting.required' => true,
+					'UserAttributeSetting.auto_regist_display' => true,
+				)
+			)
+		);
 
 		return $this->__userAttributes;
 	}
