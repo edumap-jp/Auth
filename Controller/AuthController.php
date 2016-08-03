@@ -71,11 +71,15 @@ class AuthController extends AuthAppController {
 		$this->set('pageTitle', __d('auth', 'Login'));
 
 		if ($this->request->is('post')) {
+			//Auth->login()を実行すると、$this->UserがUsers.UserからModelAppに置き換わってしまい、
+			//エラーになるため、変数に保持しておく。
+			$User = $this->User;
+
 			$this->Auth->authenticate['all']['scope'] = array(
 				'User.status' => '1'
 			);
 			if ($this->Auth->login()) {
-				$this->User->updateLoginTime($this->Auth->user('id'));
+				$User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
 				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
