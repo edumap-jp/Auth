@@ -17,11 +17,11 @@
         }
     },
     "require": {
-        "netcommons/mails":             "dev-master",
-        "netcommons/net-commons":       "dev-master",
-        "netcommons/site-manager":      "dev-master",
-        "netcommons/user-attributes":   "dev-master",
-        "netcommons/users":             "dev-master"
+        "netcommons/mails":             "@dev",
+        "netcommons/net-commons":      "@dev",
+        "netcommons/site-manager":     "@dev",
+        "netcommons/user-attributes":  "@dev",
+        "netcommons/users":             "@dev"
     },
     "config": {
         "vendor-dir": "vendors"
