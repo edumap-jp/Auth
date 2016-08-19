@@ -97,7 +97,7 @@ class AuthController extends AuthAppController {
 				),
 				400
 			);
-			$this->redirect($this->Auth->loginAction);
+			//$this->redirect($this->Auth->loginAction);
 		}
 	}
 
