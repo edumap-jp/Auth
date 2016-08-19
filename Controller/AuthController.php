@@ -10,6 +10,7 @@
  */
 
 App::uses('AuthAppController', 'Auth.Controller');
+App::uses('UserAttributeChoice', 'UserAttributes.Model');
 
 /**
  * 認証Controller
@@ -81,7 +82,9 @@ class AuthController extends AuthAppController {
 			if ($this->Auth->login()) {
 				$User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
-				$this->Session->write('Config.language', $this->Auth->user('language'));
+				if ($this->Auth->user('language') !== UserAttributeChoice::LANGUAGE_KEY_AUTO) {
+					$this->Session->write('Config.language', $this->Auth->user('language'));
+				}
 				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
 			}
