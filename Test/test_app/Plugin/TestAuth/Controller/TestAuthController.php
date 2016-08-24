@@ -27,6 +27,7 @@ class TestAuthController extends AuthAppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 		$this->Auth->allow('index_only_auth_general', 'index_no_auth_general');
+		$this->set('isMailSend', true);
 	}
 
 /**
