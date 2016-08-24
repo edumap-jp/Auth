@@ -40,14 +40,14 @@ class AutoUserRegistMail extends AppModel {
 			$data['subject'] = SiteSettingUtil::read('AutoRegist.approval_mail_subject');
 			$data['body'] = SiteSettingUtil::read('AutoRegist.approval_mail_body');
 			$data['email'] = array($user['User']['email']);
-			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/approval' .
+			$data['url'] = Router::url('/auth/auto_user_regist/approval', true) .
 						$user['User']['activate_parameter'];
 
 		} elseif ($confirmation === AutoUserRegist::CONFIRMATION_ADMIN_APPROVAL) {
 			$data['subject'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_subject');
 			$data['body'] = SiteSettingUtil::read('AutoRegist.acceptance_mail_body');
 			$data['email'] = $this->__getMailAddressForAdmin();
-			$data['url'] = Configure::read('App.fullBaseUrl') . '/auth/auto_user_regist/acceptance' .
+			$data['url'] = Router::url('/auth/auto_user_regist/acceptance', true) .
 						$user['User']['activate_parameter'];
 		} else {
 			return true;
