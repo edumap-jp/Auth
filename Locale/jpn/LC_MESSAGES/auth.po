@@ -107,16 +107,16 @@ msgstr "新しいパスワードを入力して、[決定]ボタンをクリッ�
 #
 
 msgid "Entry secret key?"
-msgstr "キーの入力"
+msgstr "認証キーの入力"
 
 msgid "Secret key"
-msgstr "キー"
+msgstr "認証キー"
 
 msgid "Entry secret key, and press [NEXT] button."
-msgstr "新規登録を受け付けるためのキーを入力して、[次へ]ボタンを押してください。"
+msgstr "新規登録を受け付けるための認証キーを入力して、[次へ]ボタンを押してください。"
 
 msgid "Failed on validation errors. Please check the secret key."
-msgstr "キーが異なります。正しいキーを入力してください。"
+msgstr "認証キーが異なります。正しい認証キーを入力してください。"
 
 
 #
