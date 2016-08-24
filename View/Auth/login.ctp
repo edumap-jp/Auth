@@ -65,7 +65,7 @@
 					<div>
 						<?php echo $this->NetCommonsHtml->link(
 								__d('auth', 'Forgot your Password? Please click here.'),
-								array('controller' => 'forgot_pass', 'action' => 'request')
+								array('plugin' => 'auth', 'controller' => 'forgot_pass', 'action' => 'request')
 							); ?>
 					</div>
 					<?php endif; ?>
