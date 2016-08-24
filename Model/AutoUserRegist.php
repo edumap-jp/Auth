@@ -543,8 +543,7 @@ class AutoUserRegist extends AppModel {
 			);
 
 			//登録処理
-			$this->__saveUser($update);
-
+			$result = $this->__saveUser($update);
 			if ($status === self::CONFIRMATION_ADMIN_APPROVAL) {
 				$result = $this->saveActivateKey($userId);
 			}

@@ -50,9 +50,7 @@ class ForgotPassController extends AuthAppController {
  * @var array
  */
 	public $components = array(
-		'Security' => array(
-			'csrfCheck' => false, //暫定対処
-		),
+		'Security',
 	);
 
 /**

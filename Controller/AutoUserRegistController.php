@@ -55,9 +55,7 @@ class AutoUserRegistController extends AuthAppController {
  * @var array
  */
 	public $components = array(
-		'Security' => array(
-			'csrfCheck' => false, //暫定対処
-		),
+		'Security',
 	);
 
 /**
@@ -123,7 +121,6 @@ class AutoUserRegistController extends AuthAppController {
  **/
 	public function beforeFilter() {
 		parent::beforeFilter();
-
 		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion', 'approval', 'acceptance');
 
 		//ページタイトル
