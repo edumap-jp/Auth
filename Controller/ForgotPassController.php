@@ -64,6 +64,7 @@ class ForgotPassController extends AuthAppController {
 	public $uses = array(
 		'Auth.ForgotPass',
 		'Users.User',
+		'SiteManager.SiteSetting',
 	);
 
 /**

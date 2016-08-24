@@ -29,6 +29,7 @@ class AuthController extends AuthAppController {
  * @var array
  */
 	public $uses = array(
+		'Auth.ForgotPass',
 		'SiteManager.SiteSetting',
 		'Users.User',
 	);
@@ -70,6 +71,9 @@ class AuthController extends AuthAppController {
 	public function login() {
 		//ページタイトル
 		$this->set('pageTitle', __d('auth', 'Login'));
+
+		//メールを送れるかどうか
+		$this->set('isMailSend', $this->ForgotPass->isMailSendCommon('auth', 'auth'));
 
 		if ($this->request->is('post')) {
 			//Auth->login()を実行すると、$this->UserがUsers.UserからModelAppに置き換わってしまい、

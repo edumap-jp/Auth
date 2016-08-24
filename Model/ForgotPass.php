@@ -41,8 +41,8 @@ class ForgotPass extends AppModel {
  * @var array
  */
 	public $actsAs = array(
-		'Mails.MailQueue' => array(
-		),
+		'Mails.IsMailSend',
+		'Mails.MailQueue' => array(),
 	);
 
 /**

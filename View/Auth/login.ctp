@@ -61,13 +61,13 @@
 
 					<hr>
 
-					<?php if (! SiteSettingUtil::read('App.close_site') && SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
-					<div>
-						<?php echo $this->NetCommonsHtml->link(
-								__d('auth', 'Forgot your Password? Please click here.'),
-								array('plugin' => 'auth', 'controller' => 'forgot_pass', 'action' => 'request')
-							); ?>
-					</div>
+					<?php if ($isMailSend && ! SiteSettingUtil::read('App.close_site') && SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
+						<div>
+							<?php echo $this->NetCommonsHtml->link(
+									__d('auth', 'Forgot your Password? Please click here.'),
+									array('plugin' => 'auth', 'controller' => 'forgot_pass', 'action' => 'request')
+								); ?>
+						</div>
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
