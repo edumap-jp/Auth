@@ -55,7 +55,9 @@ class AutoUserRegistController extends AuthAppController {
  * @var array
  */
 	public $components = array(
-		'Security',
+		'Security' => array(
+			'csrfCheck' => false, //暫定対処
+		),
 	);
 
 /**
@@ -121,6 +123,7 @@ class AutoUserRegistController extends AuthAppController {
  **/
 	public function beforeFilter() {
 		parent::beforeFilter();
+
 		$this->Auth->allow('entry_key', 'request', 'confirm', 'completion', 'approval', 'acceptance');
 
 		//ページタイトル
@@ -399,7 +402,6 @@ class AutoUserRegistController extends AuthAppController {
 			$options = array('class' => 'alert alert-danger');
 		}
 
-		CakeLog::debug(var_export($this->AutoUserRegist->validationErrors, true));
 		$this->set('redirectUrl', '/');
 		$this->set('message', $message);
 		$this->set('options', $options);
