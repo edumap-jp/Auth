@@ -69,11 +69,11 @@ msgstr "認証キー確認"
 msgid "Authorization key"
 msgstr "認証キー"
 
-msgid "Enter the authentication key that has been notified to the entered email address, please click on the [OK] button. <br>"
+msgid "Enter the authentication key that has been notified to the entered email address, please click on the [NEXT] button. <br>"
 "If the authentication key does not reach, please also check the junk mail. "
 "If you do not arrive in junk e-mail, please try again. "
 "If you do not reach even to try several times, please consult your system administrator."
-msgstr "入力したメールアドレスに通知された認証キーを入力し、[決定]ボタンをクリックしてください。<br>"
+msgstr "入力したメールアドレスに通知された認証キーを入力し、[次へ]ボタンをクリックしてください。<br>"
 "認証キーが届かない場合は、迷惑メールも確認してください。"
 "迷惑メールにも届いていない場合は、再度やり直してください。"
 "何度か試しても届かない場合は、システム管理者に相談してください。"
@@ -99,7 +99,7 @@ msgid "New password"
 msgstr "新しいパスワード"
 
 msgid "Enter the new password, please click the [OK] button."
-msgstr "新しいパスワードを入力して、[決定]ボタンをクリックしてください。"
+msgstr "ログインIDと新しいパスワードを入力して、[決定]ボタンを押してください。ログインIDがわからない場合、入力したメールアドレスに通知されていますので確認してください。"
 
 
 #
