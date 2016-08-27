@@ -228,7 +228,7 @@ class AutoUserRegistController extends AuthAppController {
 				$this->Session->write('AutoUserRegist', $this->request->data);
 				return $this->redirect('/auth/auto_user_regist/confirm');
 			} else {
-				$this->NetCommons->handleValidationError($this->AutoUserRegist->validationErrors);
+				$this->NetCommons->handleValidationError($this->AutoUserRegist->User->validationErrors);
 			}
 		} else {
 			if ($this->Session->read('AutoUserRegist')) {

@@ -173,7 +173,7 @@ class AutoUserRegistFormHelper extends AppHelper {
 			);
 			$output .= Hash::get($options, Hash::get($this->_View->request->data, $field, ''));
 		} else {
-			$output .= Hash::get($this->_View->request->data, $field);
+			$output .= h(Hash::get($this->_View->request->data, $field));
 		}
 		$output .= '</div>';
 		$output .= '</div>';

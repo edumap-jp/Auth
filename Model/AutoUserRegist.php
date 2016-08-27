@@ -256,7 +256,22 @@ class AutoUserRegist extends AppModel {
 		$this->__userAttributes = $this->UserAttribute->getUserAttriburesForAutoUserRegist(
 			array(
 				'OR' => array(
-					'UserAttributeSetting.required' => true,
+					'UserAttributeSetting.user_attribute_key' => array(
+						UserAttribute::LOGIN_ID_FIELD,
+						UserAttribute::PASSWORD_FIELD
+					),
+					array(
+						'UserAttributeSetting.required' => true,
+						'UserAttributeSetting.data_type_key' => array(
+							DataType::DATA_TYPE_CHECKBOX,
+							DataType::DATA_TYPE_RADIO,
+							DataType::DATA_TYPE_SELECT,
+						),
+					),
+					array(
+						'UserAttributeSetting.required' => true,
+						'UserAttributeSetting.only_administrator_editable' => false,
+					),
 					'UserAttributeSetting.auto_regist_display' => true,
 				)
 			)
@@ -309,6 +324,7 @@ class AutoUserRegist extends AppModel {
 		$this->__setValidateRequest();
 
 		$this->User->set($data);
+
 		return $this->User->validates();
 	}
 
