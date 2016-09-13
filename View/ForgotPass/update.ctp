@@ -31,7 +31,7 @@
 			<?php echo $this->NetCommonsForm->input('User.password', array(
 				'type' => 'password',
 				'label' => __d('auth', 'New password'),
-				'placeholder' => __d('net_commons', 'Only alphabets and numbers are allowed.'),
+				'placeholder' => __d('net_commons', 'Only alphabets, numbers and symbols are allowed.'),
 				'required' => true,
 				'again' => true
 			)); ?>
