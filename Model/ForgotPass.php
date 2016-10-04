@@ -64,7 +64,7 @@ class ForgotPass extends AppModel {
 			'email' => array(
 				'notBlank' => array(
 					'rule' => array('notBlank'),
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('auth', 'email')),
+					'message' => __d('net_commons', 'Please input %s.', __d('auth', 'email')),
 					'required' => false
 				),
 				'email' => array(
@@ -79,9 +79,7 @@ class ForgotPass extends AppModel {
 			'authorization_key' => array(
 				'notBlank' => array(
 					'rule' => array('notBlank'),
-					'message' => sprintf(
-						__d('net_commons', 'Please input %s.'), __d('auth', 'Authorization key')
-					),
+					'message' => __d('net_commons', 'Please input %s.', __d('auth', 'Authorization key')),
 					'required' => false
 				),
 				'equalTo' => array(
