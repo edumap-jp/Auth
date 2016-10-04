@@ -21,10 +21,11 @@ class ForgotPass extends AppModel {
 
 /**
  * 認証キー用のランダム文字列
+ * ※テストで書き換えるため、constではなく、メンバ変数とする
  *
- * @var const
+ * @var string
  */
-	const RANDAMSTR = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%=-~+*?@_';
+	public $randamstr = '1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!#$%=-~+*?@_';
 
 /**
  * テーブル名
@@ -110,20 +111,25 @@ class ForgotPass extends AppModel {
 			return false;
 		}
 
+		//メールアドレスのチェック
 		$email = trim($data['ForgotPass']['email']);
-
-		//その他のメールアドレスも含める必要あり
+		$conditions = array(
+			'is_deleted' => false
+		);
+		$fields = $this->User->getEmailFields();
+		foreach ($fields as $field) {
+			$conditions['OR'][$field] = $email;
+		}
 		$user = $this->User->find('first', array(
 			'recursive' => -1,
-			'conditions' => array(
-				'email' => $email,
-			),
+			'conditions' => $conditions,
 		));
+
 		$forgotPass = $this->create(array(
 			'user_id' => Hash::get($user, 'User.id', '0'),
 			'username' => Hash::get($user, 'User.username'),
 			'handlename' => Hash::get($user, 'User.handlename'),
-			'authorization_key' => substr(str_shuffle(self::RANDAMSTR), 0, 10),
+			'authorization_key' => substr(str_shuffle($this->randamstr), 0, 10),
 			'email' => $email
 		));
 
