@@ -16,9 +16,9 @@
 <?php echo $this->Wizard->navibar(ForgotPassController::WIZARD_CONFIRM); ?>
 
 <?php echo $this->MessageFlash->description(
-		__d('auth', 'Enter the authentication key that has been notified to the entered email address, please click on the [OK] button. <br>' .
+		__d('auth', 'Enter the authentication key that has been notified to the entered email address, please click on the [NEXT] button. <br>' .
 					'If the authentication key does not reach, please also check the junk mail. ' .
-					'If you do not arrive in junk e-mail, please try again. ' .
+					'If you do not arrive in junk e-mail, please try again. <br>' .
 					'If you do not reach even to try several times, please consult your system administrator.')
 	); ?>
 
