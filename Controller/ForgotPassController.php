@@ -128,6 +128,14 @@ class ForgotPassController extends AuthAppController {
 		if (! SiteSettingUtil::read('ForgotPass.use_password_reissue', '0')) {
 			return $this->setAction('throwBadRequest');
 		}
+
+		//メール通知の場合、NetCommonsMailUtilityをメンバー変数にセットする。Mockであれば、newをしない。
+		//テストでMockに差し替えが必要なための処理であるので、カバレッジレポートから除外する。
+		//@codeCoverageIgnoreStart
+		if (substr(get_class($this->mail), 0, 4) !== 'Mock') {
+			$this->mail = new NetCommonsMail();
+		}
+		//@codeCoverageIgnoreEnd
 	}
 
 /**
@@ -145,30 +153,30 @@ class ForgotPassController extends AuthAppController {
 				//対象のユーザがいる場合は、メール送る。
 				//成否を出すと、悪意ある人がやった場合、メールアドレスがバレてしまうため、送ったことにする。
 				if (Hash::get($forgotPass, 'user_id')) {
-					$mail = new NetCommonsMail();
-
-					$mail->mailAssignTag->setFixedPhraseSubject(
+					$this->mail->mailAssignTag->setFixedPhraseSubject(
 						SiteSettingUtil::read('ForgotPass.issue_mail_subject')
 					);
-					$mail->mailAssignTag->setFixedPhraseBody(
+					$this->mail->mailAssignTag->setFixedPhraseBody(
 						SiteSettingUtil::read('ForgotPass.issue_mail_body')
 					);
-					$mail->mailAssignTag->assignTags(array(
+					$this->mail->mailAssignTag->assignTags(array(
 						'X-AUTHORIZATION_KEY' => Hash::get($forgotPass, 'authorization_key'),
 					));
-					$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
-					$mail->initPlugin(Current::read('Language.id'));
+					$this->mail->mailAssignTag->initPlugin(Current::read('Language.id'));
+					$this->mail->initPlugin(Current::read('Language.id'));
 
-					$mail->to(Hash::get($forgotPass, 'email'));
-					$mail->setFrom(Current::read('Language.id'));
-					if (! $mail->sendMailDirect()) {
+					$this->mail->to(Hash::get($forgotPass, 'email'));
+					$this->mail->setFrom(Current::read('Language.id'));
+					if (! $this->mail->sendMailDirect()) {
 						return $this->NetCommons->handleValidationError(array('SendMail Error'));
 					}
 				}
 
 				$this->NetCommons->setFlashNotification(
-					__d('auth',
-						'We have sent you the key to obtain a new password to your registered e-mail address.'),
+					__d(
+						'auth',
+						'We have sent you the key to obtain a new password to your registered e-mail address.'
+					),
 					array('class' => 'success')
 				);
 
@@ -190,24 +198,22 @@ class ForgotPassController extends AuthAppController {
 			if ($this->ForgotPass->validateAuthorizationKey($this->request->data)) {
 				$forgotPass = $this->Session->read('ForgotPass');
 
-				$mail = new NetCommonsMail();
-
-				$mail->mailAssignTag->setFixedPhraseSubject(
+				$this->mail->mailAssignTag->setFixedPhraseSubject(
 					SiteSettingUtil::read('ForgotPass.request_mail_subject')
 				);
-				$mail->mailAssignTag->setFixedPhraseBody(
+				$this->mail->mailAssignTag->setFixedPhraseBody(
 					SiteSettingUtil::read('ForgotPass.request_mail_body')
 				);
-				$mail->mailAssignTag->assignTags(array(
+				$this->mail->mailAssignTag->assignTags(array(
 					'X-HANDLENAME' => $forgotPass['handlename'],
 					'X-USERNAME' => $forgotPass['username'],
 				));
-				$mail->mailAssignTag->initPlugin(Current::read('Language.id'));
-				$mail->initPlugin(Current::read('Language.id'));
+				$this->mail->mailAssignTag->initPlugin(Current::read('Language.id'));
+				$this->mail->initPlugin(Current::read('Language.id'));
 
-				$mail->to(Hash::get($forgotPass, 'email'));
-				$mail->setFrom(Current::read('Language.id'));
-				if (! $mail->sendMailDirect()) {
+				$this->mail->to(Hash::get($forgotPass, 'email'));
+				$this->mail->setFrom(Current::read('Language.id'));
+				if (! $this->mail->sendMailDirect()) {
 					return $this->NetCommons->handleValidationError(array('SendMail Error'));
 				}
 
