@@ -51,11 +51,10 @@ class ForgotPassValidateRequestTest extends NetCommonsModelTestCase {
 	protected $_methodName = 'validateRequest';
 
 /**
- * canUserEdit()テストのDataProvider
+ * validateRequest()テストのDataProvider
  *
  * ### 戻り値
- *  - roleKey 会員権限キー
- *  - user ユーザデータ
+ *  - email メールアドレス
  *  - expected 期待値
  *
  * @return array データ
