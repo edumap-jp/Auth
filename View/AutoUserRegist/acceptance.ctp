@@ -22,7 +22,7 @@
 		</div>
 
 		<div class="panel-footer text-center">
-			<?php echo $this->Button->save(__d('net_commons', 'OK'), array('url' => $redirectUrl)); ?>
+			<?php echo $this->Button->cancel(__d('net_commons', 'Close'), $redirectUrl); ?>
 		</div>
 	</article>
 <?php echo $this->NetCommonsForm->end();
