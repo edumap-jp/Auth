@@ -96,6 +96,7 @@ class ForgotPassControllerRequestTest extends NetCommonsControllerTestCase {
 /**
  * POSTリクエストデータ生成
  *
+ * @param string $email メールアドレス
  * @return array リクエストデータ
  */
 	private function __data($email = 'system_admin_1@exapmle.com') {
