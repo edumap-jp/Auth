@@ -51,9 +51,6 @@ class ForgotPassControllerRequestTest extends NetCommonsControllerTestCase {
  */
 	public function setUp() {
 		parent::setUp();
-
-		//ログイン
-		TestAuthGeneral::login($this);
 	}
 
 /**
@@ -62,9 +59,6 @@ class ForgotPassControllerRequestTest extends NetCommonsControllerTestCase {
  * @return void
  */
 	public function tearDown() {
-		//ログアウト
-		TestAuthGeneral::logout($this);
-
 		parent::tearDown();
 	}
 
@@ -182,7 +176,7 @@ class ForgotPassControllerRequestTest extends NetCommonsControllerTestCase {
 				->will($this->returnValue(false));
 		}
 		$this->controller->Components->Session
-			->expects($this->at(1))->method('write')
+			->expects($this->once())->method('write')
 			->with('ForgotPass', $forgotPass);
 	}
 
