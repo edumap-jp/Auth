@@ -47,6 +47,20 @@ class SiteSetting4authFixture extends SiteSetting4testFixture {
  */
 	public function init() {
 		parent::init();
+
+		$targets = array(
+			'ForgotPass.issue_mail_subject',
+			'ForgotPass.issue_mail_body',
+			'ForgotPass.request_mail_subject',
+			'ForgotPass.request_mail_body',
+		);
+		foreach ([5, 6, 7, 8, 9, 10, 11, 12] as $index) {
+			if (in_array($this->records[$index]['key'], $targets, true)) {
+				$records = $this->records[$index];
+				$records['value'] = $records['key'] . ' ' . $records['language_id'];
+				$this->records[$index] = $records;
+			}
+		}
 	}
 
 }
