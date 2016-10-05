@@ -314,18 +314,25 @@ class AutoUserRegist extends AppModel {
 			'User' => 'Users.User',
 		]);
 
+		$return = true;
 		if (! Hash::get($data, 'AutoUserRegist.disclaimer')) {
 			$this->invalidate(
 				'disclaimer', __d('auth', 'You have not agreed to the terms of use.')
 			);
-			return false;
+			$return = false;
 		}
 
 		$this->__setValidateRequest();
 
 		$this->User->set($data);
-
-		return $this->User->validates();
+		if (! $this->User->validates()) {
+			$this->validationErrors = Hash::merge(
+				$this->validationErrors, $this->User->validationErrors
+			);
+			return false;
+		} else {
+			return $return;
+		}
 	}
 
 /**

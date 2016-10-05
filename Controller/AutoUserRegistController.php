@@ -175,7 +175,8 @@ class AutoUserRegistController extends AuthAppController {
 			//入力キーのチェック
 			$value = SiteSettingUtil::read('AutoRegist.use_secret_key');
 			if ($value) {
-				if (! $this->Session->read('AutoUserRegistKey')) {
+				if (! in_array($this->params['action'], ['approval', 'acceptance'], true) &&
+						! $this->Session->read('AutoUserRegistKey')) {
 					if ($this->params['action'] === 'entry_key') {
 						$this->Session->delete('AutoUserRegistKey');
 						$this->Session->write('AutoUserRegistRedirect', 'request');
@@ -224,11 +225,12 @@ class AutoUserRegistController extends AuthAppController {
  **/
 	public function request() {
 		if ($this->request->is('post')) {
+			$this->request->data['User']['id'] = null;
 			if ($this->AutoUserRegist->validateRequest($this->request->data)) {
 				$this->Session->write('AutoUserRegist', $this->request->data);
 				return $this->redirect('/auth/auto_user_regist/confirm');
 			} else {
-				$this->NetCommons->handleValidationError($this->AutoUserRegist->User->validationErrors);
+				$this->NetCommons->handleValidationError($this->AutoUserRegist->validationErrors);
 			}
 		} else {
 			if ($this->Session->read('AutoUserRegist')) {
