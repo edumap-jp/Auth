@@ -49,9 +49,6 @@ class ForgotPassControllerBeforeFilterWOPasswordReissueTest extends NetCommonsCo
  */
 	public function setUp() {
 		parent::setUp();
-
-		//ログイン
-		TestAuthGeneral::login($this);
 	}
 
 /**
@@ -60,9 +57,6 @@ class ForgotPassControllerBeforeFilterWOPasswordReissueTest extends NetCommonsCo
  * @return void
  */
 	public function tearDown() {
-		//ログアウト
-		TestAuthGeneral::logout($this);
-
 		parent::tearDown();
 	}
 
