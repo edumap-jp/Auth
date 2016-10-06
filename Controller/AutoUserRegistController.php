@@ -126,32 +126,33 @@ class AutoUserRegistController extends AuthAppController {
 		//ページタイトル
 		$this->set('pageTitle', __d('auth', 'Sign up'));
 
-		SiteSettingUtil::setup(array(
-			// * 入会設定
-			// ** 自動会員登録を許可する
-			'AutoRegist.use_automatic_register',
-			// ** アカウント登録の最終決定
-			'AutoRegist.confirmation',
-			// ** 入力キーの使用
-			'AutoRegist.use_secret_key',
-			// ** 入力キー
-			'AutoRegist.secret_key',
-			// ** 自動登録時の権限
-			'AutoRegist.role_key',
-			// ** 自動登録時にデフォルトルームに参加する
-			'AutoRegist.prarticipate_default_room',
-
-			// ** 利用許諾文
-			'AutoRegist.disclaimer',
-			// ** 会員登録承認メールの件名
-			'AutoRegist.approval_mail_subject',
-			// ** 会員登録承認メールの本文
-			'AutoRegist.approval_mail_body',
-			// ** 会員登録受付メールの件名
-			'AutoRegist.acceptance_mail_subject',
-			// ** 会員登録受付メールの本文
-			'AutoRegist.acceptance_mail_body',
-		));
+		SiteSettingUtil::setup('AutoRegist');
+		//SiteSettingUtil::setup(array(
+		//	// * 入会設定
+		//	// ** 自動会員登録を許可する
+		//	'AutoRegist.use_automatic_register',
+		//	// ** アカウント登録の最終決定
+		//	'AutoRegist.confirmation',
+		//	// ** 入力キーの使用
+		//	'AutoRegist.use_secret_key',
+		//	// ** 入力キー
+		//	'AutoRegist.secret_key',
+		//	// ** 自動登録時の権限
+		//	'AutoRegist.role_key',
+		//	// ** 自動登録時にデフォルトルームに参加する
+		//	'AutoRegist.prarticipate_default_room',
+		//
+		//	// ** 利用許諾文
+		//	'AutoRegist.disclaimer',
+		//	// ** 会員登録承認メールの件名
+		//	'AutoRegist.approval_mail_subject',
+		//	// ** 会員登録承認メールの本文
+		//	'AutoRegist.approval_mail_body',
+		//	// ** 会員登録受付メールの件名
+		//	'AutoRegist.acceptance_mail_subject',
+		//	// ** 会員登録受付メールの本文
+		//	'AutoRegist.acceptance_mail_body',
+		//));
 
 		if (! SiteSettingUtil::read('AutoRegist.use_automatic_register', false)) {
 			return $this->setAction('throwBadRequest');

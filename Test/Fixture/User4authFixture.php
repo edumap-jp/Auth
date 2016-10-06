@@ -15,7 +15,7 @@ App::uses('UserFixture', 'Users.Test/Fixture');
  * UserFixture
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
- * @package NetCommons\Users\Model
+ * @package NetCommons\Auth\Model
  */
 class User4authFixture extends UserFixture {
 
