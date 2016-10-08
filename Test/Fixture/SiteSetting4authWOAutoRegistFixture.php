@@ -17,7 +17,7 @@ App::uses('SiteSetting4authFixture', 'Auth.Test/Fixture');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Fixture
  */
-class SiteSetting4authWOAutoRegistWFixture extends SiteSetting4authFixture {
+class SiteSetting4authWOAutoRegistFixture extends SiteSetting4authFixture {
 
 /**
  * Model name

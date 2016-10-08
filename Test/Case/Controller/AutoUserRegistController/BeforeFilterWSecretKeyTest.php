@@ -17,7 +17,7 @@ App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case\Controller\AutoUserRegistController
  */
-class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestCase {
+class AutoUserRegistControllerBeforeFilterWSecretKeyTest extends NetCommonsControllerTestCase {
 
 /**
  * Fixtures
@@ -25,7 +25,7 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
  * @var array
  */
 	public $fixtures = array(
-		'plugin.auth.site_setting4auth',
+		'plugin.auth.site_setting4auto_regist_w_secret_key',
 		'plugin.user_attributes.user_attribute4test',
 		'plugin.user_attributes.user_attribute_choice4test',
 		'plugin.user_attributes.user_attribute_layout',
@@ -67,18 +67,69 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
 
 /**
  * BeforeFileter()のテスト
+ * - entry_keyアクション
  *
  * @return void
  */
-	public function testBeforeFilter() {
-		//テスト実行
-		$this->_testGetAction(array('action' => 'request'), array('method' => 'assertNotEmpty'), null, 'view');
+	public function testActionEntryKey() {
+		//事前準備
+		$this->generateNc(Inflector::camelize($this->_controller), array('components' => array(
+			'Session' => array('read', 'write', 'delete'),
+		)));
+		$this->controller->Components->Session
+			->expects($this->once())->method('read')->with('AutoUserRegistKey');
+		$this->controller->Components->Session
+			->expects($this->once())->method('delete')->with('AutoUserRegistKey');
+		$this->controller->Components->Session
+			->expects($this->once())->method('write')->with('AutoUserRegistRedirect', 'request');
 
+		//テスト実行
+		$this->_testGetAction(array('action' => 'entry_key'), array('method' => 'assertNotEmpty'), null, 'view');
+
+		//チェック
+		$this->__assert();
+	}
+
+/**
+ * BeforeFileter()のテスト
+ * - confirmアクション
+ *
+ * @return void
+ */
+	public function testActionConfirm() {
+		//事前準備
+		$this->generateNc(Inflector::camelize($this->_controller), array('components' => array(
+			'Session' => array('read', 'write'),
+		)));
+		$this->controller->Components->Session
+			->expects($this->once())->method('read')->with('AutoUserRegistKey');
+		$this->controller->Components->Session
+			->expects($this->once())->method('write')->with('AutoUserRegistRedirect', 'confirm');
+
+		//テスト実行
+		$this->_testGetAction(array('action' => 'confirm'), array('method' => 'assertNotEmpty'), null, 'view');
+
+		//チェック
+		$this->__assert();
+	}
+
+/**
+ * テストの評価
+ *
+ * @return void
+ */
+	private function __assert() {
 		//チェック
 		$this->assertEquals($this->vars['pageTitle'], __d('auth', 'Sign up'));
 
 		$expected = array(
 			'navibar' => array(
+				'entry_key' => array(
+					'url' => array(
+						'controller' => 'auto_user_regist', 'action' => 'entry_key',
+					),
+					'label' => array('auth', 'Entry secret key?'),
+				),
 				'request' => array(
 					'url' => array(
 						'controller' => 'auto_user_regist', 'action' => 'request',
@@ -107,6 +158,8 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
 			'cancelUrl' => null,
 		);
 		$this->assertEquals($this->controller->helpers['NetCommons.Wizard'], $expected);
+
+		$this->assertEquals($this->controller->params['action'], 'entry_key');
 	}
 
 }

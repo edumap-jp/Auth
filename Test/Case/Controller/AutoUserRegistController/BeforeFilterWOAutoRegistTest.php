@@ -13,11 +13,12 @@ App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
 
 /**
  * AutoUserRegistController::beforeFilter()のテスト
+ * - 自動登録OFFのテスト
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case\Controller\AutoUserRegistController
  */
-class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestCase {
+class AutoUserRegistControllerBeforeFilterWOAutoRegistTest extends NetCommonsControllerTestCase {
 
 /**
  * Fixtures
@@ -25,7 +26,7 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
  * @var array
  */
 	public $fixtures = array(
-		'plugin.auth.site_setting4auth',
+		'plugin.auth.site_setting4auth_w_o_auto_regist',
 		'plugin.user_attributes.user_attribute4test',
 		'plugin.user_attributes.user_attribute_choice4test',
 		'plugin.user_attributes.user_attribute_layout',
@@ -72,41 +73,7 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
  */
 	public function testBeforeFilter() {
 		//テスト実行
-		$this->_testGetAction(array('action' => 'request'), array('method' => 'assertNotEmpty'), null, 'view');
-
-		//チェック
-		$this->assertEquals($this->vars['pageTitle'], __d('auth', 'Sign up'));
-
-		$expected = array(
-			'navibar' => array(
-				'request' => array(
-					'url' => array(
-						'controller' => 'auto_user_regist', 'action' => 'request',
-					),
-					'label' => array(
-						0 => 'auth', 1 => 'Registration?',
-					),
-				),
-				'confirm' => array(
-					'url' => array(
-						'controller' => 'auto_user_regist', 'action' => 'confirm',
-					),
-					'label' => array(
-						0 => 'auth', 1 => 'Entry confirm.',
-					),
-				),
-				'completion' => array(
-					'url' => array(
-						'controller' => 'auto_user_regist', 'action' => 'update',
-					),
-					'label' => array(
-						0 => 'auth', 1 => 'Complete registration.',
-					),
-				),
-			),
-			'cancelUrl' => null,
-		);
-		$this->assertEquals($this->controller->helpers['NetCommons.Wizard'], $expected);
+		$this->_testGetAction(array('action' => 'request'), null, 'BadRequestException', 'view');
 	}
 
 }

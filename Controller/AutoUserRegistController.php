@@ -158,7 +158,8 @@ class AutoUserRegistController extends AuthAppController {
 			return $this->setAction('throwBadRequest');
 		}
 
-		if (Hash::get($this->params['pass'], 'activate_key')) {
+		if (in_array($this->params['action'], ['approval', 'acceptance'], true) &&
+				Hash::get($this->request->query, 'activate_key')) {
 			$this->helpers['NetCommons.Wizard']['navibar'] = Hash::remove(
 				$this->helpers['NetCommons.Wizard']['navibar'], self::WIZARD_ENTRY_KEY
 			);

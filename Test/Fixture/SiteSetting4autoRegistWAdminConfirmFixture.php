@@ -17,7 +17,7 @@ App::uses('SiteSetting4authFixture', 'Auth.Test/Fixture');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Fixture
  */
-class SiteSetting4authWSecretKeyWFixture extends SiteSetting4authFixture {
+class SiteSetting4autoRegistWAdminConfirmFixture extends SiteSetting4authFixture {
 
 /**
  * Model name
@@ -48,11 +48,8 @@ class SiteSetting4authWSecretKeyWFixture extends SiteSetting4authFixture {
 	public function init() {
 		parent::init();
 
-		if ($this->records[23]['key'] === 'AutoRegist.use_secret_key') {
-			$this->records[23]['value'] = '1';
-		}
-		if ($this->records[24]['key'] === 'AutoRegist.secret_key') {
-			$this->records[24]['value'] = 'test_pass';
+		if ($this->records[22]['key'] === 'AutoRegist.confirmation') {
+			$this->records[22]['value'] = '2';
 		}
 	}
 

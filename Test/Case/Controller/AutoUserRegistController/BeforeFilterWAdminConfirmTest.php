@@ -17,7 +17,7 @@ App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Case\Controller\AutoUserRegistController
  */
-class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestCase {
+class AutoUserRegistControllerBeforeFilterWAdminConfirmTest extends NetCommonsControllerTestCase {
 
 /**
  * Fixtures
@@ -25,7 +25,7 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
  * @var array
  */
 	public $fixtures = array(
-		'plugin.auth.site_setting4auth',
+		'plugin.auth.site_setting4auto_regist_w_admin_confirm',
 		'plugin.user_attributes.user_attribute4test',
 		'plugin.user_attributes.user_attribute_choice4test',
 		'plugin.user_attributes.user_attribute_layout',
@@ -70,12 +70,12 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
  *
  * @return void
  */
-	public function testBeforeFilter() {
+	public function testBeforeFilterOnRequest() {
 		//テスト実行
 		$this->_testGetAction(array('action' => 'request'), array('method' => 'assertNotEmpty'), null, 'view');
 
 		//チェック
-		$this->assertEquals($this->vars['pageTitle'], __d('auth', 'Sign up'));
+		$this->assertEquals($this->controller->viewVars['pageTitle'], __d('auth', 'Sign up'));
 
 		$expected = array(
 			'navibar' => array(
@@ -99,6 +99,47 @@ class AutoUserRegistControllerBeforeFilterTest extends NetCommonsControllerTestC
 					'url' => array(
 						'controller' => 'auto_user_regist', 'action' => 'update',
 					),
+					'label' => array(
+						0 => 'auth', 1 => 'Complete request registration.',
+					),
+				),
+			),
+			'cancelUrl' => null,
+		);
+		$this->assertEquals($this->controller->helpers['NetCommons.Wizard'], $expected);
+	}
+
+/**
+ * BeforeFileter()のテスト
+ * - activate_keyがある場合
+ *
+ * @return void
+ */
+	public function testBeforeFilterOnApproval() {
+		//事前準備
+		$this->_mockForReturnTrue('Auth.AutoUserRegist', 'saveUserStatus');
+
+		//テスト実行
+		$this->_testGetAction(
+			array('action' => 'approval', '?' => array('activate_key' => 'test')), null, null, 'view'
+		);
+
+		//チェック
+		$this->assertEquals($this->vars['pageTitle'], __d('auth', 'Sign up'));
+
+		$expected = array(
+			'navibar' => array(
+				'request' => array(
+					'label' => array(
+						0 => 'auth', 1 => 'Registration?',
+					),
+				),
+				'confirm' => array(
+					'label' => array(
+						0 => 'auth', 1 => 'Entry confirm.',
+					),
+				),
+				'completion' => array(
 					'label' => array(
 						0 => 'auth', 1 => 'Complete registration.',
 					),
