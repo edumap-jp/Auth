@@ -1,6 +1,6 @@
 <?php
 /**
- * ForgotPassController::beforeFilter()のテスト
+ * AutoUserRegistController::beforeFilter()のテスト
  *
  * @author Noriko Arai <arai@nii.ac.jp>
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
@@ -12,12 +12,13 @@
 App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
 
 /**
- * ForgotPassController::beforeFilter()のテスト
+ * AutoUserRegistController::beforeFilter()のテスト
+ * - 自動登録OFFのテスト
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
- * @package NetCommons\Auth\Test\Case\Controller\ForgotPassController
+ * @package NetCommons\Auth\Test\Case\Controller\AutoUserRegistController
  */
-class ForgotPassControllerBeforeFilterTest extends NetCommonsControllerTestCase {
+class AutoUserRegistControllerBeforeFilterWOAutoRegistTest extends NetCommonsControllerTestCase {
 
 /**
  * Fixtures
@@ -25,7 +26,12 @@ class ForgotPassControllerBeforeFilterTest extends NetCommonsControllerTestCase 
  * @var array
  */
 	public $fixtures = array(
-		'plugin.auth.site_setting4auth',
+		'plugin.auth.site_setting4auth_w_o_auto_regist',
+		'plugin.user_attributes.user_attribute4test',
+		'plugin.user_attributes.user_attribute_choice4test',
+		'plugin.user_attributes.user_attribute_layout',
+		'plugin.user_attributes.user_attribute_setting4test',
+		'plugin.user_attributes.user_attributes_role4test',
 	);
 
 /**
@@ -40,7 +46,7 @@ class ForgotPassControllerBeforeFilterTest extends NetCommonsControllerTestCase 
  *
  * @var string
  */
-	protected $_controller = 'forgot_pass';
+	protected $_controller = 'auto_user_regist';
 
 /**
  * setUp method
@@ -61,16 +67,13 @@ class ForgotPassControllerBeforeFilterTest extends NetCommonsControllerTestCase 
 	}
 
 /**
- * BeforeFileteのテスト
+ * BeforeFileter()のテスト
  *
  * @return void
  */
 	public function testBeforeFilter() {
 		//テスト実行
-		$this->_testGetAction(array('action' => 'request'), array('method' => 'assertNotEmpty'), null, 'view');
-
-		//チェック
-		$this->assertEquals($this->vars['pageTitle'], __d('auth', 'Forgot your Password?'));
+		$this->_testGetAction(array('action' => 'request'), null, 'BadRequestException', 'view');
 	}
 
 }

@@ -112,19 +112,7 @@ class ForgotPassController extends AuthAppController {
 		//ページタイトル
 		$this->set('pageTitle', __d('auth', 'Forgot your Password?'));
 
-		SiteSettingUtil::setup(array(
-			// ** パスワード再発行を使う
-			'ForgotPass.use_password_reissue',
-			// ** 新規パスワード通知の件名
-			'ForgotPass.issue_mail_subject',
-			// ** パスワード通知メールの本文
-			'ForgotPass.issue_mail_body',
-			// ** 新規パスワード発行の件名
-			'ForgotPass.request_mail_subject',
-			// ** パスワード発行メールの本文
-			'ForgotPass.request_mail_body',
-		));
-
+		SiteSettingUtil::setup('ForgotPass');
 		if (! SiteSettingUtil::read('ForgotPass.use_password_reissue', '0')) {
 			return $this->setAction('throwBadRequest');
 		}

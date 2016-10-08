@@ -9,7 +9,7 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
-App::uses('SiteSetting4testFixture', 'SiteManager.Test/Fixture');
+App::uses('SiteSetting4authFixture', 'Auth.Test/Fixture');
 
 /**
  * SiteSettingFixture
@@ -17,7 +17,7 @@ App::uses('SiteSetting4testFixture', 'SiteManager.Test/Fixture');
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Test\Fixture
  */
-class SiteSetting4authWOPasswordReissueFixture extends SiteSetting4testFixture {
+class SiteSetting4autoRegistWAdminConfirmFixture extends SiteSetting4authFixture {
 
 /**
  * Model name
@@ -47,8 +47,9 @@ class SiteSetting4authWOPasswordReissueFixture extends SiteSetting4testFixture {
  */
 	public function init() {
 		parent::init();
-		if ($this->records[4]['key'] === 'ForgotPass.use_password_reissue') {
-			$this->records[4]['value'] = '0';
+
+		if ($this->records[22]['key'] === 'AutoRegist.confirmation') {
+			$this->records[22]['value'] = '2';
 		}
 	}
 
