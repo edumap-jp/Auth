@@ -77,7 +77,14 @@ class AutoUserRegistControllerBeforeFilterWSecretKeyTest extends NetCommonsContr
 			'Session' => array('read', 'write', 'delete'),
 		)));
 		$this->controller->Components->Session
-			->expects($this->once())->method('read')->with('AutoUserRegistKey');
+			->expects($this->exactly(2))->method('read')
+			->will($this->returnCallback(function ($key) {
+				if ($key === 'AutoUserRegistKey') {
+					return false;
+				} else {
+					return null;
+				}
+			}));
 		$this->controller->Components->Session
 			->expects($this->once())->method('delete')->with('AutoUserRegistKey');
 		$this->controller->Components->Session
@@ -102,7 +109,9 @@ class AutoUserRegistControllerBeforeFilterWSecretKeyTest extends NetCommonsContr
 			'Session' => array('read', 'write'),
 		)));
 		$this->controller->Components->Session
-			->expects($this->once())->method('read')->with('AutoUserRegistKey');
+			->expects($this->exactly(2))->method('read')
+			->will($this->returnValue(null));
+
 		$this->controller->Components->Session
 			->expects($this->once())->method('write')->with('AutoUserRegistRedirect', 'confirm');
 
