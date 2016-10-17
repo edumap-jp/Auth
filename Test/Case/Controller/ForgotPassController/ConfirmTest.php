@@ -100,14 +100,21 @@ class ForgotPassControllerConfirmTest extends NetCommonsControllerTestCase {
 
 		if ($success === true) {
 			$this->controller->Components->Session
-				->expects($this->once())->method('read')
-				->will($this->returnValue(array(
-					'user_id' => '2',
-					'username' => 'site_manager',
-					'handlename' => 'Site Manager',
-					'authorization_key' => 'test@test',
-					'email' => 'site_manager@exapmle.com'
-				)));
+				->expects($this->exactly(2))->method('read')
+				->will($this->returnCallback(function ($key) {
+					if ($key === 'ForgotPass') {
+						return array(
+							'user_id' => '2',
+							'username' => 'site_manager',
+							'handlename' => 'Site Manager',
+							'authorization_key' => 'test@test',
+							'email' => 'site_manager@exapmle.com'
+						);
+					} else {
+						return null;
+					}
+				}));
+
 			$this->controller->mail->mailAssignTag
 				->expects($this->once())->method('setFixedPhraseSubject')
 				->with('ForgotPass.request_mail_subject 2');
