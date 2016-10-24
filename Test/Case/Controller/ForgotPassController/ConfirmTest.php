@@ -100,7 +100,7 @@ class ForgotPassControllerConfirmTest extends NetCommonsControllerTestCase {
 
 		if ($success === true) {
 			$this->controller->Components->Session
-				->expects($this->exactly(2))->method('read')
+				->expects($this->exactly(1))->method('read')
 				->will($this->returnCallback(function ($key) {
 					if ($key === 'ForgotPass') {
 						return array(
