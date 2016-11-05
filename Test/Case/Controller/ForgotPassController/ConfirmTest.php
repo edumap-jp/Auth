@@ -99,8 +99,13 @@ class ForgotPassControllerConfirmTest extends NetCommonsControllerTestCase {
 		);
 
 		if ($success === true) {
+			if (Configure::read('debug')) {
+				$exactly = 2;
+			} else {
+				$exactly = 1;
+			}
 			$this->controller->Components->Session
-				->expects($this->exactly(2))->method('read')
+				->expects($this->exactly($exactly))->method('read')
 				->will($this->returnCallback(function ($key) {
 					if ($key === 'ForgotPass') {
 						return array(
