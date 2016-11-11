@@ -33,7 +33,7 @@ class AuthAppController extends AppController {
  *
  * @return array authenticators
  */
-	public function getAuthenticators() {
+	protected function _getAuthenticators() {
 		$authenticators = array();
 		$plugins = App::objects('plugins');
 		foreach ($plugins as $plugin) {

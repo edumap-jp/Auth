@@ -41,7 +41,7 @@ class AuthController extends AuthAppController {
  **/
 	public function beforeFilter() {
 		// Load available authenticators
-		$authenticators = $this->getAuthenticators();
+		$authenticators = $this->_getAuthenticators();
 		$this->set('authenticators', $authenticators);
 
 		$this->__setDefaultAuthenticator();
