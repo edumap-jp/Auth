@@ -1,0 +1,185 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Auth/Controller/AuthController.php:73
+#: Auth/View/Auth/login.ctp:17;64
+msgid "Login"
+msgstr ""
+
+#: Auth/Controller/AuthController.php:97
+msgid "Invalid username or password, try again"
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:127
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterTest.php:78
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterWAdminConfirmTest.php:78;128
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterWSecretKeyTest.php:142
+#: Auth/View/AutoUserRegist/acceptance.ctp:14
+#: Auth/View/AutoUserRegist/completion.ctp:14
+#: Auth/View/AutoUserRegist/confirm.ctp:14
+#: Auth/View/AutoUserRegist/entry_key.ctp:14
+#: Auth/View/AutoUserRegist/request.ctp:14
+#: NetCommons/View/Elements/common_header.ctp:107
+msgid "Sign up"
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:291
+msgid "Confirmation e-mail will be sent to the registered address, after the system administrator approve your registration."
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:295;333
+msgid "Thank you for your registration. Click on the link, please login."
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:298
+msgid "Your registration will be confirmed by the system administrator. <br>When confirmed, it will be notified by e-mail."
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:365
+#: UserManager/Controller/UserManagerController.php:239
+msgid "hank you for your registration.<br>We have sent you the registration key to your registered e-mail address."
+msgstr ""
+
+#: Auth/Controller/AutoUserRegistController.php:401
+#: UserManager/Controller/UserManagerController.php:244
+msgid "Your registration was not approved.<br>Please consult with the system administrator."
+msgstr ""
+
+#: Auth/Controller/ForgotPassController.php:113
+#: Auth/Test/Case/Controller/ForgotPassController/BeforeFilterTest.php:73
+#: Auth/View/ForgotPass/confirm.ctp:14
+#: Auth/View/ForgotPass/request.ctp:14
+#: Auth/View/ForgotPass/update.ctp:14
+msgid "Forgot your Password?"
+msgstr ""
+
+#: Auth/Controller/ForgotPassController.php:164
+#: Auth/Test/Case/Controller/ForgotPassController/RequestTest.php:216;301
+msgid "We have sent you the key to obtain a new password to your registered e-mail address."
+msgstr ""
+
+#: Auth/Controller/ForgotPassController.php:209
+#: Auth/Test/Case/Controller/ForgotPassController/ConfirmTest.php:189
+msgid "We have sent your login id to your registered e-mail address."
+msgstr ""
+
+#: Auth/Model/AutoUserRegist.php:135
+#: Auth/View/AutoUserRegist/entry_key.ctp:27
+msgid "Secret key"
+msgstr ""
+
+#: Auth/Model/AutoUserRegist.php:141
+msgid "Failed on validation errors. Please check the secret key."
+msgstr ""
+
+#: Auth/Model/AutoUserRegist.php:320
+msgid "You have not agreed to the terms of use."
+msgstr ""
+
+#: Auth/Model/AutoUserRegist.php:612
+msgid "The member was cancelled out."
+msgstr ""
+
+#: Auth/Model/AutoUserRegist.php:639
+msgid "Selected account is already activated!"
+msgstr ""
+
+#: Auth/Model/ForgotPass.php:68;75;76
+#: Auth/Test/Case/Controller/ForgotPassController/RequestTest.php:335;342
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:71;78;79
+#: Auth/View/ForgotPass/request.ctp:28
+msgid "email"
+msgstr ""
+
+#: Auth/Model/ForgotPass.php:83
+#: Auth/Test/Case/Controller/ForgotPassController/ConfirmTest.php:257;267
+#: Auth/Test/Case/Model/ForgotPass/ValidateAuthorizationKeyTest.php:87
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:96
+#: Auth/View/ForgotPass/confirm.ctp:30
+msgid "Authorization key"
+msgstr ""
+
+#: Auth/Model/ForgotPass.php:88;158
+#: Auth/Test/Case/Model/ForgotPass/ValidateAuthorizationKeyTest.php:100;109
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:101
+msgid "Failed on validation errors. Please check the authorization key."
+msgstr ""
+
+#: Auth/Model/ForgotPass.php:187
+msgid "Failed on validation errors. Please check the login id."
+msgstr ""
+
+#: Auth/View/Auth/login.ctp:50
+#: Auth/View/ForgotPass/update.ctp:26
+msgid "Username"
+msgstr ""
+
+#: Auth/View/Auth/login.ctp:51
+#: Auth/View/ForgotPass/update.ctp:27
+msgid "Please enter your username."
+msgstr ""
+
+#: Auth/View/Auth/login.ctp:57
+msgid "Password"
+msgstr ""
+
+#: Auth/View/Auth/login.ctp:58
+msgid "Please enter your password."
+msgstr ""
+
+#: Auth/View/Auth/login.ctp:72
+msgid "Forgot your Password? Please click here."
+msgstr ""
+
+#: Auth/View/AutoUserRegist/completion.ctp:23
+msgid "Registered info"
+msgstr ""
+
+#: Auth/View/AutoUserRegist/confirm.ctp:19
+msgid "Check the input contents. If there is no content is a problem, please click on the [NEXT] button. If you re-fix, please click on the [BACK] button."
+msgstr ""
+
+#: Auth/View/AutoUserRegist/entry_key.ctp:19
+msgid "Entry secret key, and press [NEXT] button."
+msgstr ""
+
+#: Auth/View/AutoUserRegist/request.ctp:19
+msgid "Fill out the following items, and press [NEXT] button."
+msgstr ""
+
+#: Auth/View/AutoUserRegist/request.ctp:38
+msgid "Terms of use"
+msgstr ""
+
+#: Auth/View/AutoUserRegist/request.ctp:47
+msgid "I agree to the above."
+msgstr ""
+
+#: Auth/View/ForgotPass/confirm.ctp:19
+msgid "Enter the authentication key that has been notified to the entered email address, please click on the [NEXT] button. <br>If the authentication key does not reach, please also check the junk mail. If you do not arrive in junk e-mail, please try again. <br>If you do not reach even to try several times, please consult your system administrator."
+msgstr ""
+
+#: Auth/View/ForgotPass/request.ctp:19
+msgid "Please enter your registered e-mail address, and click on the [OK] button. <br>We will send the activation key to obtain a new password to your registered e-mail address."
+msgstr ""
+
+#: Auth/View/ForgotPass/update.ctp:19
+msgid "Enter the new password, please click the [OK] button."
+msgstr ""
+
+#: Auth/View/ForgotPass/update.ctp:33
+msgid "New password"
+msgstr ""
+
