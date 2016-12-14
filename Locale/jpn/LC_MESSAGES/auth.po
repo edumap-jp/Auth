@@ -15,181 +15,218 @@ msgstr ""
 "Language: ja\n"
 "X-Generator: Poedit 1.8.1\n"
 
-#
-# ログイン
-#
-
-msgid "Please enter your username."
-msgstr "ログインIDを入力してください。"
-
-msgid "Please enter your password."
-msgstr "パスワードを入力してください。"
-
+#: Auth/Controller/AuthController.php:73
+#: Auth/View/Auth/login.ctp:17;64
 msgid "Login"
 msgstr "ログイン"
 
+#: Auth/Controller/AuthController.php:97
 msgid "Invalid username or password, try again"
 msgstr "ログイン情報が間違っています。再度、入力してください。"
 
-msgid "Username"
-msgstr "ログインID"
+#: Auth/Controller/AutoUserRegistController.php:127
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterTest.php:78
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterWAdminConfirmTest.php:78;128
+#: Auth/Test/Case/Controller/AutoUserRegistController/BeforeFilterWSecretKeyTest.php:142
+#: Auth/View/AutoUserRegist/acceptance.ctp:14
+#: Auth/View/AutoUserRegist/completion.ctp:14
+#: Auth/View/AutoUserRegist/confirm.ctp:14
+#: Auth/View/AutoUserRegist/entry_key.ctp:14
+#: Auth/View/AutoUserRegist/request.ctp:14
+#: NetCommons/View/Elements/common_header.ctp:107
+msgid "Sign up"
+msgstr "新規登録"
 
-msgid "Password"
-msgstr "パスワード"
+#: Auth/Controller/AutoUserRegistController.php:291
+msgid "Confirmation e-mail will be sent to the registered address, after the system administrator approve your registration."
+msgstr "登録メールアドレス宛に承認キーを送信しました。メールの指示に従い、承認を完了してください。"
 
-#
-# パスワード再発行
-#
+#: Auth/Controller/AutoUserRegistController.php:295;333
+msgid "Thank you for your registration. Click on the link, please login."
+msgstr "登録が完了しました。ログインボックスよりログインしてください。"
 
-msgid "Forgot your Password? Please click here."
-msgstr "パスワードがわからない方はこちら"
+#: Auth/Controller/AutoUserRegistController.php:298
+msgid "Your registration will be confirmed by the system administrator. <br>When confirmed, it will be notified by e-mail."
+msgstr "サイト管理者がアカウントを承認するまでしばらくお待ちください。<br>承認完了時にはメールにてお知らせします。"
 
+#: Auth/Controller/AutoUserRegistController.php:365
+#: UserManager/Controller/UserManagerController.php:239
+msgid "hank you for your registration.<br>We have sent you the registration key to your registered e-mail address."
+msgstr "アカウントを承認しました。<br>承認キーが記載されたメールを承認した会員に送信しました。"
+
+#: Auth/Controller/AutoUserRegistController.php:401
+#: UserManager/Controller/UserManagerController.php:244
+msgid "Your registration was not approved.<br>Please consult with the system administrator."
+msgstr "アカウントを承認できませんでした。<br>システム管理者にお問い合わせください。"
+
+#: Auth/Controller/ForgotPassController.php:113
+#: Auth/Test/Case/Controller/ForgotPassController/BeforeFilterTest.php:73
+#: Auth/View/ForgotPass/confirm.ctp:14
+#: Auth/View/ForgotPass/request.ctp:14
+#: Auth/View/ForgotPass/update.ctp:14
 msgid "Forgot your Password?"
 msgstr "パスワード再発行"
 
-msgid "Please enter your registered e-mail address, and click on the [OK] button. <br>"
-"We will send the activation key to obtain a new password to your registered e-mail address."
-msgstr "登録に使用したメールアドレスを入力し、[決定]ボタンをクリックしてください。<br>"
-"パスワード取得用のリンクが記載されたメールが登録メールアドレス宛に送られます。"
-
-msgid "email"
-msgstr "Eメール"
-
+#: Auth/Controller/ForgotPassController.php:164
+#: Auth/Test/Case/Controller/ForgotPassController/RequestTest.php:216;301
 msgid "We have sent you the key to obtain a new password to your registered e-mail address."
 msgstr "入力されたメールアドレスに認証キーをメール送信しました。"
 
+#: Auth/Controller/ForgotPassController.php:209
+#: Auth/Test/Case/Controller/ForgotPassController/ConfirmTest.php:189
+msgid "We have sent your login id to your registered e-mail address."
+msgstr "指定されたメールアドレスにログインIDを送信しました。"
 
-#
-# 認証キー入力画面
-#
+#: Auth/Model/AutoUserRegist.php:135
+#: Auth/View/AutoUserRegist/entry_key.ctp:27
+msgid "Secret key"
+msgstr "認証キー"
 
-msgid "Authorization key confirm?"
-msgstr "認証キー確認"
+#: Auth/Model/AutoUserRegist.php:141
+msgid "Failed on validation errors. Please check the secret key."
+msgstr "認証キーが異なります。正しい認証キーを入力してください。"
 
+#: Auth/Model/AutoUserRegist.php:320
+msgid "You have not agreed to the terms of use."
+msgstr "利用許諾に同意してください。"
+
+#: Auth/Model/AutoUserRegist.php:612
+msgid "The member was cancelled out."
+msgstr "指定会員はすでに削除されています。承認できませんでした。"
+
+#: Auth/Model/AutoUserRegist.php:639
+msgid "Selected account is already activated!"
+msgstr "既に承認された会員です。"
+
+#: Auth/Model/ForgotPass.php:68;75;76
+#: Auth/Test/Case/Controller/ForgotPassController/RequestTest.php:335;342
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:71;78;79
+#: Auth/View/ForgotPass/request.ctp:28
+msgid "email"
+msgstr "Eメール"
+
+#: Auth/Model/ForgotPass.php:83
+#: Auth/Test/Case/Controller/ForgotPassController/ConfirmTest.php:257;267
+#: Auth/Test/Case/Model/ForgotPass/ValidateAuthorizationKeyTest.php:87
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:96
+#: Auth/View/ForgotPass/confirm.ctp:30
 msgid "Authorization key"
 msgstr "認証キー"
 
-msgid "Enter the authentication key that has been notified to the entered email address, please click on the [NEXT] button. <br>"
-"If the authentication key does not reach, please also check the junk mail. "
-"If you do not arrive in junk e-mail, please try again. <br>"
-"If you do not reach even to try several times, please consult your system administrator."
+#: Auth/Model/ForgotPass.php:88;158
+#: Auth/Test/Case/Model/ForgotPass/ValidateAuthorizationKeyTest.php:100;109
+#: Auth/Test/Case/Model/ForgotPass/ValidateTest.php:101
+msgid "Failed on validation errors. Please check the authorization key."
+msgstr "認証キーが異なります。正しい認証キーを入力してください。"
+
+#: Auth/Model/ForgotPass.php:187
+msgid "Failed on validation errors. Please check the login id."
+msgstr "ログインIDが異なります。正しいログインIDを入力してください。"
+
+#: Auth/View/Auth/login.ctp:50
+#: Auth/View/ForgotPass/update.ctp:26
+msgid "Username"
+msgstr "ログインID"
+
+#: Auth/View/Auth/login.ctp:51
+#: Auth/View/ForgotPass/update.ctp:27
+msgid "Please enter your username."
+msgstr "ログインIDを入力してください。"
+
+#: Auth/View/Auth/login.ctp:57
+msgid "Password"
+msgstr "パスワード"
+
+#: Auth/View/Auth/login.ctp:58
+msgid "Please enter your password."
+msgstr "パスワードを入力してください。"
+
+#: Auth/View/Auth/login.ctp:72
+msgid "Forgot your Password? Please click here."
+msgstr "パスワードがわからない方はこちら"
+
+#: Auth/View/AutoUserRegist/completion.ctp:23
+msgid "Registered info"
+msgstr "登録された内容"
+
+#: Auth/View/AutoUserRegist/confirm.ctp:19
+msgid "Check the input contents. If there is no content is a problem, please click on the [NEXT] button. If you re-fix, please click on the [BACK] button."
+msgstr "入力した内容を確認してください。"
+"内容に問題なければ、[次へ]ボタンをクリックしてください。"
+"修正しなおす場合は、[前へ]ボタンをクリックしてください。"
+
+#: Auth/View/AutoUserRegist/entry_key.ctp:19
+msgid "Entry secret key, and press [NEXT] button."
+msgstr "新規登録を受け付けるための認証キーを入力して、[次へ]ボタンを押してください。"
+
+#: Auth/View/AutoUserRegist/request.ctp:19
+msgid "Fill out the following items, and press [NEXT] button."
+msgstr "下記項目を入力して、[次へ]ボタンを押してください。"
+
+#: Auth/View/AutoUserRegist/request.ctp:38
+msgid "Terms of use"
+msgstr "利用規約"
+
+#: Auth/View/AutoUserRegist/request.ctp:47
+msgid "I agree to the above."
+msgstr "私は上記事項に同意します。"
+
+#: Auth/View/ForgotPass/confirm.ctp:19
+msgid "Enter the authentication key that has been notified to the entered email address, please click on the [NEXT] button. <br>If the authentication key does not reach, please also check the junk mail. If you do not arrive in junk e-mail, please try again. <br>If you do not reach even to try several times, please consult your system administrator."
 msgstr "入力したメールアドレスに通知された認証キーを入力し、[次へ]ボタンをクリックしてください。<br>"
 "認証キーが届かない場合は、迷惑メールも確認してください。"
 "迷惑メールにも届いていない場合は、再度やり直してください。<br>"
 "何度か試しても届かない場合は、システム管理者に相談してください。"
 
-msgid "Failed on validation errors. Please check the authorization key."
-msgstr "認証キーが異なります。正しい認証キーを入力してください。"
+#: Auth/View/ForgotPass/request.ctp:19
+msgid "Please enter your registered e-mail address, and click on the [OK] button. <br>We will send the activation key to obtain a new password to your registered e-mail address."
+msgstr "登録に使用したメールアドレスを入力し、[決定]ボタンをクリックしてください。<br>"
+"パスワード取得用のリンクが記載されたメールが登録メールアドレス宛に送られます。"
 
-msgid "We have sent your login id to your registered e-mail address."
-msgstr "指定されたメールアドレスにログインIDを送信しました。"
-
-
-#
-# 新しいパスワード入力画面
-#
-
-msgid "Entry new password"
-msgstr "新しいパスワードの登録"
-
-msgid "Failed on validation errors. Please check the login id."
-msgstr "ログインIDが異なります。正しいログインIDを入力してください。"
-
-msgid "New password"
-msgstr "新しいパスワード"
-
+#: Auth/View/ForgotPass/update.ctp:19
 msgid "Enter the new password, please click the [OK] button."
 msgstr "ログインIDと新しいパスワードを入力して、[決定]ボタンを押してください。ログインIDがわからない場合、入力したメールアドレスに通知されていますので確認してください。"
 
+#: Auth/View/ForgotPass/update.ctp:33
+msgid "New password"
+msgstr "新しいパスワード"
 
-#
-# 新規登録キーの入力画面
-#
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:90
+msgid "Authorization key confirm?"
+msgstr "認証キー確認"
 
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:92
 msgid "Entry secret key?"
 msgstr "認証キーの入力"
 
-msgid "Secret key"
-msgstr "認証キー"
-
-msgid "Entry secret key, and press [NEXT] button."
-msgstr "新規登録を受け付けるための認証キーを入力して、[次へ]ボタンを押してください。"
-
-msgid "Failed on validation errors. Please check the secret key."
-msgstr "認証キーが異なります。正しい認証キーを入力してください。"
-
-
-#
-# 新規登録の受付画面
-#
-
-msgid "Sign up"
-msgstr "新規登録"
-
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:98
 msgid "Registration?"
 msgstr "新規登録の受付"
 
-msgid "Fill out the following items, and press [NEXT] button."
-msgstr "下記項目を入力して、[次へ]ボタンを押してください。"
-
-msgid "Terms of use"
-msgstr "利用規約"
-
-msgid "I agree to the above."
-msgstr "私は上記事項に同意します。"
-
-msgid "You have not agreed to the terms of use."
-msgstr "利用許諾に同意してください。"
-
-
-#
-# 新規登録の入力確認画面
-#
-
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:104
 msgid "Entry confirm."
 msgstr "入力内容の確認"
 
-msgid "Check the input contents. "
-"If there is no content is a problem, please click on the [NEXT] button. "
-"If you re-fix, please click on the [BACK] button."
-msgstr "入力した内容を確認してください。"
-"内容に問題なければ、[次へ]ボタンをクリックしてください。"
-"修正しなおす場合は、[前へ]ボタンをクリックしてください。"
-
-
-#
-# 新規登録の完了画面
-#
-
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:110
 msgid "Complete registration."
 msgstr "登録完了"
 
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/ForgotPassController.php:96
+msgid "Entry new password"
+msgstr "新しいパスワードの登録"
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:173
 msgid "Complete request registration."
 msgstr "受付完了"
 
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:357
 msgid "Approval completion."
 msgstr "承認完了"
-
-msgid "Thank you for your registration. Click on the link, please login."
-msgstr "登録が完了しました。ログインボックスよりログインしてください。"
-
-msgid "Confirmation e-mail will be sent to the registered address, after the system administrator approve your registration."
-msgstr "登録メールアドレス宛に承認キーを送信しました。メールの指示に従い、承認を完了してください。"
-
-msgid "Your registration will be confirmed by the system administrator. <br>When confirmed, it will be notified by e-mail."
-msgstr "サイト管理者がアカウントを承認するまでしばらくお待ちください。<br>承認完了時にはメールにてお知らせします。"
-
-msgid "Registered info"
-msgstr "登録された内容"
-
-msgid "Your registration was not approved.<br>Please consult with the system administrator."
-msgstr "アカウントを承認できませんでした。<br>システム管理者にお問い合わせください。"
-
-msgid "Selected account is already activated!"
-msgstr "既に承認された会員です。"
-
-msgid "The member was cancelled out."
-msgstr "指定会員はすでに削除されています。承認できませんでした。"
-
-msgid "hank you for your registration.<br>We have sent you the registration key to your registered e-mail address."
-msgstr "アカウントを承認しました。<br>承認キーが記載されたメールを承認した会員に送信しました。"

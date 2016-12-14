@@ -183,3 +183,43 @@ msgstr ""
 msgid "New password"
 msgstr ""
 
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:90
+msgid "Authorization key confirm?"
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:92
+msgid "Entry secret key?"
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:98
+msgid "Registration?"
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:104
+msgid "Entry confirm."
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:110
+msgid "Complete registration."
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/ForgotPassController.php:96
+msgid "Entry new password"
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:173
+msgid "Complete request registration."
+msgstr ""
+
+# 下記の項目は、i18nでセットされない
+#: Auth/Controller/AutoUserRegistController.php:357
+msgid "Approval completion."
+msgstr ""
+
