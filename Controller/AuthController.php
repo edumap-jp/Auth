@@ -89,7 +89,7 @@ class AuthController extends AuthAppController {
 				if ($this->Auth->user('language') !== UserAttributeChoice::LANGUAGE_KEY_AUTO) {
 					$this->Session->write('Config.language', $this->Auth->user('language'));
 				}
-				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
+				$this->Auth->loginRedirect = $this->getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
 			}
 
@@ -103,6 +103,15 @@ class AuthController extends AuthAppController {
 			);
 			//$this->redirect($this->Auth->loginAction);
 		}
+	}
+
+/**
+ * デフォルト開始ページの取得
+ *
+ * @return string or null
+ */
+	public function getDefaultStartPage() {
+		return $this->SiteSetting->getDefaultStartPage();
 	}
 
 /**
