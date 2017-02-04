@@ -44,4 +44,14 @@ class AuthAppController extends AppController {
 
 		return $authenticators;
 	}
+
+/**
+ * デフォルト開始ページの取得
+ *
+ * @return string or null
+ */
+	protected function _getDefaultStartPage() {
+		return $this->SiteSetting->getDefaultStartPage();
+	}
+
 }

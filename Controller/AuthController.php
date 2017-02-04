@@ -89,7 +89,7 @@ class AuthController extends AuthAppController {
 				if ($this->Auth->user('language') !== UserAttributeChoice::LANGUAGE_KEY_AUTO) {
 					$this->Session->write('Config.language', $this->Auth->user('language'));
 				}
-				$this->Auth->loginRedirect = $this->SiteSetting->getDefaultStartPage();
+				$this->Auth->loginRedirect = $this->_getDefaultStartPage();
 				return $this->redirect($this->Auth->redirect());
 			}
 
