@@ -258,7 +258,8 @@ class AutoUserRegist extends AppModel {
 				'OR' => array(
 					'UserAttributeSetting.user_attribute_key' => array(
 						UserAttribute::LOGIN_ID_FIELD,
-						UserAttribute::PASSWORD_FIELD
+						UserAttribute::PASSWORD_FIELD,
+						UserAttribute::EMAIL_FIELD
 					),
 					array(
 						'UserAttributeSetting.required' => true,
