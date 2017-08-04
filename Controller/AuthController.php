@@ -15,6 +15,8 @@ App::uses('UserAttributeChoice', 'UserAttributes.Model');
 /**
  * 認証Controller
  *
+ * @property AuthComponent $Auth
+ *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
  */
@@ -83,6 +85,9 @@ class AuthController extends AuthAppController {
 			$this->Auth->authenticate['all']['scope'] = array(
 				'User.status' => '1'
 			);
+
+			$this->__setNc2Authenticate();
+
 			if ($this->Auth->login()) {
 				$User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
@@ -132,4 +137,16 @@ class AuthController extends AuthAppController {
 			//CakeLog::info(sprintf('Unknown authenticator %s.%s', $plugin, $scheme), true);
 		}
 	}
+
+/**
+ * Set nc2 authenticator
+ *
+ * @return void
+ **/
+	private function __setNc2Authenticate() {
+		if (CakePlugin::loaded('Nc2ToNc3')) {
+			$this->Auth->authenticate['Nc2ToNc3.Nc2'] = [];
+		}
+	}
+
 }
