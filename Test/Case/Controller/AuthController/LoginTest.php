@@ -41,21 +41,39 @@ class AuthControllerLoginTest extends NetCommonsControllerTestCase {
 	protected $_controller = 'auth';
 
 /**
+ * tearDown method
+ *
+ * @return void
+ */
+	public function tearDown() {
+		parent::tearDown();
+
+		TestAuthGeneral::logout($this);
+	}
+
+/**
  * ログイン状態と判定させるMock生成する
  *
  * @return void
  */
 	protected function _mockLoggedIn() {
+		$this->generateNc(Inflector::camelize($this->_controller),
+			array(
+				'components' => array(
+					'Auth' => array('login'),
+				),
+				'uses' => array(
+					'Users.User' => array('updateLoginTime'),
+				)
+			)
+		);
+
 		$this->controller->Auth
-			->staticExpects($this->any())
-			->method('user')
-			->will($this->returnCallback(function ($key = null) {
-				$role = Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR;
-				if (isset(TestAuthGeneral::$roles[$role][$key])) {
-					return TestAuthGeneral::$roles[$role][$key];
-				} else {
-					return TestAuthGeneral::$roles[$role];
-				}
+			->expects($this->once())
+			->method('login')
+			->will($this->returnCallback(function () {
+				TestAuthGeneral::login($this);
+				return true;
 			}));
 	}
 
@@ -185,20 +203,4 @@ class AuthControllerLoginTest extends NetCommonsControllerTestCase {
 		$this->assertTrue($this->controller->Auth->loggedIn());
 	}
 
-/**
- * ログインのテスト(Userのupdateエラー)
- *
- * @param array $data リクエストPOSTデータ
- * @dataProvider dataProvider
- * @return void
- */
-	public function testLoginOnUserUpdateError($data) {
-		$Mock = $this->getMockForModel('Users.User', ['updateAll']);
-		$Mock->expects($this->once())
-			->method('updateAll')
-			->will($this->returnValue(false));
-
-		$this->setExpectedException('InternalErrorException');
-		$this->testLogin($data);
-	}
 }

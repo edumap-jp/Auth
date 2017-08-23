@@ -10,6 +10,7 @@
  */
 
 App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
+App::uses('TestAuthGeneral', 'AuthGeneral.TestSuite');
 
 /**
  * AuthController::logout()のテスト
@@ -46,17 +47,7 @@ class AuthControllerLogoutTest extends NetCommonsControllerTestCase {
  * @return void
  */
 	protected function _mockLoggedIn() {
-		$this->controller->Auth
-			->staticExpects($this->any())
-			->method('user')
-			->will($this->returnCallback(function ($key = null) {
-				$role = Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR;
-				if (isset(TestAuthGeneral::$roles[$role][$key])) {
-					return TestAuthGeneral::$roles[$role][$key];
-				} else {
-					return TestAuthGeneral::$roles[$role];
-				}
-			}));
+		TestAuthGeneral::login($this);
 	}
 
 /**
@@ -73,7 +64,7 @@ class AuthControllerLogoutTest extends NetCommonsControllerTestCase {
 			'data' => array(),
 		));
 
-		$this->assertEqual(null, CakeSession::read('Auth.User'));
+		$this->assertFalse($this->controller->Auth->loggedIn());
 	}
 
 /**
@@ -89,7 +80,7 @@ class AuthControllerLogoutTest extends NetCommonsControllerTestCase {
 			'data' => array(),
 		));
 
-		$this->assertEqual(null, CakeSession::read('Auth.User'));
+		$this->assertFalse($this->controller->Auth->loggedIn());
 	}
 
 }
