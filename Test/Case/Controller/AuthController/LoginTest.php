@@ -10,6 +10,7 @@
  */
 
 App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
+App::uses('TestAuthGeneral', 'AuthGeneral.TestSuite');
 
 /**
  * AuthController::login()のテスト
