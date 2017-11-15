@@ -28,7 +28,9 @@
 		<?php endif; ?>
 
 			<?php if ($this->elementExists(Inflector::camelize($plugin) . '.login')) : ?>
-				<?php echo $this->element(Inflector::camelize($plugin) . '.login'); ?>
+				<?php echo $this->element(Inflector::camelize($plugin) . '.login', array(
+					'plugin' => $plugin,
+				)); ?>
 
 			<?php else : ?>
 				<?php echo $this->NetCommonsForm->create('User', array(
