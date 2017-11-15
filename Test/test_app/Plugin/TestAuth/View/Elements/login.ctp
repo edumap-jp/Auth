@@ -22,4 +22,4 @@
 
 	TestAuth/View/Elements/login.ctp
 
-<?php echo $this->NetCommonsForm->end(); ?>
+<?php echo $this->NetCommonsForm->end();
