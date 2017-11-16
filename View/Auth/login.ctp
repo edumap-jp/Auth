@@ -27,50 +27,52 @@
 			</div>
 		<?php endif; ?>
 
-		<?php echo $this->NetCommonsForm->create('User', array(
-					'id' => Inflector::camelize($plugin),
-					'url' => array(
-						'plugin' => $plugin,
-						'controller' => $plugin,
-						'action' => 'login')
-					)
-			); ?>
-
 			<?php if ($this->elementExists(Inflector::camelize($plugin) . '.login')) : ?>
-				<?php echo $this->element(Inflector::camelize($plugin) . '.login'); ?>
+				<?php echo $this->element(Inflector::camelize($plugin) . '.login', array(
+					'plugin' => $plugin,
+				)); ?>
 
 			<?php else : ?>
-				<div class="panel-body">
-					<?php echo $this->NetCommonsForm->input('username', array(
-						'label' => __d('auth', 'Username'),
-						'placeholder' => __d('auth', 'Please enter your username.'),
-						'required' => true,
-						'class' => 'form-control allow-submit',
-					)); ?>
+				<?php echo $this->NetCommonsForm->create('User', array(
+						'id' => Inflector::camelize($plugin),
+						'url' => array(
+							'plugin' => $plugin,
+							'controller' => $plugin,
+							'action' => 'login')
+					)
+				); ?>
 
-					<?php echo $this->NetCommonsForm->input('password', array(
-						'label' => __d('auth', 'Password'),
-						'placeholder' => __d('auth', 'Please enter your password.'),
-						'required' => true,
-						'class' => 'form-control allow-submit',
-					)); ?>
+					<div class="panel-body">
+						<?php echo $this->NetCommonsForm->input('username', array(
+							'label' => __d('auth', 'Username'),
+							'placeholder' => __d('auth', 'Please enter your username.'),
+							'required' => true,
+							'class' => 'form-control allow-submit',
+						)); ?>
 
-					<button class="btn btn-primary btn-block" type="submit">
-						<?php echo __d('auth', 'Login'); ?>
-					</button>
+						<?php echo $this->NetCommonsForm->input('password', array(
+							'label' => __d('auth', 'Password'),
+							'placeholder' => __d('auth', 'Please enter your password.'),
+							'required' => true,
+							'class' => 'form-control allow-submit',
+						)); ?>
 
-					<hr>
+						<button class="btn btn-primary btn-block" type="submit">
+							<?php echo __d('auth', 'Login'); ?>
+						</button>
 
-					<?php if ($isMailSend && ! SiteSettingUtil::read('App.close_site') && SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
-						<div>
-							<?php echo $this->NetCommonsHtml->link(
-									__d('auth', 'Forgot your Password? Please click here.'),
-									array('plugin' => 'auth', 'controller' => 'forgot_pass', 'action' => 'request')
-								); ?>
-						</div>
-					<?php endif; ?>
-				</div>
+						<hr>
+
+						<?php if ($isMailSend && ! SiteSettingUtil::read('App.close_site') && SiteSettingUtil::read('ForgotPass.use_password_reissue')) : ?>
+							<div>
+								<?php echo $this->NetCommonsHtml->link(
+										__d('auth', 'Forgot your Password? Please click here.'),
+										array('plugin' => 'auth', 'controller' => 'forgot_pass', 'action' => 'request')
+									); ?>
+							</div>
+						<?php endif; ?>
+					</div>
+				<?php echo $this->NetCommonsForm->end(); ?>
 			<?php endif; ?>
-		<?php echo $this->NetCommonsForm->end(); ?>
 	</article>
 <?php endforeach;
