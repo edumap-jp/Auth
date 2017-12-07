@@ -56,6 +56,8 @@ class AuthenticatorPlugin {
 		$authenticators = self::getPlugins();
 		// array_diffを利用して 配列の値AuthGeneralを削除
 		$authenticators = array_diff($authenticators, array('AuthGeneral'));
+		// 配列indexの再設定
+		$authenticators = array_values($authenticators);
 		return $authenticators;
 	}
 }
