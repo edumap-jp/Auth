@@ -10,7 +10,6 @@
  */
 
 App::uses('AppController', 'Controller');
-App::uses('AuthenticatorPlugin', 'Auth.Utility');
 
 /**
  * AuthApp Controller
@@ -19,6 +18,15 @@ App::uses('AuthenticatorPlugin', 'Auth.Utility');
  * @package NetCommons\Auth\Controller
  */
 class AuthAppController extends AppController {
+
+/**
+ * Other components
+ *
+ * @var array
+ */
+	public $components = array(
+		'Auth.AuthPlugin',
+	);
 
 /**
  * Return authentication adapter name
@@ -35,7 +43,7 @@ class AuthAppController extends AppController {
  * @return array authenticators
  */
 	protected function _getAuthenticators() {
-		return AuthenticatorPlugin::getAuthenticators();
+		return $this->AuthPlugin->getAuthenticators();
 	}
 
 /**

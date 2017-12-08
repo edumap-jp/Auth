@@ -1,6 +1,6 @@
 <?php
 /**
- * AuthenticatorPlugin Utility
+ * AuthShibboleth Component
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -8,20 +8,40 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
+App::uses('Component', 'Controller');
+
 /**
- * AuthenticatorPlugin Utility
+ * AuthShibboleth Component
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\Auth\Utility
+ * @package NetCommons\AuthShibboleth\Controller\Component
+ * @property SessionComponent $Session
  */
-class AuthenticatorPlugin {
+class AuthPluginComponent extends Component {
+
+/**
+ * @var Controller コントローラ
+ */
+	protected $_controller = null;
+
+/**
+ * Called before the Controller::beforeFilter().
+ *
+ * @param Controller $controller Instantiating controller
+ * @return void
+ * @link http://book.cakephp.org/2.0/ja/controllers/components.html#Component::initialize
+ */
+	public function initialize(Controller $controller) {
+		// どのファンクションでも $controller にアクセスできるようにクラス内変数に保持する
+		$this->_controller = $controller;
+	}
 
 /**
  * Return available authenticators (Camel)
  *
  * @return array authenticators (Camel)
  */
-	public static function getPlugins() {
+	public function getPlugins() {
 		$authenticators = array();
 		$plugins = App::objects('plugins');
 		foreach ($plugins as $plugin) {
@@ -38,8 +58,8 @@ class AuthenticatorPlugin {
  *
  * @return array authenticators
  */
-	public static function getAuthenticators() {
-		$authenticators = self::getPlugins();
+	public function getAuthenticators() {
+		$authenticators = $this->getPlugins();
 		foreach ($authenticators as &$plugin) {
 			$plugin = Inflector::underscore($plugin);
 		}
@@ -52,12 +72,13 @@ class AuthenticatorPlugin {
  *
  * @return array external authenticators
  */
-	public static function getExternals() {
-		$authenticators = self::getPlugins();
+	public function getExternals() {
+		$authenticators = $this->getPlugins();
 		// array_diffを利用して 配列の値AuthGeneralを削除
 		$authenticators = array_diff($authenticators, array('AuthGeneral'));
 		// 配列indexの再設定
 		$authenticators = array_values($authenticators);
 		return $authenticators;
 	}
+
 }
