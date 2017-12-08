@@ -20,6 +20,15 @@ App::uses('AppController', 'Controller');
 class AuthAppController extends AppController {
 
 /**
+ * Other components
+ *
+ * @var array
+ */
+	public $components = array(
+		'Auth.AuthPlugin',
+	);
+
+/**
  * Return authentication adapter name
  *
  * @return string Authentication adapter name
@@ -34,15 +43,7 @@ class AuthAppController extends AppController {
  * @return array authenticators
  */
 	protected function _getAuthenticators() {
-		$authenticators = array();
-		$plugins = App::objects('plugins');
-		foreach ($plugins as $plugin) {
-			if (preg_match('/^Auth([A-Z0-9_][\w]+)/', $plugin)) {
-				$authenticators[] = Inflector::underscore($plugin);
-			}
-		}
-
-		return $authenticators;
+		return $this->AuthPlugin->getAuthenticators();
 	}
 
 /**
