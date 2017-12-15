@@ -49,6 +49,17 @@ class AuthPluginComponent extends Component {
 				$authenticators[] = $plugin;
 			}
 		}
+		foreach ($plugins as $plugin) {
+			if (preg_match('/^RmAuth([A-Z0-9_][\w]+)/', $plugin)) {
+				$authenticators[] = $plugin;
+				// RmAuthXXXプラグインがあったら、先頭Rm文字を取り除き、対象のプラグインを除外する
+				$unsetPlugin = ltrim($plugin, 'Rm');
+				$unsetKey = array_search($unsetPlugin, $authenticators);
+				if ($unsetKey) {
+					unset($authenticators[$unsetKey]);
+				}
+			}
+		}
 
 		return $authenticators;
 	}
