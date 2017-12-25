@@ -53,6 +53,10 @@ class AuthController extends AuthAppController {
 
 		$this->Session->delete('AutoUserRegist');
 		$this->Session->delete('ForgotPass');
+
+		$this->Auth->authenticate['all']['scope'] = array(
+			'User.status' => '1'
+		);
 	}
 
 /**
@@ -81,10 +85,6 @@ class AuthController extends AuthAppController {
 			//Auth->login()を実行すると、$this->UserがUsers.UserからModelAppに置き換わってしまい、
 			//エラーになるため、変数に保持しておく。
 			$User = $this->User;
-
-			$this->Auth->authenticate['all']['scope'] = array(
-				'User.status' => '1'
-			);
 
 			$this->__setNc2Authenticate();
 
