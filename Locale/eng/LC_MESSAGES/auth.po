@@ -223,3 +223,27 @@ msgstr ""
 msgid "Approval completion."
 msgstr ""
 
+# 他のサービスを用いてログイン
+msgid "Auth.exlogin.success"
+msgstr "It will be [login authenticated] until all browsers are closed. Please close all the browsers before you leave the seat if you connect with a computer that others may use."
+
+msgid "Auth.exlogin.failure"
+msgstr "Login can not be performed because necessary attribute information can not be obtained from the selected belonging organization authentication system. Please contact the administrator of the belonging organization authentication system you selected."
+
+msgid "The ID association information of the corresponding service is invalid. Please login with a different ID and review ID linkage settings or contact your institution."
+msgstr ""
+
+msgid "Account is pending approval. Please wait until your account is approved, or confirm that you have not received your membership confirmation email."
+msgstr ""
+
+msgid "Do you associate the ID of %s you always use?"
+msgstr ""
+
+msgid "You can associate the ID of the specified service with the ID of %s."
+msgstr ""
+
+msgid "Please login with the ID of %s."
+msgstr ""
+
+msgid "Still, if you do not have an account at %s please go to %s."
+msgstr ""

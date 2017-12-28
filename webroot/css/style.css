@@ -20,3 +20,21 @@
 	overflow: auto;
 	height: 250px;
 }
+
+/*
+ * --- ログイン関連付け画面
+ */
+/* タイトルエリア */
+div.auth-mapping-title {
+	border-bottom: solid 1px #ddd;
+}
+
+/* メインエリア */
+div.auth-mapping-main {
+	display: flex; flex-wrap: wrap;
+}
+
+/* ログインエリア */
+div.auth-mapping-login {
+	border-right: solid 1px #ddd;
+}

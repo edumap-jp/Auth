@@ -230,3 +230,29 @@ msgstr "受付完了"
 #: Auth/Controller/AutoUserRegistController.php:357
 msgid "Approval completion."
 msgstr "承認完了"
+
+# 他のサービスを用いてログイン
+
+msgid "Auth.exlogin.success"
+msgstr "すべてのブラウザを閉じるまで「ログイン認証済み」となります。他者が使用する可能性のあるパソコンで接続した場合は、席を立つ前に必ずすべてのブラウザを閉じてください。"
+
+msgid "Auth.exlogin.failure"
+msgstr "選択した所属機関認証システムから必要な属性情報が得られないため、ログインすることができません。選択した所属機関認証システムの管理者にお問い合わせください。"
+
+msgid "The ID association information of the corresponding service is invalid. Please login with a different ID and review ID linkage settings or contact your institution."
+msgstr "該当サービスのID関連付け情報が無効に設定されています。別のIDでログインしID連携設定を見直すか、所属機関にお問合せください。"
+
+msgid "Account is pending approval. Please wait until your account is approved, or confirm that you have not received your membership confirmation email."
+msgstr "アカウントが承認待ちになっています。アカウントの承認までお待ちいただくか、会員登録確認メールが届いていないかご確認ください。"
+
+msgid "Do you associate the ID of %s you always use?"
+msgstr "いつも利用している%sのIDを関連づけますか。"
+
+msgid "You can associate the ID of the specified service with the ID of %s."
+msgstr "指定されたサービスのIDと%sのIDを関連付けることができます。"
+
+msgid "Please login with the ID of %s."
+msgstr "%sのIDでログインしてください。"
+
+msgid "Still, if you do not have an account at %s please go to %s."
+msgstr "まだ、%sにアカウントをお持ちでない方は、%sにお進みください。"
