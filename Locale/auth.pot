@@ -222,3 +222,28 @@ msgstr ""
 #: Auth/Controller/AutoUserRegistController.php:357
 msgid "Approval completion."
 msgstr ""
+
+# 他のサービスを用いてログイン
+msgid "Auth.exlogin.success"
+msgstr ""
+
+msgid "Auth.exlogin.failure"
+msgstr ""
+
+msgid "The ID association information of the corresponding service is invalid. Please login with a different ID and review ID linkage settings or contact your institution."
+msgstr ""
+
+msgid "Account is pending approval. Please wait until your account is approved, or confirm that you have not received your membership confirmation email."
+msgstr ""
+
+msgid "Do you associate the ID of %s you always use?"
+msgstr ""
+
+msgid "You can associate the ID of the specified service with the ID of %s."
+msgstr ""
+
+msgid "Please login with the ID of %s."
+msgstr ""
+
+msgid "Still, if you do not have an account at %s please go to %s."
+msgstr ""
