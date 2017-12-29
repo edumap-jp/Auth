@@ -14,7 +14,7 @@ App::uses('Component', 'Controller');
  * AuthPlugin Component
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\AuthShibboleth\Controller\Component
+ * @package NetCommons\Auth\Controller\Component
  * @property SessionComponent $Session
  */
 class AuthPluginComponent extends Component {
