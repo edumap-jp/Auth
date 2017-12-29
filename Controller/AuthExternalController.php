@@ -52,7 +52,7 @@ class AuthExternalController extends AuthAppController {
 		$this->Session->delete('ForgotPass');
 
 		$this->Auth->authenticate['all']['scope'] = array(
-			'User.status' => '1'
+			'User.status' => UserAttributeChoice::STATUS_CODE_ACTIVE
 		);
 	}
 
