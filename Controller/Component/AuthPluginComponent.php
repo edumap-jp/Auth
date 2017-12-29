@@ -1,6 +1,6 @@
 <?php
 /**
- * AuthShibboleth Component
+ * AuthPlugin Component
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -11,7 +11,7 @@
 App::uses('Component', 'Controller');
 
 /**
- * AuthShibboleth Component
+ * AuthPlugin Component
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\AuthShibboleth\Controller\Component
