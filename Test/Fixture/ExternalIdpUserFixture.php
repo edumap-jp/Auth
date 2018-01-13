@@ -37,7 +37,7 @@ class ExternalIdpUserFixture extends CakeTestFixture {
  */
 	public function init() {
 		require_once CakePlugin::path('Auth') . 'Config' . DS . 'Schema' . DS . 'schema.php';
-		$this->fields = (new AuthShibbolethSchema())->tables[Inflector::tableize($this->name)];
+		$this->fields = (new AuthSchema())->tables[Inflector::tableize($this->name)];
 		parent::init();
 	}
 
