@@ -58,6 +58,7 @@ class AuthController extends AuthAppController {
 		$this->Session->delete('AutoUserRegist');
 		$this->Session->delete('ForgotPass');
 
+		$this->Auth->authenticate['all']['userModel'] = 'Users.User';
 		$this->Auth->authenticate['all']['scope'] = array(
 			'User.status' => UserAttributeChoice::STATUS_CODE_ACTIVE
 		);
@@ -86,14 +87,10 @@ class AuthController extends AuthAppController {
 		$this->set('isMailSend', $this->ForgotPass->isMailSendCommon('auth', 'auth'));
 
 		if ($this->request->is('post')) {
-			//Auth->login()を実行すると、$this->UserがUsers.UserからModelAppに置き換わってしまい、
-			//エラーになるため、変数に保持しておく。
-			$User = $this->User;
-
 			$this->_setNc2Authenticate();
 
 			if ($this->Auth->login()) {
-				$User->updateLoginTime($this->Auth->user('id'));
+				$this->User->updateLoginTime($this->Auth->user('id'));
 				Current::write('User', $this->Auth->user());
 				if ($this->Auth->user('language') !== UserAttributeChoice::LANGUAGE_KEY_AUTO) {
 					$this->Session->write('Config.language', $this->Auth->user('language'));
