@@ -90,7 +90,7 @@ class AuthController extends AuthAppController {
 			//エラーになるため、変数に保持しておく。
 			$User = $this->User;
 
-			$this->__setNc2Authenticate();
+			$this->_setNc2Authenticate();
 
 			if ($this->Auth->login()) {
 				$User->updateLoginTime($this->Auth->user('id'));
@@ -147,7 +147,7 @@ class AuthController extends AuthAppController {
  *
  * @return void
  **/
-	private function __setNc2Authenticate() {
+	protected function _setNc2Authenticate() {
 		if (CakePlugin::loaded('Nc2ToNc3')) {
 			$this->Auth->authenticate['Nc2ToNc3.Nc2'] = [];
 		}
