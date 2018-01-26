@@ -1,10 +1,14 @@
 {
-    "name":        "netcommons/auth",
+    "name": "netcommons/auth",
     "description": "Auth Plugin for CakePHP",
-    "type":        "cakephp-plugin",
-    "keywords":    ["cakephp", "auth"],
-    "homepage":    "http://www.netcommons.org/",
-    "license":     "NetCommons License",
+    "type": "cakephp-plugin",
+    "keywords": [
+        "cakephp",
+        "auth"
+    ],
+    "homepage": "http://www.netcommons.org/",
+    "license": "LicenseRef-NetCommons",
+    "license-ref-net-commons": "https://raw.githubusercontent.com/NetCommons3/NetCommons3/master/license.txt",
     "authors": [
         {
             "name": "NetCommons Community",
@@ -13,15 +17,17 @@
     ],
     "extra": {
         "installer-paths": {
-            "app/Plugin/{$name}": ["type:cakephp-plugin"]
+            "app/Plugin/{$name}": [
+                "type:cakephp-plugin"
+            ]
         }
     },
     "require": {
-        "netcommons/mails":             "@dev",
-        "netcommons/net-commons":      "@dev",
-        "netcommons/site-manager":     "@dev",
-        "netcommons/user-attributes":  "@dev",
-        "netcommons/users":             "@dev"
+        "netcommons/mails": "@dev",
+        "netcommons/net-commons": "@dev",
+        "netcommons/site-manager": "@dev",
+        "netcommons/user-attributes": "@dev",
+        "netcommons/users": "@dev"
     },
     "config": {
         "vendor-dir": "vendors"
