@@ -51,6 +51,10 @@ class AuthController extends AuthAppController {
 		$this->set('authenticators', $authenticators);
 
 		$this->__setDefaultAuthenticator();
+		// @see https://book.cakephp.org/2.0/ja/core-libraries/components/authentication.html#id5
+		// 認証ハンドラは $this->Auth->authenticate を使って設定します。
+		// コントローラの beforeFilter の中、もしくは $components 配列の中に、 認証ハンドラ()を設定することができます。
+		$this->_setNc2Authenticate();
 
 		parent::beforeFilter();
 		$this->Auth->allow('login', 'logout');
@@ -87,7 +91,7 @@ class AuthController extends AuthAppController {
 		$this->set('isMailSend', $this->ForgotPass->isMailSendCommon('auth', 'auth'));
 
 		if ($this->request->is('post')) {
-			$this->_setNc2Authenticate();
+			//$this->_setNc2Authenticate();
 
 			if ($this->Auth->login()) {
 				$this->User->updateLoginTime($this->Auth->user('id'));
