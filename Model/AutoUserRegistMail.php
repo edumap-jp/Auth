@@ -85,9 +85,12 @@ class AutoUserRegistMail extends AppModel {
 			return true;
 		}
 
+		$originalTags = $this->getOriginalTags($user);
+
 		foreach ($data['email'] as $email) {
 			$this->mail->mailAssignTag->setFixedPhraseSubject($data['subject']);
 			$this->mail->mailAssignTag->setFixedPhraseBody($data['body']);
+			$this->mail->mailAssignTag->assignTags($originalTags);
 			$this->mail->mailAssignTag->assignTags(array('X-URL' => $data['url']));
 			$this->mail->mailAssignTag->initPlugin(Current::read('Language.id'));
 			$this->mail->initPlugin(Current::read('Language.id'));
@@ -98,6 +101,34 @@ class AutoUserRegistMail extends AppModel {
 		}
 
 		return true;
+	}
+
+/**
+ * オリジナルタグを取得する
+ *
+ * @param array $user ユーザ情報
+ * @return array
+ */
+	public function getOriginalTags($user) {
+		$originalTags = [];
+
+		if (isset($user['User'])) {
+			foreach ($user['User'] as $key => $value) {
+				$tagKey = 'X-' . strtoupper($key);
+				$originalTags[$tagKey] = $value;
+			}
+		}
+
+		if (isset($user['UsersLanguage'])) {
+			foreach ($user['UsersLanguage'] as $langId => $userLanguages) {
+				foreach ($userLanguages as $key => $value) {
+					$tagKey = 'X-' . strtoupper($key) . '-' . $langId;
+					$originalTags[$tagKey] = $value;
+				}
+			}
+		}
+
+		return $originalTags;
 	}
 
 }

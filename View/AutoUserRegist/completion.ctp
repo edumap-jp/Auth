@@ -19,18 +19,6 @@
 
 <?php echo $this->NetCommonsForm->create('AutoUserRegist'); ?>
 	<article class="panel panel-default">
-		<div class="panel-heading">
-			<?php echo __d('auth', 'Registered info'); ?>
-		</div>
-
-		<div class="panel-body">
-			<?php
-				foreach ($userAttributes as $userAttribute) {
-					echo $this->AutoUserRegistForm->inputByCompletion($userAttribute);
-				}
-			?>
-		</div>
-
 		<div class="panel-footer text-center">
 			<?php echo $this->Button->cancel(__d('net_commons', 'Close'), $redirectUrl); ?>
 		</div>
