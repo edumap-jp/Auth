@@ -92,16 +92,10 @@ class AutoUserRegistFormHelper extends AppHelper {
 			$endTag = '';
 		}
 
-		$key = $userAttribute['UserAttribute']['key'];
-		$editable = $userAttribute['UserAttributesRole']['self_editable'];
-		$dataTypeKey = $userAttribute['UserAttributeSetting']['data_type_key'];
-		if (Hash::get($userAttribute, 'UserAttributeSetting.is_multilingualization')) {
-			$field = 'UsersLanguage.' . Current::read('Language.id') . '.' . $key;
-		} else {
-			$field = 'User' . '.' . $key;
-		}
+		$field = $this->__getField($userAttribute, $attributeKey);
 
-		if (! $editable && ! in_array($key, ['username', 'password'], true)) {
+		$editable = $userAttribute['UserAttributesRole']['self_editable'];
+		if (! $editable && ! in_array($attributeKey, ['username', 'password'], true)) {
 			if (! $disabled) {
 				$output .= $startTag;
 				$output .= $this->NetCommonsForm->hidden($field);
@@ -109,6 +103,41 @@ class AutoUserRegistFormHelper extends AppHelper {
 			}
 			return $output;
 		}
+
+		$options = $this->__getOptions($userAttribute, $disabled, $colClass);
+
+		$output .= $startTag;
+		$output .= $this->NetCommonsForm->input($field, $options);
+		$output .= $endTag;
+
+		return $output;
+	}
+
+/**
+ * フィールド名ゲット
+ *
+ * @param array $userAttribute 会員項目データ配列
+ * @param string $attributeKey userAttribute[UserAttribute][key]
+ * @return string field name
+ */
+	private function __getField($userAttribute, $attributeKey) {
+		//$attributeKey = $userAttribute['UserAttribute']['key'];
+		if (Hash::get($userAttribute, 'UserAttributeSetting.is_multilingualization')) {
+			return 'UsersLanguage.' . Current::read('Language.id') . '.' . $attributeKey;
+		}
+		return 'User.' . $attributeKey;
+	}
+
+/**
+ * フィールド名ゲット
+ *
+ * @param array $userAttribute 会員項目データ配列
+ * @param bool $disabled Disabledの有無
+ * @param string $colClass col css class
+ * @return array option values
+ */
+	private function __getOptions($userAttribute, $disabled, $colClass) {
+		$dataTypeKey = $userAttribute['UserAttributeSetting']['data_type_key'];
 
 		$options = array(
 			'type' => $dataTypeKey,
@@ -123,22 +152,17 @@ class AutoUserRegistFormHelper extends AppHelper {
 			$options['options'] = Hash::combine(
 				$userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'
 			);
-		} else if (in_array($dataTypeKey, ['checkbox'], true)) {
+		} elseif (in_array($dataTypeKey, ['checkbox'], true)) {
 			// チェックボックスは 'multiple' => 'checkbox' を設定しないと、$this->request->dataの値が反映されない
 			$options += [
 				'options' => Hash::combine($userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'),
 				'multiple' => 'checkbox',
 				'class' => 'checkbox-inline nc-checkbox',
 			];
-		} else if (in_array($dataTypeKey, ['password', 'email'], true)) {
+		} elseif (in_array($dataTypeKey, ['password', 'email'], true)) {
 			$options['again'] = ! $disabled;
 		}
-
-		$output .= $startTag;
-		$output .= $this->NetCommonsForm->input($field, $options);
-		$output .= $endTag;
-
-		return $output;
+		return $options;
 	}
 
 /**
