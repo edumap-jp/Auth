@@ -123,14 +123,14 @@ class AutoUserRegistFormHelper extends AppHelper {
 			$options['options'] = Hash::combine(
 				$userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'
 			);
-		} else if (in_array($dataTypeKey, ['checkbox'], true)) {
+		} elseif (in_array($dataTypeKey, ['checkbox'], true)) {
 			// チェックボックスは 'multiple' => 'checkbox' を設定しないと、$this->request->dataの値が反映されない
 			$options += [
 				'options' => Hash::combine($userAttribute['UserAttributeChoice'], '{n}.code', '{n}.name'),
 				'multiple' => 'checkbox',
 				'class' => 'checkbox-inline nc-checkbox',
 			];
-		} else if (in_array($dataTypeKey, ['password', 'email'], true)) {
+		} elseif (in_array($dataTypeKey, ['password', 'email'], true)) {
 			$options['again'] = ! $disabled;
 		}
 
