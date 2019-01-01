@@ -155,7 +155,7 @@ class AutoUserRegist extends AppModel {
  * @return string model名(UserもしくはUsersLanguage)
  */
 	private function __getModel($userAttribute) {
-		if (Hash::get($userAttribute, 'UserAttribute.is_multilingualization')) {
+		if (Hash::get($userAttribute, 'UserAttributeSetting.is_multilingualization')) {
 			$model = 'UsersLanguage';
 		} else {
 			$model = 'User';
