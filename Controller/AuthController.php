@@ -11,6 +11,7 @@
 
 App::uses('AuthAppController', 'Auth.Controller');
 App::uses('UserAttributeChoice', 'UserAttributes.Model');
+App::uses('User', 'Users.Model');
 
 /**
  * 認証Controller
@@ -66,6 +67,10 @@ class AuthController extends AuthAppController {
 		$this->Auth->authenticate['all']['scope'] = array(
 			'User.status' => UserAttributeChoice::STATUS_CODE_ACTIVE
 		);
+		$this->Auth->authenticate['all']['passwordHasher'] = [
+			'className' => 'Simple',
+			'hashType' => User::PASSWORD_HASH_TYPE,
+		];
 	}
 
 /**
