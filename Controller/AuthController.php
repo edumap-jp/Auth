@@ -28,6 +28,15 @@ App::uses('User', 'Users.Model');
 class AuthController extends AuthAppController {
 
 /**
+ * 使用するComponents
+ *
+ * @var array
+ */
+	public $components = array(
+		'Security',
+	);
+
+/**
  * 使用するModels
  *
  * - [SiteManager.SiteSetting](../../SiteManager/classes/SiteSetting.html)
