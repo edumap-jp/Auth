@@ -61,7 +61,7 @@ class ForgotPass extends AppModel {
 			$forgotPass = array();
 		}
 
-		$this->validate = Hash::merge($this->validate, array(
+		$this->validate = ValidateMerge::merge($this->validate, array(
 			'email' => array(
 				'notBlank' => array(
 					'rule' => array('notBlank'),

@@ -127,7 +127,7 @@ class AutoUserRegist extends AppModel {
 	public function beforeValidate($options = array()) {
 		//入力キーのチェック
 		if (SiteSettingUtil::read('AutoRegist.use_secret_key')) {
-			$this->validate = Hash::merge($this->validate, array(
+			$this->validate = ValidateMerge::merge($this->validate, array(
 				'secret_key' => array(
 					'notBlank' => array(
 						'rule' => array('notBlank'),
