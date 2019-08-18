@@ -11,6 +11,7 @@
  */
 
 echo $this->NetCommonsHtml->css('/auth/css/style.css');
+echo $this->element('Auth.meta');
 ?>
 
 <div class="container">
