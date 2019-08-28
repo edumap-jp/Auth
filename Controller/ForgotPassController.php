@@ -16,6 +16,11 @@ App::uses('SiteSettingUtil', 'SiteManager.Utility');
 /**
  * パスワード再発行Controller
  *
+ * @property SecurityComponent $Security
+ * @property ForgotPass $ForgotPass
+ * @property User $User
+ * @property SiteSetting $SiteSetting
+ *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
  */
