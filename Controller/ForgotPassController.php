@@ -185,6 +185,7 @@ class ForgotPassController extends AuthAppController {
 	public function confirm() {
 		if ($this->request->is('post')) {
 			if ($this->ForgotPass->validateAuthorizationKey($this->request->data)) {
+				$this->Session->write('ForgotPass.isValidAuthorizationKey', true);
 				$forgotPass = $this->Session->read('ForgotPass');
 
 				$this->mail->mailAssignTag->setFixedPhraseSubject(
@@ -222,6 +223,11 @@ class ForgotPassController extends AuthAppController {
  * @return void
  **/
 	public function update() {
+		if ($this->Session->read('ForgotPass.isValidAuthorizationKey') !== true) {
+			$this->Session->delete('ForgotPass');
+			return $this->throwBadRequest();
+		}
+
 		if ($this->request->is('put')) {
 			if ($this->ForgotPass->savePassowrd($this->request->data)) {
 				$this->NetCommons->setFlashNotification(
