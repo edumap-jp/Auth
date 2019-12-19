@@ -22,9 +22,13 @@
             ]
         }
     },
+    "repositories": [
+        {"type": "vcs", "url": "https://github.com/WillBooster/NC3Auth.git"},
+        {"type": "vcs", "url": "https://github.com/WillBooster/NetCommons.git"}
+    ],
     "require": {
         "netcommons/mails": "@dev",
-        "netcommons/net-commons": "@dev",
+        "netcommons/net-commons": "dev-availability",
         "netcommons/site-manager": "@dev",
         "netcommons/user-attributes": "@dev",
         "netcommons/users": "@dev"
