@@ -98,11 +98,11 @@ class AuthController extends AuthAppController {
  * @throws InternalErrorException
  **/
 	public function login() {
-		// ログイン機能をサブドメインにする変更のために、App.loginUrl を追加して
-		// ログイン画面のURLが違ったら転送するようにする
-		$loginUrl = Configure::read('App.loginUrl');
-		if ($loginUrl != "" && Router::fullBaseUrl() != $loginUrl) {
-			$this->redirect($loginUrl . '/auth/login');
+		// ログイン機能を別ドメインにする変更のために、App.memberUrl を追加して
+		// ログイン画面にアクセスしたさいの FullBaseURL と App.memberUrl が違ったら転送する
+		$memberUrl = Configure::read('App.memberUrl');
+		if ($memberUrl != "" && Router::fullBaseUrl() != $memberUrl) {
+			$this->redirect($memberUrl . '/auth/login');
 			return;
 		}
 
