@@ -29,6 +29,14 @@ class AuthAppController extends AppController {
 	);
 
 /**
+ * beforeFilter
+ *
+ * @return void
+ **/
+	public function beforeFilter() {
+	}
+
+/**
  * Return authentication adapter name
  *
  * @return string Authentication adapter name
