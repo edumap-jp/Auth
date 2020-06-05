@@ -173,7 +173,7 @@ msgstr ""
 
 #: Auth/View/ForgotPass/request.ctp:19
 msgid "Please enter your registered e-mail address, and click on the [OK] button. <br>We will send the activation key to obtain a new password to your registered e-mail address."
-msgstr ""
+msgstr "Please enter your registered e-mail address, and click on the [NEXT] button. <br>We will send the activation key to obtain a new password to your registered e-mail address."
 
 #: Auth/View/ForgotPass/update.ctp:19
 msgid "Enter the new password, please click the [OK] button."
