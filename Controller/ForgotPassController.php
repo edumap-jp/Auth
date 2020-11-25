@@ -12,6 +12,7 @@
 App::uses('AuthAppController', 'Auth.Controller');
 App::uses('NetCommonsMail', 'Mails.Utility');
 App::uses('SiteSettingUtil', 'SiteManager.Utility');
+App::uses('UserAttributeChoice', 'UserAttributes.Model');
 
 /**
  * パスワード再発行Controller
@@ -234,6 +235,18 @@ class ForgotPassController extends AuthAppController {
 		}
 
 		if ($this->request->is('put')) {
+			// 承認済ならば、利用可へ
+			$userId = $this->request->data[$this->User->alias]['id'] ?? null;
+			$user = $this->User->find('first', array(
+				'recursive' => -1,
+				'conditions' => array('id' => $userId)
+			));
+
+			if ($user && $user[$this->User->alias]['status'] === UserAttributeChoice::STATUS_CODE_APPROVED) {
+				$this->request->data[$this->User->alias]['status']
+					= UserAttributeChoice::STATUS_CODE_ACTIVE;
+			}
+
 			if ($this->ForgotPass->savePassowrd($this->request->data)) {
 				$this->NetCommons->setFlashNotification(
 					__d('net_commons', 'Successfully saved.'), array('class' => 'success')
