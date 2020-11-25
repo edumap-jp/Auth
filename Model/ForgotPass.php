@@ -10,6 +10,7 @@
  */
 
 App::uses('AppModel', 'Model');
+App::uses('UserAttributeChoice', 'UserAttributes.Model');
 
 /**
  * パスワード再発行Model
@@ -113,9 +114,12 @@ class ForgotPass extends AppModel {
 
 		//メールアドレスのチェック
 		$email = trim($data['ForgotPass']['email']);
+		// 削除済 or 承認待ち or 利用不可ならメール送信しない
 		$conditions = array(
-			'is_deleted' => false
+			'is_deleted' => false,
+			'status' => [UserAttributeChoice::STATUS_CODE_ACTIVE, UserAttributeChoice::STATUS_CODE_APPROVED]
 		);
+
 		$fields = $this->User->getEmailFields();
 		foreach ($fields as $field) {
 			$conditions['OR'][$field] = $email;
