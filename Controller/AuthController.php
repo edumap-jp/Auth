@@ -125,6 +125,25 @@ class AuthController extends AuthAppController {
 					$this->Session->write('Config.language', $this->Auth->user('language'));
 				}
 				$this->Auth->loginRedirect = $this->_getDefaultStartPage();
+
+				// Display motivating flash notification.
+				// See also `updateMotivatingFlashMessage` in app/Plugin/NetCommons/webroot/js/base.js
+				CurrentLibRoom::getInstance()->resetInstance();
+				CurrentLibUser::getInstance()->initialize($this);
+				CurrentLibRoom::getInstance()->initialize($this);
+				$topPageRoomId = CurrentLibPage::getInstance()->findTopPage()['Page']['room_id'];
+				$roomRoleKey = CurrentLibRoom::getInstance()->getRoomRoleKeyByRoomId($topPageRoomId);
+				$isEditor = $roomRoleKey === Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR
+					|| $roomRoleKey === Role::ROOM_ROLE_KEY_CHIEF_EDITOR
+					|| $roomRoleKey === Role::ROOM_ROLE_KEY_EDITOR;
+				if ($isEditor) {
+					$userId = $this->Auth->user('key');
+					$this->NetCommons->setFlashNotification(
+						'<div ng-init="updateMotivatingFlashMessage(\'' . $userId . '\');"></div>',
+						array( 'class' => 'info', 'interval' => 0, 'is_dismissed' => true ),
+					);
+				}
+
 				return $this->redirect($this->Auth->redirect());
 			}
 
