@@ -147,13 +147,12 @@ class AuthController extends AuthAppController {
 						),
 					);
 					$topicCount = $this->Topic->find('count', $this->Topic->getQueryOptions(0, $options));
-					if (!$topicCount) {
-						$userId = $this->Auth->user('key');
-						$this->NetCommons->setFlashNotification(
-							'<div ng-init="updateMotivatingFlashMessage(\'' . $userId . '\');"></div>',
-							array( 'class' => 'info', 'interval' => 0, 'is_dismissed' => true ),
-						);
-					}
+					$userId = $this->Auth->user('key');
+					$params = h(json_encode($userId)) . ',' . h(json_encode($topicCount));
+					$this->NetCommons->setFlashNotification(
+						'<div ng-init="updateMotivatingFlashMessage(' . $params . ');"></div>',
+						array( 'class' => 'info', 'interval' => 0, 'is_dismissed' => true ),
+					);
 				}
 
 				return $this->redirect($this->Auth->redirect());
