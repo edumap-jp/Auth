@@ -58,7 +58,7 @@ echo $this->element('Auth.meta');
 						'class' => 'form-control allow-submit',
 					)); ?>
 
-					<button class="btn btn-primary btn-block" type="submit">
+					<button class="btn btn-primary btn-block" type="submit" ng-click="wakeMitouMlUp();">
 						<?php echo __d('auth', 'Login'); ?>
 					</button>
 
