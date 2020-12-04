@@ -47,6 +47,7 @@ class AuthController extends AuthAppController {
 	public $uses = array(
 		'Auth.ForgotPass',
 		'SiteManager.SiteSetting',
+		'Topics.Topic',
 		'Users.User',
 	);
 
@@ -137,11 +138,22 @@ class AuthController extends AuthAppController {
 					|| $roomRoleKey === Role::ROOM_ROLE_KEY_CHIEF_EDITOR
 					|| $roomRoleKey === Role::ROOM_ROLE_KEY_EDITOR;
 				if ($isEditor) {
-					$userId = $this->Auth->user('key');
-					$this->NetCommons->setFlashNotification(
-						'<div ng-init="updateMotivatingFlashMessage(\'' . $userId . '\');"></div>',
-						array( 'class' => 'info', 'interval' => 0, 'is_dismissed' => true ),
+					$date = new DateTime(date('Y-m-d', strtotime("+9 hours")));
+					$date->sub(new DateInterval('PT9H'));
+					$options = array(
+						'conditions' => array(
+							'Topic.plugin_key' => array('bbses', 'blogs'),
+							'Topic.publish_start >=' => $date->format('Y-m-d H:i:s'),
+						),
 					);
+					$topicCount = $this->Topic->find('count', $this->Topic->getQueryOptions(0, $options));
+					if (!$topicCount) {
+						$userId = $this->Auth->user('key');
+						$this->NetCommons->setFlashNotification(
+							'<div ng-init="updateMotivatingFlashMessage(\'' . $userId . '\');"></div>',
+							array( 'class' => 'info', 'interval' => 0, 'is_dismissed' => true ),
+						);
+					}
 				}
 
 				return $this->redirect($this->Auth->redirect());
