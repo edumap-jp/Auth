@@ -151,7 +151,7 @@ class AuthController extends AuthAppController {
 					$params = h(json_encode($userId)) . ',' . h(json_encode($topicCount));
 					$this->NetCommons->setFlashNotification(
 						'<div ng-init="updateMotivatingFlashMessage(' . $params . ');"></div>',
-						array( 'class' => 'info', 'interval' => 0, 'isDismissed' => true ),
+						array('class' => 'info', 'interval' => 0, 'isDismissed' => true)
 					);
 				}
 
