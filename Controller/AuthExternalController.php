@@ -194,6 +194,11 @@ class AuthExternalController extends AuthAppController {
  * @see AuthShibbolethController::mapping() オーバーライト参考
  **/
 	public function mapping() {
+		if ((bool)$this->Auth->user()) {
+			// 既にログイン済 => トップページへ
+			return $this->redirect('/');
+		}
+
 		$this->view = 'Auth.AuthExternal/mapping';
 
 		//メールを送れるかどうか

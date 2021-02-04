@@ -98,6 +98,11 @@ class AuthController extends AuthAppController {
  * @throws InternalErrorException
  **/
 	public function login() {
+		if ((bool)$this->Auth->user()) {
+			// 既にログイン済 => トップページへ
+			return $this->redirect('/');
+		}
+
 		//ページタイトル
 		$this->set('pageTitle', __d('auth', 'Login'));
 
