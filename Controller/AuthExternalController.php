@@ -108,6 +108,9 @@ class AuthExternalController extends AuthAppController {
 	protected function _getMappingUser() {
 		// IdPによる個人識別番号 取得
 		$idpUserid = $this->_getIdpUserid();
+		if (!$idpUserid) {
+			return array();
+		}
 
 		$idpUser = $this->ExternalIdpUser->findByIdpUserid($idpUserid);
 		if (!$idpUser) {
@@ -194,6 +197,11 @@ class AuthExternalController extends AuthAppController {
  * @see AuthShibbolethController::mapping() オーバーライト参考
  **/
 	public function mapping() {
+		if ((bool)$this->Auth->user()) {
+			// 既にログイン済 => トップページへ
+			return $this->redirect('/');
+		}
+
 		$this->view = 'Auth.AuthExternal/mapping';
 
 		//メールを送れるかどうか
