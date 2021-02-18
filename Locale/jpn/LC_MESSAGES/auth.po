@@ -258,4 +258,4 @@ msgid "Still, if you do not have an account at %s please go to %s."
 msgstr "まだ、%sにアカウントをお持ちでない方は、%sにお進みください。"
 
 msgid "Internet Explorer(IE) is deprecated. If you are using IE, please change to the latest version such as Edge, Chrome, Firefox, etc."
-msgstr "Internet Explorer(IE)は、推奨されていません。<br>IEをご利用の方は、EdgeやChrome、Firefoxなどの最新版に変更してください。"
+msgstr "お使いのブラウザがInternet Explorer(IE)のようです。<br>edumapではIEの利用を推奨していません。IEでの動作保証はできません。<br>お手数ですが、EdgeやChrome, Firefoxの最新版をご利用ください。"
