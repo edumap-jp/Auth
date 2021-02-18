@@ -21,6 +21,7 @@ App::uses('User', 'Users.Model');
  * @property ForgotPass $ForgotPass
  * @property NetCommonsComponent $NetCommons
  * @property User $User
+ * @property DeprecatedBrowserComponent $DeprecatedBrowser
  *
  * @author Shohei Nakajima <nakajimashouhei@gmail.com>
  * @package NetCommons\Auth\Controller
@@ -34,6 +35,7 @@ class AuthController extends AuthAppController {
  */
 	public $components = array(
 		'Security',
+		'Auth.DeprecatedBrowser',
 	);
 
 /**
@@ -117,6 +119,11 @@ class AuthController extends AuthAppController {
 			//$this->_setNc2Authenticate();
 
 			if ($this->Auth->login()) {
+				//非推奨ブラウザチェック
+				if ($this->DeprecatedBrowser->isDeprecatedBrowser()) {
+					$this->DeprecatedBrowser->setFlashNotification();
+				}
+
 				ClassRegistry::removeObject('User');
 				$this->User = ClassRegistry::init('Users.User');
 
@@ -137,7 +144,8 @@ class AuthController extends AuthAppController {
 				$isEditor = $roomRoleKey === Role::ROOM_ROLE_KEY_ROOM_ADMINISTRATOR
 					|| $roomRoleKey === Role::ROOM_ROLE_KEY_CHIEF_EDITOR
 					|| $roomRoleKey === Role::ROOM_ROLE_KEY_EDITOR;
-				if ($isEditor) {
+				if ($isEditor &&
+						! $this->DeprecatedBrowser->isDeprecatedBrowser()) {
 					$date = new DateTime(date('Y-m-d', strtotime("+9 hours")));
 					$date->sub(new DateInterval('PT9H'));
 					$options = array(
