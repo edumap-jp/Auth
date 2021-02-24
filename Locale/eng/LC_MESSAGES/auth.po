@@ -124,12 +124,12 @@ msgstr ""
 #: Auth/View/Auth/login.ctp:50
 #: Auth/View/ForgotPass/update.ctp:26
 msgid "Username"
-msgstr ""
+msgstr "Login ID"
 
 #: Auth/View/Auth/login.ctp:51
 #: Auth/View/ForgotPass/update.ctp:27
 msgid "Please enter your username."
-msgstr ""
+msgstr "Please enter your Login ID"
 
 #: Auth/View/Auth/login.ctp:57
 msgid "Password"
