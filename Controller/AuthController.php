@@ -35,7 +35,7 @@ class AuthController extends AuthAppController {
  */
 	public $components = array(
 		'Security',
-		'Auth.DeprecatedBrowser',
+		'NetCommons.DeprecatedBrowser',
 	);
 
 /**
